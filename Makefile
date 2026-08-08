@@ -37,7 +37,7 @@ $(LIB_OUT): $(LIB_OBJ)
 	$(AR) $(ARFLAGS) $@ $^
 
 # --- Make C example ---
-c_example: all
+example: all
 	$(CXX) $(CXXFLAGS) $(EXAMPLE_FILE) $(LIB_OUT) -o $(EXAMPLE_TARGET)
 
 # --- Install ---
