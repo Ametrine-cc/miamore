@@ -24,6 +24,8 @@ PREFIX      := /usr/local
 LIB_DIR     := $(PREFIX)/lib
 INCLUDE_DIR := $(PREFIX)/include
 
+INCLUDE     := -lm
+
 # --- Targets ---
 .PHONY: all install uninstall example clean
 
@@ -31,7 +33,7 @@ all: $(LIB_OUT) $(TARGET)
 
 # --- Compile library object ---
 $(LIB_OBJ): $(LIB_SRC_FILES)
-	$(CXX) $(CXXFLAGS) -I$(LIB_SRC) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(LIB_SRC) $(INCLUDE) -c $< -o $@
 
 $(LIB_OUT): $(LIB_OBJ)
 	$(AR) $(ARFLAGS) $@ $^
