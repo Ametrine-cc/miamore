@@ -5,6 +5,10 @@
 #include <time.h>
 // #include <string.h>
 
+// | 24-bit Foreground | \033[38;2;<r>;<g>;<b>m  | Truecolor RGB support |
+// | ----------------- | ----------------------- | ----------------------|
+// | 24-bit Background | \033[48;2;<r>;<g>;<b>m  | Truecolor RGB support |
+
 static const char *MANAGE_CURSOR_STR[] = {
     [hidden] = "\033[?25l",
     [visible] = "\033[?25h",
@@ -23,8 +27,8 @@ void manage_cursor(cursor shown) {
   fflush(stdout);
 }
 
-void wait_for(unsigned int seconds) {
-  unsigned int retTime = time(0) + seconds;
+void wait_for(seconds wait_time) {
+  unsigned int retTime = time(0) + wait_time;
   while (time(0) < retTime)
     ;
 }
@@ -38,18 +42,4 @@ void restore_window(void) {
 void clear_window(void) {
   printf("\033[2J");
   fflush(stdout);
-}
-
-void create_window() {
-  printf("%s\n", __FUNCTION__);
-  // restore_window();
-  printf("\033[20;20H\n");
-  manage_cursor(hidden);
-
-  wait_for(2);
-  clear_window();
-
-  manage_cursor(visible);
-
-  restore_window();
 }

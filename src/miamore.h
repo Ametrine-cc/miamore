@@ -7,12 +7,14 @@ typedef enum {
   visible,
 } cursor;
 
+typedef unsigned int seconds;
+
 // MIAMORE : Functions
-void create_window();
+void clear_window(void);
 void restore_window(void);
 
 // MISC : Utilities
-void wait_for(unsigned int seconds);
-void manange_cursor(cursor visible);
+void wait_for(seconds wait_time);
+void manage_cursor(cursor visible);
 
 #endif // MIAMORE_H
