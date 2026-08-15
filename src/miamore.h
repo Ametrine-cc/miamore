@@ -19,8 +19,9 @@
 
 // MIAMORE : types
 typedef enum {
-  hidden,
+  hide,
   visible,
+  move,
 } cursor;
 
 typedef enum {
@@ -45,6 +46,6 @@ void draw(shape shape, dimensions width_x_height);
 
 // MISC : Utilities
 void wait_for(seconds wait_time);
-void manage_cursor(cursor visible);
+void manage_cursor(cursor cursor);
 
 #endif // MIAMORE_H
