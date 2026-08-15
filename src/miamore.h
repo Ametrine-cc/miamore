@@ -35,6 +35,10 @@ typedef struct {
   int width;
   int height;
 } dimensions;
+typedef struct {
+  int x;
+  int y;
+} position;
 
 typedef unsigned int seconds;
 
@@ -44,8 +48,15 @@ void restore_window(void);
 
 void draw(shape shape, dimensions width_x_height);
 
-// MISC : Utilities
+// MIAMORE : Utilities
 void wait_for(seconds wait_time);
-void manage_cursor(cursor cursor);
+void manage_cursor(cursor cursor, position position);
+
+#define MANAGE_CURSOR_1(cursor) manage_cursor(cursor, (position){0, 0})
+#define MANAGE_CURSOR_2(cursor, pos) manage_cursor(cursor, pos)
+
+#define GET_MACRO(_1, _2, NAME, ...) NAME
+#define manage_cursor(...)                                                     \
+  GET_MACRO(__VA_ARGS__, MANAGE_CURSOR_2, MANAGE_CURSOR_1)(__VA_ARGS__)
 
 #endif // MIAMORE_H

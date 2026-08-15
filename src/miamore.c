@@ -54,7 +54,7 @@ static const char *MANAGE_SHAPE_STR[] = {
 };
 
 // miamore misc functions
-void manage_cursor(cursor cursor) {
+void manage_cursor(cursor cursor, position position) {
   switch (cursor) {
   case hide:
     manage_cursor_visibility[cursor]("\033[?25l");
@@ -63,7 +63,7 @@ void manage_cursor(cursor cursor) {
     manage_cursor_visibility[cursor]("\033[?25h");
     break;
   case move:
-    manage_cursor_action[cursor](10, 10);
+    manage_cursor_action[cursor](position.x, position.y);
     break;
   }
   fflush(stdout);
@@ -97,3 +97,10 @@ void draw(shape shape, dimensions width_x_height) {
 
   printf("%s\n", current_shape);
 }
+
+#define MANAGE_CURSOR_1(cursor) manage_cursor(cursor)
+#define MANAGE_CURSOR_2(cursor, position) manage_cursor(cursor, position)
+
+#define GET_MACRO(_1, _2, NAME, ...) NAME
+#define manage_cursor(...)                                                     \
+  GET_MACRO(__VA_ARGS__, MANAGE_CURSOR_2, MANAGE_CURSOR_1)(__VA_ARGS__)
