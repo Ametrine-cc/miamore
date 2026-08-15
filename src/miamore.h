@@ -46,14 +46,15 @@ typedef unsigned int seconds;
 void clear_window(void);
 void restore_window(void);
 
-void draw(shape shape, dimensions width_x_height);
+void draw(shape shape, dimensions dimensions);
 
 // MIAMORE : Utilities
 void wait_for(seconds wait_time);
-void manage_cursor(cursor cursor, position position);
 
-#define MANAGE_CURSOR_1(cursor) manage_cursor(cursor, (position){0, 0})
-#define MANAGE_CURSOR_2(cursor, pos) manage_cursor(cursor, pos)
+void(manage_cursor)(cursor cursor, position position);
+
+#define MANAGE_CURSOR_1(c) (manage_cursor)(c, (position){0, 0})
+#define MANAGE_CURSOR_2(c, p) (manage_cursor)(c, p)
 
 #define GET_MACRO(_1, _2, NAME, ...) NAME
 #define manage_cursor(...)                                                     \

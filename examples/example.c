@@ -27,7 +27,9 @@ int main() {
                     // manage_cursor(move, (position){1, 1})
                     // does the same thing without restoring text style
 
-  manage_cursor(move);
+  manage_cursor(move, ((position){.x = 10, .y = 10}));
+  printf("hi guys");
+
   draw(circle, (dimensions){2, 2});
   // or with designated initializers
   // draw(rect, (dimensions){.width = 2, .height = 2});
@@ -35,6 +37,7 @@ int main() {
   manage_cursor(hide);
   wait_for(4); // waits for 4 seconds
 
+  clear_window();
   printf("hiii\n");
   return 0;
 }
