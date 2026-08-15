@@ -25,9 +25,17 @@
 // | ----------------- | ----------------------- | ----------------------|
 // | 24-bit Background | \033[48;2;<r>;<g>;<b>m  | Truecolor RGB support |
 
+// manage strings (for typedef)
 static const char *MANAGE_CURSOR_STR[] = {
     [hidden] = "\033[?25l",
     [visible] = "\033[?25h",
+
+};
+static const char *MANAGE_SHAPE_STR[] = {
+    [square] = "square",
+    [circle] = "circle",
+    [rect] = "rect",
+    [triangle] = "triangle",
 };
 
 // miamore misc functions
@@ -59,3 +67,5 @@ void clear_window(void) {
   printf("\033[2J");
   fflush(stdout);
 }
+
+void draw(shape shape, dimensions width_x_height) {}

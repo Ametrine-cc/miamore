@@ -23,11 +23,25 @@ typedef enum {
   visible,
 } cursor;
 
+typedef enum {
+  square,
+  circle,
+  rect,
+  triangle,
+} shape;
+
+typedef struct {
+  int width;
+  int height;
+} dimensions;
+
 typedef unsigned int seconds;
 
 // MIAMORE : Functions
 void clear_window(void);
 void restore_window(void);
+
+void draw(shape shape, dimensions width_x_height);
 
 // MISC : Utilities
 void wait_for(seconds wait_time);
