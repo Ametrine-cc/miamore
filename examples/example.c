@@ -38,6 +38,6 @@ int main() {
   wait_for(4); // waits for 4 seconds
 
   clear_window();
-  printf("hiii\n");
+  printf("hiii welcome!!!\n");
   return 0;
 }
