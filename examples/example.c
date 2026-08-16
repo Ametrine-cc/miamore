@@ -30,7 +30,7 @@ int main() {
   manage_cursor(move, ((position){.x = 10, .y = 10}));
   printf("hi guys");
 
-  draw(circle, (dimensions){2, 2});
+  draw(circle, ((dimensions){2, 2}));
   // or with designated initializers
   // draw(rect, (dimensions){.width = 2, .height = 2});
 

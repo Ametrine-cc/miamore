@@ -86,7 +86,8 @@ void clear_window(void) {
   fflush(stdout);
 }
 
-void draw(shape shape, dimensions dimensions) {
+void(draw)(shape shape, dimensions dimensions, char *side_vert,
+           char *side_height, char *corners) {
   const char *current_shape;
 
   if (shape == rect) {
@@ -96,6 +97,7 @@ void draw(shape shape, dimensions dimensions) {
   }
 
   move_cursor(dimensions.width, dimensions.height); // TEMP
+  printf("%s , %s, %s", side_vert, side_height, corners);
 
   printf("%s\n", current_shape);
 }
