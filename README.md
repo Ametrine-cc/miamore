@@ -5,12 +5,19 @@ Making TUI applications simply
 
 `miamore` exists as a ncurses replacement(not drop in, syntax is very different) allowing developers to make TUI applications much easier with more features.
 
+miamore adds native 24-bit colors and the support to make animations directly in the library without having to add extra boilerplate in your main codebase.
+
+miamore also streamlines some processes about normal nurses such as the ability to create shapes with our 'draw()' function.
+
 ## Installing miamore:
 
 ### System
-*   `Linux` (or `UNIX` system).
+*   `Linux`
 *   `clang` (to compile the code).
 *   `make` (automate build and install process).
+
+#### note: miamore relies on '-lm'('-l' is the link, 'm' is the math library) the C math library so if that isn't present on your system miamore will NOT compile as it is a dependency.
+
 
 Install `miamore` from source:
 
@@ -19,7 +26,7 @@ Install `miamore` from source:
 git clone https://github.com/Ametrine-cc/miamore.git
 cd miamore
 
-# --- Building and installing miamore
+# --- Building and installing miamore ---
 sudo make clean # Remove any miamore files that may already exist
 
 make # run the make command to build everything initially then install
@@ -29,14 +36,14 @@ sudo make install
 sudo make uninstall
 ```
 
-## Using kazmai:
+## Using miamore:
 
 When using `miamore`, the library must be linked during compilation. You can do this in two ways:
 
 In `clang` or `gcc`:
 
 ```bash
-# --- Include the kazmailib for compilation ---
+# --- Include the libmiamore.a for compilation ---
 clang src/PROJECT_NAME -lmiamore -o PROJECT_NAME
 ```
 
@@ -66,23 +73,13 @@ We welcome contributions from the community to help improve `miamore`! Whether i
 
 ### Reporting Bugs
 
-If you find a bug, please help us by reporting it on the [GitHub Issues page](https://github.com/Ametrine-cc/Kamakazi/issues). When reporting a bug, please include:
+If you find a bug, please help us by reporting it on the [GitHub Issues page](https://github.com/Ametrine-cc/miamore/issues). When reporting a bug, please include:
 
 *   A clear and concise description of the bug.
 *   Steps to reproduce the behavior.
 *   Expected behavior vs. actual behavior.
 *   Any error messages or logs.
 *   Your operating system and compiler version.
-
-### Suggestions
-
-Do you have an idea for a new feature or an improvement to an existing one? We'd love to hear about it! Please open an issue on the [GitHub Issues page](https://github.com/Ametrine-cc/miamore/issues) and:
-
-*   Clearly describe the proposed feature or enhancement.
-*   Explain the problem it solves or the use case it addresses.
-*   (Optional) Provide any thoughts on how it might be implemented.
-
-Thank you for helping to make `miamore` better!
 
 ## Credits:
 
@@ -95,5 +92,4 @@ This project is dual-licensed under the **GNU Affero General Public License v3.0
 - **Open Source / Non-Commercial Use:** You are free to use, modify, and distribute this software under the terms of the AGPL-3.0 license. See the `LICENSE` file for details.
 - **Commercial / Proprietary Use:** If you wish to use this software in a closed-source project, embed it into proprietary software, or use it without the copyleft restrictions of the AGPL-3.0, you must acquire a commercial license.
 
-<!-- To purchase a commercial license or discuss custom licensing terms, please contact [business@ametrine.cc] or visit [ametrine.cc/licensing]. -->
 To purchase a commercial license or discuss custom licensing terms, please contact [business@ametrine.cc].
