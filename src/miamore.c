@@ -15,7 +15,7 @@
 // along with this program.   If not, see <https://www.gnu.org/licenses/>
 
 #include "miamore.h"
-#include <math.h>
+// #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
@@ -25,21 +25,47 @@
 // | ----------------- | ----------------------- | ----------------------|
 // | 24-bit Background | \033[48;2;<r>;<g>;<b>m  | Truecolor RGB support |
 
-static const char *MANAGE_CURSOR_STR[] = {
-    [hidden] = "\033[?25l",
-    [visible] = "\033[?25h",
+typedef void (*cursor_action)(int, int);
+typedef void (*cursor_visibility)(const char *cursor);
+
+void move_cursor(int x, int y) {
+  /* \033[<y>;<x>H */
+  printf("\033[%d;%dH", x, y);
+}
+
+void show_hide(const char *cursor) {
+  printf("%s", cursor);
+  fflush(stdout);
+}
+
+static cursor_visibility manage_cursor_visibility[] = {
+    [hide] = show_hide,
+    [visible] = show_hide,
+};
+static cursor_action manage_cursor_action[] = {
+    [move] = move_cursor,
+};
+
+static const char *MANAGE_SHAPE_STR[] = {
+    [square] = "square",
+    [circle] = "circle",
+    [rect] = "rect",
+    [triangle] = "triangle",
 };
 
 // miamore misc functions
-void manage_cursor(cursor shown) {
-  if (shown == hidden) {
-    const char *hide = MANAGE_CURSOR_STR[shown];
-    printf("%s", hide);
-  } else if (shown == visible) {
-    const char *hide = MANAGE_CURSOR_STR[shown];
-    printf("%s", hide);
+void(manage_cursor)(cursor cursor, position position) {
+  switch (cursor) {
+  case hide:
+    manage_cursor_visibility[cursor]("\033[?25l");
+    break;
+  case visible:
+    manage_cursor_visibility[cursor]("\033[?25h");
+    break;
+  case move:
+    manage_cursor_action[cursor](position.x, position.y);
+    break;
   }
-
   fflush(stdout);
 }
 
@@ -58,4 +84,20 @@ void restore_window(void) {
 void clear_window(void) {
   printf("\033[2J");
   fflush(stdout);
+}
+
+void(draw)(shape shape, dimensions dimensions, char *side_vert,
+           char *side_height, char *corners) {
+  const char *current_shape;
+
+  if (shape == rect) {
+    current_shape = MANAGE_SHAPE_STR[rect];
+  } else {
+    current_shape = "hi";
+  }
+
+  move_cursor(dimensions.width, dimensions.height); // TEMP
+  printf("%s , %s, %s", side_vert, side_height, corners);
+
+  printf("%s\n", current_shape);
 }
