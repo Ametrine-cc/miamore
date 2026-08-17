@@ -17,8 +17,10 @@
 #ifndef MIAMORE_H
 #define MIAMORE_H
 
-// MIAMORE : types
+// included libraries
 #include <stddef.h>
+
+// MIAMORE : types
 typedef enum {
   hide,
   visible,
@@ -37,6 +39,7 @@ typedef struct {
   int width;
   int height;
 } dimensions;
+
 typedef struct {
   int x;
   int y;

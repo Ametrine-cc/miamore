@@ -27,20 +27,13 @@
 // | ----------------- | ----------------------- | ----------------------|
 // | 24-bit Background | \033[48;2;<r>;<g>;<b>m  | Truecolor RGB support |
 
+// globals
 typedef void (*cursor_action)(int, int);
 typedef void (*cursor_visibility)(const char *cursor);
 
 static FrameBuffer *b;
 
-void init_miamore(void) {
-  if (!b) {
-    b = malloc(sizeof(FrameBuffer));
-    b->data = malloc(1024);
-    b->capacity = 1024;
-    b->len = 0;
-  }
-}
-
+// functions
 void move_cursor(int x, int y) {
   char seq[32];
   int len = snprintf(seq, sizeof(seq), "\033[%d;%dH", y + 1, x + 1);
@@ -65,7 +58,16 @@ static const char *MANAGE_SHAPE_STR[] = {
     [triangle] = "triangle", [border] = "border",
 };
 
-// miamore misc functions
+// miamore functions
+void init_miamore(void) {
+  if (!b) {
+    b = malloc(sizeof(FrameBuffer));
+    b->data = malloc(1024);
+    b->capacity = 1024;
+    b->len = 0;
+  }
+}
+
 void(manage_cursor)(cursor cursor, position position) {
   switch (cursor) {
   case hide:
@@ -89,7 +91,6 @@ void wait_for(seconds wait_time) {
     ;
 }
 
-// miamore functions
 void restore_window(void) {
   printf("\033[1;1H\033[0m\n");
   fflush(stdout);
@@ -108,17 +109,34 @@ void draw_text(char *string) {
 
 void(draw)(shape shape, dimensions dimensions, char *side_vert,
            char *side_height, char *corners) {
+  char temp[256];
   const char *current_shape;
+  (void)(dimensions);
 
-  if (shape == rect) {
+  switch (shape) {
+  case square:
+    current_shape = MANAGE_SHAPE_STR[square];
+    break;
+  case circle:
+    current_shape = MANAGE_SHAPE_STR[circle];
+    break;
+  case rect:
     current_shape = MANAGE_SHAPE_STR[rect];
-  } else {
+    break;
+  case triangle:
+    current_shape = MANAGE_SHAPE_STR[triangle];
+    break;
+  case border:
+    current_shape = MANAGE_SHAPE_STR[border];
+    printf("side_vert: %s\nside_height: %s\ncorners: %s\n", side_vert,
+           side_height, corners);
+    break;
+  default:
     current_shape = "hi";
   }
 
-  move_cursor(dimensions.width, dimensions.height); // TEMP
-  printf("side_vert: %s\nside_height: %s\ncorners: %s\n", side_vert,
-         side_height, corners);
+  // move_cursor(dimensions.width, dimensions.height); // TEMP
 
-  printf("%s\n", current_shape);
+  snprintf(temp, sizeof(temp), "%s", current_shape);
+  draw_text(temp);
 }
