@@ -18,6 +18,7 @@
 #define MIAMORE_H
 
 // MIAMORE : types
+#include <stddef.h>
 typedef enum {
   hide,
   visible,
@@ -29,6 +30,7 @@ typedef enum {
   circle,
   rect,
   triangle,
+  border,
 } shape;
 
 typedef struct {
@@ -40,15 +42,33 @@ typedef struct {
   int y;
 } position;
 
+typedef struct {
+  char *data;
+  size_t capacity;
+  size_t len;
+} FrameBuffer;
+
 typedef unsigned int seconds;
 
 // MIAMORE : Functions
+
+void init_miamore(void);
+
 void clear_window(void);
 void restore_window(void);
 
+void(manage_cursor)(cursor cursor, position position);
 void(draw)(shape shape, dimensions dimensions, char *side_vert,
            char *side_height, char *corners);
+void draw_text(char *text);
 
+// MIAMORE : Utilities
+void wait_for(seconds wait_time);
+
+void buf_append(FrameBuffer *fb, const char *str, size_t len);
+void render_frame(FrameBuffer *fb);
+
+// MIAMORE : MACROS
 #define DRAW_1(s) (draw)(s, (dimensions){10, 10}, "#", "#", "#")
 #define DRAW_2(s, d) (draw)(s, d, "#", "#", "#")
 #define DRAW_3(s, d, sv) (draw)(s, d, sv, "#", "#")
@@ -59,11 +79,6 @@ void(draw)(shape shape, dimensions dimensions, char *side_vert,
 #define draw(...)                                                              \
   GET_DRAW_MACRO(__VA_ARGS__, DRAW_5, DRAW_4, DRAW_3, DRAW_2,                  \
                  DRAW_1)(__VA_ARGS__)
-
-// MIAMORE : Utilities
-void wait_for(seconds wait_time);
-
-void(manage_cursor)(cursor cursor, position position);
 
 #define MANAGE_CURSOR_1(c) (manage_cursor)(c, (position){0, 0})
 #define MANAGE_CURSOR_2(c, p) (manage_cursor)(c, p)

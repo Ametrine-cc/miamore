@@ -18,6 +18,8 @@
 // #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
 // #include <string.h>
 
@@ -28,9 +30,21 @@
 typedef void (*cursor_action)(int, int);
 typedef void (*cursor_visibility)(const char *cursor);
 
+static FrameBuffer *b;
+
+void init_miamore(void) {
+  if (!b) {
+    b = malloc(sizeof(FrameBuffer));
+    b->data = malloc(1024);
+    b->capacity = 1024;
+    b->len = 0;
+  }
+}
+
 void move_cursor(int x, int y) {
-  /* \033[<y>;<x>H */
-  printf("\033[%d;%dH", x, y);
+  char seq[32];
+  int len = snprintf(seq, sizeof(seq), "\033[%d;%dH", y + 1, x + 1);
+  buf_append(b, seq, len);
 }
 
 void show_hide(const char *cursor) {
@@ -47,10 +61,8 @@ static cursor_action manage_cursor_action[] = {
 };
 
 static const char *MANAGE_SHAPE_STR[] = {
-    [square] = "square",
-    [circle] = "circle",
-    [rect] = "rect",
-    [triangle] = "triangle",
+    [square] = "square",     [circle] = "circle", [rect] = "rect",
+    [triangle] = "triangle", [border] = "border",
 };
 
 // miamore misc functions
@@ -66,6 +78,8 @@ void(manage_cursor)(cursor cursor, position position) {
     manage_cursor_action[cursor](position.x, position.y);
     break;
   }
+
+  render_frame(b);
   fflush(stdout);
 }
 
@@ -86,6 +100,12 @@ void clear_window(void) {
   fflush(stdout);
 }
 
+void draw_text(char *string) {
+  buf_append(b, string, strlen(string));
+  render_frame(b);
+  fflush(stdout);
+}
+
 void(draw)(shape shape, dimensions dimensions, char *side_vert,
            char *side_height, char *corners) {
   const char *current_shape;
@@ -97,7 +117,8 @@ void(draw)(shape shape, dimensions dimensions, char *side_vert,
   }
 
   move_cursor(dimensions.width, dimensions.height); // TEMP
-  printf("%s , %s, %s", side_vert, side_height, corners);
+  printf("side_vert: %s\nside_height: %s\ncorners: %s\n", side_vert,
+         side_height, corners);
 
   printf("%s\n", current_shape);
 }
