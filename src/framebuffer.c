@@ -21,7 +21,8 @@
 #include <unistd.h>
 
 void buf_append(FrameBuffer *buf, const char *str, size_t len) {
-  if (!buf || !buf->data || !str)
+  // Remove !buf->data check here
+  if (!buf || !str || len == 0)
     return;
 
   if (buf->len + len > buf->capacity) {

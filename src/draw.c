@@ -15,6 +15,7 @@
 // along with this program.   If not, see <https://www.gnu.org/licenses/>
 
 #include "miamore.h"
+#include <stddef.h>
 #include <stdio.h>
 // #include <stdlib.h>
 #include <string.h>
@@ -26,7 +27,7 @@ static const char *MANAGE_SHAPE_STR[] = {
     [triangle] = "triangle",
 };
 
-void(draw)(shape shape, dimensions dimensions, char *line) {
+void(draw_shape)(shape shape, dimensions dimensions, char *line) {
   const char *current_shape;
   (void)(dimensions);
 
@@ -50,26 +51,49 @@ void(draw)(shape shape, dimensions dimensions, char *line) {
   }
 }
 
-void draw_border() {
-  // check_fb();
+void draw_box(int width, int height) {
+  if (!fb || !height || !width)
+    return;
 
-  // snprintf(temp, sizeof(temp),
-  // "side_vert: %s\nside_height: %s\ncorners: %s\n", side_vert,
-  // side_height, corners);
-  // buf_append(b, temp, sizeof(temp));
-  // render_frame(b);
+  manage_cursor(move, ((position){1, 1}));
+  fflush(stdout);
+  for (int x = 0; x < width; x++)
+    buf_append(fb, "-", 1);
+  render_frame(fb);
 
-  char *line = ".";
+  for (int y = 2; y < height; y++) {
 
-  snprintf(temp_buf, sizeof(temp_buf), "%s", line);
+    // Left wall
+    manage_cursor(move, ((position){1, y}));
+    fflush(stdout);
+    buf_append(fb, "|", 1);
+    render_frame(fb);
 
-  manage_cursor(move, ((position){window_width, 1}));
-  buf_append(fb, temp_buf, strlen(temp_buf));
+    // Right wall
+    manage_cursor(move, ((position){width, y}));
+    fflush(stdout);
+    buf_append(fb, "|", 1);
+    render_frame(fb);
+  }
+
+  // Bottom border
+  manage_cursor(move, ((position){1, height}));
+  fflush(stdout);
+  for (int x = 0; x < width; x++)
+    buf_append(fb, "-", 1);
   render_frame(fb);
 }
 
+void draw_border(void) {
+  draw_box(window_width, window_height);
+  return;
+}
+
 void draw_text(char *string) {
+  if (!fb || !string)
+    return;
+
+  fflush(stdout);
   buf_append(fb, string, strlen(string));
   render_frame(fb);
-  fflush(stdout);
 }

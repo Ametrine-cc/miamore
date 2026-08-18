@@ -15,7 +15,7 @@
 // along with this program.   If not, see <https://www.gnu.org/licenses/>
 
 #include "../src/miamore.h"
-// #include <stdio.h>
+#include <stdio.h>
 
 void test(void) {
   clear_window();   // clears terminal window (does NOT move cursor position)
@@ -27,9 +27,9 @@ void test(void) {
   manage_cursor(move, ((position){.x = 4, .y = 1}));
   draw_text("dollars billllls\n");
 
-  // draw(circle, ((dimensions){2, 2}));
+  // draw_shape(circle, ((dimensions){2, 2}));
   // or with designated initializers
-  // draw(rect, (dimensions){.width = 2, .height = 2});
+  // draw_shape(rect, (dimensions){.width = 2, .height = 2});
 
   manage_cursor(hide);
   wait_for(4); // waits for 4 seconds
@@ -41,6 +41,9 @@ void test(void) {
 int main() {
   init_miamore();
   clear_window();
+
+  manage_cursor(hide);
+  // draw_text("Hi");
   draw_border();
 
   wait_for(4); // waits for 4 seconds

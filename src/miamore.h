@@ -66,8 +66,8 @@ static ASCIIEscapeCodes *aec = &aes_instance;
 
 typedef unsigned int seconds;
 
-static int window_width;
-static int window_height;
+extern int window_width;
+extern int window_height;
 
 static char temp_buf[512];
 
@@ -82,9 +82,10 @@ void clear_window(void);
 void restore_window(void);
 
 void(manage_cursor)(cursor cursor, position position);
-void(draw)(shape shape, dimensions dimensions, char *line);
+void(draw_shape)(shape shape, dimensions dimensions, char *line);
 void draw_text(char *text);
-void draw_border();
+void draw_box(int width, int height);
+void draw_border(void);
 
 // MIAMORE : Utilities
 void wait_for(seconds wait_time);
@@ -93,13 +94,14 @@ void buf_append(FrameBuffer *fb, const char *str, size_t len);
 void render_frame(FrameBuffer *fb);
 
 // MIAMORE : MACROS
-#define DRAW_1(s) (draw)(s, (dimensions){6, 6}, ".")
-#define DRAW_2(s, d) (draw)(s, d, ".")
-#define DRAW_3(s, d, l) (draw)(s, d, l)
+#define DRAW_SHAPE_1(s) (draw)(s, (dimensions){6, 6}, ".")
+#define DRAW_SHAPE_2(s, d) (draw)(s, d, ".")
+#define DRAW_SHAPE_3(s, d, l) (draw)(s, d, l)
 
 #define GET_DRAW_MACRO(_1, _2, _3, NAME, ...) NAME
-#define draw(...)                                                              \
-  GET_DRAW_MACRO(__VA_ARGS__, DRAW_3, DRAW_2, DRAW_1)(__VA_ARGS__)
+#define draw_shape(...)                                                        \
+  GET_DRAW_MACRO(__VA_ARGS__, DRAW_SHAPE_3, DRAW_SHAPE_2,                      \
+                 DRAW_SHAPE_1)(__VA_ARGS__)
 
 #define MANAGE_CURSOR_1(c) (manage_cursor)(c, (position){0, 0})
 #define MANAGE_CURSOR_2(c, p) (manage_cursor)(c, p)

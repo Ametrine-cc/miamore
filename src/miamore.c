@@ -28,6 +28,9 @@
 
 // globals
 FrameBuffer *fb = NULL;
+int window_width;
+int window_height;
+
 typedef void (*cursor_action)(int, int);
 typedef void (*cursor_visibility)(const char *cursor);
 
@@ -37,14 +40,14 @@ void check_fb(void) {
     if (!fb)
       return;
 
-    fb->data = malloc(1024);
+    fb->data = malloc(2048);
     if (!fb->data) {
       free(fb);
       fb = NULL;
       return;
     }
 
-    fb->capacity = 1024;
+    fb->capacity = 2048;
   }
 
   fb->len = 0;
@@ -67,9 +70,11 @@ void calc_window_size(void) {
 
 // init function
 void init_miamore(void) {
-  check_fb();
   calc_window_size();
-  manage_cursor(hide);
+  check_fb();
+
+  // printf("%dx%d", window_width, window_height);
+  // manage_cursor(hide);
 }
 
 // functions
