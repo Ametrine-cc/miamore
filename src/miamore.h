@@ -69,7 +69,7 @@ typedef unsigned int seconds;
 static int window_width;
 static int window_height;
 
-static char *temp_buf;
+static char temp_buf[512];
 
 extern FrameBuffer *fb;
 void check_fb(void);

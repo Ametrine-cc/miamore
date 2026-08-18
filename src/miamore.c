@@ -67,14 +67,9 @@ void calc_window_size(void) {
 
 // init function
 void init_miamore(void) {
+  check_fb();
   calc_window_size();
-
-  if (!fb) {
-    fb = malloc(sizeof(FrameBuffer));
-    fb->data = malloc(1024);
-    fb->capacity = 1024;
-    fb->len = 0;
-  }
+  manage_cursor(hide);
 }
 
 // functions

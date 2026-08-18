@@ -16,7 +16,7 @@
 
 #include "miamore.h"
 #include <stdio.h>
-#include <stdlib.h>
+// #include <stdlib.h>
 #include <string.h>
 
 static const char *MANAGE_SHAPE_STR[] = {
@@ -51,7 +51,7 @@ void(draw)(shape shape, dimensions dimensions, char *line) {
 }
 
 void draw_border() {
-  check_fb();
+  // check_fb();
 
   // snprintf(temp, sizeof(temp),
   // "side_vert: %s\nside_height: %s\ncorners: %s\n", side_vert,

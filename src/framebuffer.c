@@ -20,27 +20,27 @@
 #include <string.h>
 #include <unistd.h>
 
-void buf_append(FrameBuffer *fb, const char *str, size_t len) {
-  if (!fb)
+void buf_append(FrameBuffer *buf, const char *str, size_t len) {
+  if (!buf || !buf->data || !str)
     return;
 
-  if (fb->len + len > fb->capacity) {
-    size_t new_cap = (fb->capacity == 0) ? 1024 : (fb->len + len) * 2;
-    char *new_data = realloc(fb->data, new_cap);
+  if (buf->len + len > buf->capacity) {
+    size_t new_cap = (buf->capacity == 0) ? 1024 : (buf->len + len) * 2;
+    char *new_data = realloc(buf->data, new_cap);
     if (!new_data)
       return;
 
-    fb->data = new_data;
-    fb->capacity = new_cap;
+    buf->data = new_data;
+    buf->capacity = new_cap;
   }
-  memcpy(fb->data + fb->len, str, len);
-  fb->len += len;
+  memcpy(buf->data + buf->len, str, len);
+  buf->len += len;
 }
 
-void render_frame(FrameBuffer *fb) {
-  if (!fb || fb->len == 0)
+void render_frame(FrameBuffer *buf) {
+  if (!buf || buf->len == 0)
     return;
 
-  write(STDOUT_FILENO, fb->data, fb->len);
-  fb->len = 0;
+  write(STDOUT_FILENO, buf->data, buf->len);
+  buf->len = 0;
 }
