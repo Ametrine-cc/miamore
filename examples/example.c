@@ -40,7 +40,8 @@ void test(void) {
 
 int main() {
   init_miamore();
-  draw(border);
+  draw_border();
+  clear_window();
   wait_for(4); // waits for 4 seconds
 
   return 0;

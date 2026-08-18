@@ -22,7 +22,7 @@ ARFLAGS   := rcs
 
 # --- Source Layout ---
 LIB_SRC       := src
-LIB_SRC_FILES := $(LIB_SRC)/miamore.c $(LIB_SRC)/framebuffer.c
+LIB_SRC_FILES := $(LIB_SRC)/miamore.c $(LIB_SRC)/framebuffer.c $(LIB_SRC)/draw.c $(LIB_SRC)/misc.c
 LIB_OBJS      := $(LIB_SRC_FILES:.c=.o)
 LIB_HEADER    := $(LIB_SRC)/miamore.h
 LIB_OUT       := libmiamore.a
