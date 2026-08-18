@@ -43,7 +43,10 @@ int main() {
   clear_window();
 
   manage_cursor(hide);
-  // draw_text("Hi");
+
+  manage_cursor(move, ((position){2, 2}));
+  draw_text("Hi");
+
   draw_border();
 
   wait_for(4); // waits for 4 seconds

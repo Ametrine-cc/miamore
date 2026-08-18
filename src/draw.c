@@ -31,8 +31,6 @@ void(draw_shape)(shape shape, dimensions dimensions, char *line) {
   const char *current_shape;
   (void)(dimensions);
 
-  printf("here\n");
-
   switch (shape) {
   case square:
     current_shape = MANAGE_SHAPE_STR[square];
@@ -46,8 +44,6 @@ void(draw_shape)(shape shape, dimensions dimensions, char *line) {
   case triangle:
     current_shape = MANAGE_SHAPE_STR[triangle];
     break;
-  default:
-    current_shape = "hi";
   }
 }
 
@@ -85,6 +81,7 @@ void draw_box(int width, int height) {
 }
 
 void draw_border(void) {
+  manage_cursor(move, ((position){1, 1}));
   draw_box(window_width, window_height);
   return;
 }
