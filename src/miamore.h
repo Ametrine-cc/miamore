@@ -17,6 +17,9 @@
 #ifndef MIAMORE_H
 #define MIAMORE_H
 
+// included libraries
+#include <stddef.h>
+
 // MIAMORE : types
 typedef enum {
   hide,
@@ -35,35 +38,70 @@ typedef struct {
   int width;
   int height;
 } dimensions;
+
 typedef struct {
   int x;
   int y;
 } position;
 
+typedef struct {
+  char *data;
+  size_t capacity;
+  size_t len;
+} FrameBuffer;
+
+typedef struct ASCIIEscapeCodes {
+  const char *clear;
+  const char *reset_styles;
+  const char *show_cursor;
+  const char *hide_cursor;
+} ASCIIEscapeCodes;
+
+static ASCIIEscapeCodes aes_instance = {.clear = "\033[2J",
+                                        .reset_styles = "\033[0m",
+                                        .show_cursor = "\033[?25h",
+                                        .hide_cursor = "\033[?25l"};
+
+static ASCIIEscapeCodes *aec = &aes_instance;
+
 typedef unsigned int seconds;
 
+extern int window_width;
+extern int window_height;
+
+static char temp_buf[512];
+
+extern FrameBuffer *fb;
+void check_fb(void);
+
 // MIAMORE : Functions
+
+void init_miamore(void);
+
 void clear_window(void);
 void restore_window(void);
 
-void(draw)(shape shape, dimensions dimensions, char *side_vert,
-           char *side_height, char *corners);
-
-#define DRAW_1(s) (draw)(s, (dimensions){10, 10}, "#", "#", "#")
-#define DRAW_2(s, d) (draw)(s, d, "#", "#", "#")
-#define DRAW_3(s, d, sv) (draw)(s, d, sv, "#", "#")
-#define DRAW_4(s, d, sv, sh) (draw)(s, d, sv, sh, "#")
-#define DRAW_5(s, d, sv, sh, c) (draw)(s, d, sv, sh, c)
-
-#define GET_DRAW_MACRO(_1, _2, _3, _4, _5, NAME, ...) NAME
-#define draw(...)                                                              \
-  GET_DRAW_MACRO(__VA_ARGS__, DRAW_5, DRAW_4, DRAW_3, DRAW_2,                  \
-                 DRAW_1)(__VA_ARGS__)
+void(manage_cursor)(cursor cursor, position position);
+void(draw_shape)(shape shape, dimensions dimensions, char *line);
+void draw_text(char *text);
+void draw_box(int width, int height);
+void draw_border(void);
 
 // MIAMORE : Utilities
 void wait_for(seconds wait_time);
 
-void(manage_cursor)(cursor cursor, position position);
+void buf_append(FrameBuffer *fb, const char *str, size_t len);
+void render_frame(FrameBuffer *fb);
+
+// MIAMORE : MACROS
+#define DRAW_SHAPE_1(s) (draw)(s, (dimensions){6, 6}, ".")
+#define DRAW_SHAPE_2(s, d) (draw)(s, d, ".")
+#define DRAW_SHAPE_3(s, d, l) (draw)(s, d, l)
+
+#define GET_DRAW_MACRO(_1, _2, _3, NAME, ...) NAME
+#define draw_shape(...)                                                        \
+  GET_DRAW_MACRO(__VA_ARGS__, DRAW_SHAPE_3, DRAW_SHAPE_2,                      \
+                 DRAW_SHAPE_1)(__VA_ARGS__)
 
 #define MANAGE_CURSOR_1(c) (manage_cursor)(c, (position){0, 0})
 #define MANAGE_CURSOR_2(c, p) (manage_cursor)(c, p)

@@ -1,4 +1,7 @@
 /libmiamore.a
 /src/miamore.o
+/src/framebuffer.o
+/src/misc.o
+/src/draw.o
 /example
 /e.c

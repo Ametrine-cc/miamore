@@ -1,0 +1,4 @@
+1. switch to buf_append+render_frame
+2. make struct of all basic ASCII escape codes
+3. get back to work
+4. Make some working examples: clock, calender, music(mpvlib)

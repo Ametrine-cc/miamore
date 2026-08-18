@@ -15,22 +15,19 @@
 # along with this program.   If not, see <https://www.gnu.org/licenses/>
 
 # --- Compilers ---
-
-CXX       := clang
-CXXFLAGS  := -Wall -Wextra -O2
+CC        := clang
+CFLAGS    := -Wall -Wextra -O2
 AR        := ar
 ARFLAGS   := rcs
 
 # --- Source Layout ---
 LIB_SRC       := src
-LIB_SRC_FILES := $(LIB_SRC)/miamore.c
-LIB_OBJ       := $(LIB_SRC)/miamore.o
+LIB_SRC_FILES := $(LIB_SRC)/miamore.c $(LIB_SRC)/framebuffer.c $(LIB_SRC)/draw.c $(LIB_SRC)/misc.c
+LIB_OBJS      := $(LIB_SRC_FILES:.c=.o)
 LIB_HEADER    := $(LIB_SRC)/miamore.h
 LIB_OUT       := libmiamore.a
 
-# LICENSE := LICENSE
-
-# --- Exmaple Layout ---
+# --- Example Layout ---
 EXAMPLE_SRC    := examples
 EXAMPLE_FILE   := $(EXAMPLE_SRC)/example.c
 EXAMPLE_TARGET := example
@@ -40,23 +37,24 @@ PREFIX      := /usr/local
 LIB_DIR     := $(PREFIX)/lib
 INCLUDE_DIR := $(PREFIX)/include
 
-INCLUDE     := -lm
+LDFLAGS     := -lm
 
 # --- Targets ---
 .PHONY: all install uninstall example clean
 
-all: $(LIB_OUT) $(TARGET)
+all: $(LIB_OUT)
 
-# --- Compile library object ---
-$(LIB_OBJ): $(LIB_SRC_FILES)
-	$(CXX) $(CXXFLAGS) -I$(LIB_SRC) $(INCLUDE) -c $< -o $@
+# --- Pattern rule for compiling object files ---
+$(LIB_SRC)/%.o: $(LIB_SRC)/%.c
+	$(CC) $(CFLAGS) -I$(LIB_SRC) -c $< -o $@
 
-$(LIB_OUT): $(LIB_OBJ)
+# --- Build Static Library ---
+$(LIB_OUT): $(LIB_OBJS)
 	$(AR) $(ARFLAGS) $@ $^
 
 # --- Make C example ---
-example: all
-	$(CXX) $(CXXFLAGS) $(EXAMPLE_FILE) $(LIB_OUT) -o $(EXAMPLE_TARGET)
+example: all $(EXAMPLE_FILE)
+	$(CC) $(CFLAGS) -I$(LIB_SRC) $(EXAMPLE_FILE) $(LIB_OUT) $(LDFLAGS) -o $(EXAMPLE_TARGET)
 
 # --- Install ---
 install: all
@@ -65,8 +63,9 @@ install: all
 
 # --- Uninstall ---
 uninstall:
-	rm -r $(DESTDIR)$(LIB_DIR)/$(LIB_OUT)
-	rm -r $(DESTDIR)$(INCLUDE_DIR)/miamore.h
+	rm -f $(DESTDIR)$(LIB_DIR)/$(LIB_OUT)
+	rm -f $(DESTDIR)$(INCLUDE_DIR)/miamore.h
 
+# --- Clean ---
 clean:
-	rm -r $(LIB_OBJ) $(LIB_OUT) $(EXAMPLE_TARGET)
+	rm -f $(LIB_OBJS) $(LIB_OUT) $(EXAMPLE_TARGET)

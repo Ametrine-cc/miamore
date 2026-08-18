@@ -17,27 +17,40 @@
 #include "../src/miamore.h"
 #include <stdio.h>
 
-int main() {
-  // wait_for(4); // waits for 4 seconds
-  printf("Hello, World!\n");
-
+void test(void) {
   clear_window();   // clears terminal window (does NOT move cursor position)
   restore_window(); // moves cursor to position 1,1 (top left corner) and
                     // restores default text style
                     // manage_cursor(move, (position){1, 1})
                     // does the same thing without restoring text style
 
-  manage_cursor(move, ((position){.x = 10, .y = 10}));
-  printf("hi guys");
+  manage_cursor(move, ((position){.x = 4, .y = 1}));
+  draw_text("dollars billllls\n");
 
-  draw(circle, ((dimensions){2, 2}));
+  // draw_shape(circle, ((dimensions){2, 2}));
   // or with designated initializers
-  // draw(rect, (dimensions){.width = 2, .height = 2});
+  // draw_shape(rect, (dimensions){.width = 2, .height = 2});
 
   manage_cursor(hide);
   wait_for(4); // waits for 4 seconds
 
+  clear_window(); // clears window and moves back 1,1
+  draw_text("hiii welcome!!!\n");
+}
+
+int main() {
+  init_miamore();
   clear_window();
-  printf("hiii welcome!!!\n");
+
+  manage_cursor(hide);
+
+  manage_cursor(move, ((position){2, 2}));
+  draw_text("Hi");
+
+  draw_border();
+
+  wait_for(4); // waits for 4 seconds
+  clear_window();
+
   return 0;
 }

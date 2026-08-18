@@ -18,23 +18,77 @@
 // #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <time.h>
-// #include <string.h>
+#include <stdlib.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 // | 24-bit Foreground | \033[38;2;<r>;<g>;<b>m  | Truecolor RGB support |
 // | ----------------- | ----------------------- | ----------------------|
 // | 24-bit Background | \033[48;2;<r>;<g>;<b>m  | Truecolor RGB support |
 
+// globals
+FrameBuffer *fb = NULL;
+int window_width;
+int window_height;
+
 typedef void (*cursor_action)(int, int);
 typedef void (*cursor_visibility)(const char *cursor);
 
-void move_cursor(int x, int y) {
-  /* \033[<y>;<x>H */
-  printf("\033[%d;%dH", x, y);
+void check_fb(void) {
+  if (!fb) {
+    fb = malloc(sizeof(FrameBuffer));
+    if (!fb)
+      return;
+
+    fb->data = malloc(2048);
+    if (!fb->data) {
+      free(fb);
+      fb = NULL;
+      return;
+    }
+
+    fb->capacity = 2048;
+  }
+
+  fb->len = 0;
 }
 
-void show_hide(const char *cursor) {
-  printf("%s", cursor);
+// window_size
+void calc_window_size(void) {
+  struct winsize w;
+
+  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == 0) {
+    window_height = w.ws_row;
+    window_width = w.ws_col;
+
+    // printf("Width in pixels:  %d\n", w.ws_xpixel);
+    // printf("Height in pixels: %d\n", w.ws_ypixel);
+  } else {
+    perror("ioctl TIOCGWINSZ failed");
+  }
+}
+
+// init function
+void init_miamore(void) {
+  calc_window_size();
+  check_fb();
+
+  // printf("%dx%d", window_width, window_height);
+  // manage_cursor(hide);
+}
+
+// functions
+void move_cursor(int x, int y) {
+  char seq[32];
+  int len = snprintf(seq, sizeof(seq), "\033[%d;%dH", y + 1, x + 1);
+  buf_append(fb, seq, len);
+}
+
+void show_hide(const char *set) {
+  snprintf(temp_buf, sizeof(temp_buf), "%s", set);
+
+  buf_append(fb, temp_buf, sizeof(temp_buf));
+  render_frame(fb);
   fflush(stdout);
 }
 
@@ -46,58 +100,19 @@ static cursor_action manage_cursor_action[] = {
     [move] = move_cursor,
 };
 
-static const char *MANAGE_SHAPE_STR[] = {
-    [square] = "square",
-    [circle] = "circle",
-    [rect] = "rect",
-    [triangle] = "triangle",
-};
-
-// miamore misc functions
+// miamore functions
 void(manage_cursor)(cursor cursor, position position) {
   switch (cursor) {
   case hide:
-    manage_cursor_visibility[cursor]("\033[?25l");
+    manage_cursor_visibility[cursor](aec->hide_cursor);
     break;
   case visible:
-    manage_cursor_visibility[cursor]("\033[?25h");
+    manage_cursor_visibility[cursor](aec->show_cursor);
     break;
   case move:
     manage_cursor_action[cursor](position.x, position.y);
     break;
   }
+
   fflush(stdout);
-}
-
-void wait_for(seconds wait_time) {
-  unsigned int retTime = time(0) + wait_time;
-  while (time(0) < retTime)
-    ;
-}
-
-// miamore functions
-void restore_window(void) {
-  printf("\033[1;1H\033[0m\n");
-  fflush(stdout);
-}
-
-void clear_window(void) {
-  printf("\033[2J");
-  fflush(stdout);
-}
-
-void(draw)(shape shape, dimensions dimensions, char *side_vert,
-           char *side_height, char *corners) {
-  const char *current_shape;
-
-  if (shape == rect) {
-    current_shape = MANAGE_SHAPE_STR[rect];
-  } else {
-    current_shape = "hi";
-  }
-
-  move_cursor(dimensions.width, dimensions.height); // TEMP
-  printf("%s , %s, %s", side_vert, side_height, corners);
-
-  printf("%s\n", current_shape);
 }
