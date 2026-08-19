@@ -28,9 +28,8 @@ typedef enum {
 } cursor;
 
 typedef enum {
-  square,
-  circle,
   rect,
+  circle,
   triangle,
 } shape;
 

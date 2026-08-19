@@ -20,7 +20,7 @@
 // #include <stdlib.h>
 #include <string.h>
 
-void draw_square(dimensions dimensions, const char *line) {
+void draw_rect(dimensions dimensions, const char *line) {
   if (!fb || !dimensions.height || !dimensions.width || !line)
     return;
 
@@ -62,11 +62,6 @@ void draw_circle(dimensions dimensions, const char *line) {
   draw_text(line);
 }
 
-void draw_rect(dimensions dimensions, const char *line) {
-  draw_text("rect");
-  draw_text(line);
-}
-
 void draw_triangle(dimensions dimensions, const char *line) {
   draw_text("triangle");
   draw_text(line);
@@ -74,14 +69,11 @@ void draw_triangle(dimensions dimensions, const char *line) {
 
 void(draw_shape)(shape shape, dimensions dimensions, const char *line) {
   switch (shape) {
-  case square:
-    draw_square(dimensions, line);
+  case rect:
+    draw_rect(dimensions, line);
     break;
   case circle:
     draw_circle(dimensions, line);
-    break;
-  case rect:
-    draw_rect(dimensions, line);
     break;
   case triangle:
     draw_triangle(dimensions, line);
