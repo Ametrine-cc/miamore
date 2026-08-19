@@ -29,7 +29,7 @@ void wait_for(seconds wait_time) {
 }
 
 void restore_window(void) {
-  snprintf(temp_buf, sizeof(temp_buf), "\033[1;1H%s", aec->reset_styles);
+  snprintf(temp_buf, sizeof(temp_buf), "\x1b[1;1H%s", aec->reset_styles);
 
   buf_append(fb, temp_buf, strlen(temp_buf));
   render_frame(fb);
@@ -37,7 +37,7 @@ void restore_window(void) {
 }
 
 void clear_window(void) {
-  snprintf(temp_buf, sizeof(temp_buf), "\033[1;1H%s", aec->clear);
+  snprintf(temp_buf, sizeof(temp_buf), "\x1b[1;1H%s", aec->clear);
   buf_append(fb, temp_buf, strlen(temp_buf));
   render_frame(fb);
   fflush(stdout);

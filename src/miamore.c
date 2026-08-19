@@ -77,7 +77,7 @@ void init_miamore(void) {
 // functions
 void move_cursor(int x, int y) {
   char seq[32];
-  int len = snprintf(seq, sizeof(seq), "\033[%d;%dH", y + 1, x + 1);
+  int len = snprintf(seq, sizeof(seq), "\x1b[%d;%dH", y + 1, x + 1);
   buf_append(fb, seq, len);
 
   current_position[0] = x + 1;

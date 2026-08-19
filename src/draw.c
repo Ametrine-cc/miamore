@@ -103,7 +103,7 @@ void draw_border(border_type border_type) {
 
 #define MOVE_TO(x, y)                                                          \
   do {                                                                         \
-    int len = snprintf(pos_buf, sizeof(pos_buf), "\033[%d;%dH", (y), (x));     \
+    int len = snprintf(pos_buf, sizeof(pos_buf), "\x1b[%d;%dH", (y), (x));     \
     buf_append(fb, pos_buf, len);                                              \
   } while (0)
 

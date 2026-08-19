@@ -56,7 +56,7 @@ int main() {
   draw_border(round_line);
 
   manage_cursor(move, ((position){5, 5}));
-  draw_shape(square, ((dimensions){5, 5}));
+  draw_shape(rect, ((dimensions){5, 5}));
 
   manage_cursor(move, ((position){2, 3}));
   draw_text("Hi");
