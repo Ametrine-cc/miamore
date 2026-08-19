@@ -47,7 +47,32 @@ void(draw_shape)(shape shape, dimensions dimensions, char *line) {
   }
 }
 
-void draw_box(int width, int height) {
+static const char *MANAGE_BORDER_STR[][6] = {
+    [single_line] = {"┌", "┐", "└", "┘", "─", "│"},
+    [double_line] = {"╔", "╗", "╚", "╝", "═", "║"},
+    [thick_line] = {"┏", "┓", "┗", "┛", "━", "┃"},
+    [round_line] = {"╭", "╮", "╰", "╯", "─", "│"},
+    [blocky_line] = {"█", "█", "█", "█", "█", "█"},
+};
+
+typedef void (*border)(border_type);
+
+void get_border_char(border_type border_type) {
+  printf("\n%s", MANAGE_BORDER_STR[border_type][1]);
+}
+
+static border MANAGE_BORDER_TYPES_STR[] = {
+    [single_line] = get_border_char, [double_line] = get_border_char,
+    [thick_line] = get_border_char,  [round_line] = get_border_char,
+    [blocky_line] = get_border_char,
+};
+
+void draw_border(border_type border_type) {
+  get_border_char(border_type);
+
+  int height = window_height;
+  int width = window_width;
+
   if (!fb || !height || !width)
     return;
 
@@ -80,13 +105,7 @@ void draw_box(int width, int height) {
   render_frame(fb);
 }
 
-void draw_border(void) {
-  manage_cursor(move, ((position){1, 1}));
-  draw_box(window_width, window_height);
-  return;
-}
-
-void draw_text(char *string) {
+void draw_text(const char *string) {
   if (!fb || !string)
     return;
 

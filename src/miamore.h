@@ -34,6 +34,14 @@ typedef enum {
   triangle,
 } shape;
 
+typedef enum {
+  single_line,
+  thick_line,
+  double_line,
+  round_line,
+  blocky_line,
+} border_type;
+
 typedef struct {
   int width;
   int height;
@@ -77,23 +85,27 @@ void check_fb(void);
 // MIAMORE : Functions
 
 void init_miamore(void);
-
 void clear_window(void);
 void restore_window(void);
 
 void(manage_cursor)(cursor cursor, position position);
 void(draw_shape)(shape shape, dimensions dimensions, char *line);
-void draw_text(char *text);
-void draw_box(int width, int height);
-void draw_border(void);
+
+// MIAMORE : Drawing
+void draw_text(const char *text);
+void draw_border(border_type border_type);
+// void draw_box(int width, int height);
 
 // MIAMORE : Utilities
 void wait_for(seconds wait_time);
+int input(void);
 
 void buf_append(FrameBuffer *fb, const char *str, size_t len);
 void render_frame(FrameBuffer *fb);
 
 // MIAMORE : MACROS
+
+// draw_shape macro
 #define DRAW_SHAPE_1(s) (draw)(s, (dimensions){6, 6}, ".")
 #define DRAW_SHAPE_2(s, d) (draw)(s, d, ".")
 #define DRAW_SHAPE_3(s, d, l) (draw)(s, d, l)
@@ -103,6 +115,7 @@ void render_frame(FrameBuffer *fb);
   GET_DRAW_MACRO(__VA_ARGS__, DRAW_SHAPE_3, DRAW_SHAPE_2,                      \
                  DRAW_SHAPE_1)(__VA_ARGS__)
 
+// manage_cursor macro
 #define MANAGE_CURSOR_1(c) (manage_cursor)(c, (position){0, 0})
 #define MANAGE_CURSOR_2(c, p) (manage_cursor)(c, p)
 

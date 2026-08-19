@@ -38,6 +38,16 @@ void test(void) {
   draw_text("hiii welcome!!!\n");
 }
 
+void user_inputs() {
+  char temp[512];
+
+  int said = input();
+  snprintf(temp, sizeof(temp), "%c", said);
+  manage_cursor(move, ((position){2, 2}));
+
+  draw_text(temp);
+}
+
 int main() {
   init_miamore();
   clear_window();
@@ -45,9 +55,9 @@ int main() {
   manage_cursor(hide);
 
   manage_cursor(move, ((position){2, 2}));
-  draw_text("Hi");
+  // draw_text("Hi");
 
-  draw_border();
+  draw_border(single_line);
 
   wait_for(4); // waits for 4 seconds
   clear_window();

@@ -18,7 +18,9 @@
 #include <stdio.h>
 // #include <stdlib.h>
 #include <string.h>
+#include <termios.h>
 #include <time.h>
+#include <unistd.h>
 
 void wait_for(seconds wait_time) {
   unsigned int retTime = time(0) + wait_time;
@@ -39,4 +41,21 @@ void clear_window(void) {
   buf_append(fb, temp_buf, strlen(temp_buf));
   render_frame(fb);
   fflush(stdout);
+}
+
+int input(void) {
+  struct termios oldt, newt;
+  int ch;
+
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+  ch = getchar();
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+  return ch;
 }
