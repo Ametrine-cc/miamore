@@ -22,10 +22,6 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-// | 24-bit Foreground | \033[38;2;<r>;<g>;<b>m  | Truecolor RGB support |
-// | ----------------- | ----------------------- | ----------------------|
-// | 24-bit Background | \033[48;2;<r>;<g>;<b>m  | Truecolor RGB support |
-
 // globals
 FrameBuffer *fb = NULL;
 int window_width;
