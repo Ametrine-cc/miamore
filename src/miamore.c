@@ -30,6 +30,7 @@
 FrameBuffer *fb = NULL;
 int window_width;
 int window_height;
+int unsigned current_position[2];
 
 typedef void (*cursor_action)(int, int);
 typedef void (*cursor_visibility)(const char *cursor);
@@ -82,6 +83,9 @@ void move_cursor(int x, int y) {
   char seq[32];
   int len = snprintf(seq, sizeof(seq), "\033[%d;%dH", y + 1, x + 1);
   buf_append(fb, seq, len);
+
+  current_position[0] = x + 1;
+  current_position[1] = y + 1;
 }
 
 void show_hide(const char *set) {

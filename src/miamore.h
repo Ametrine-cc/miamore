@@ -74,6 +74,7 @@ static ASCIIEscapeCodes *aec = &aes_instance;
 
 typedef unsigned int seconds;
 
+extern unsigned int current_position[2];
 extern int window_width;
 extern int window_height;
 

@@ -21,8 +21,40 @@
 #include <string.h>
 
 void draw_square(dimensions dimensions, const char *line) {
-  draw_text("square");
-  draw_text(line);
+  if (!fb || !dimensions.height || !dimensions.width || !line)
+    return;
+
+  size_t line_len = strlen(line);
+
+  int start_x = current_position[0];
+  int start_y = current_position[1];
+
+  manage_cursor(move, ((position){start_x, start_y}));
+  for (int x = 0; x < dimensions.width; x++) {
+    buf_append(fb, line, line_len);
+  }
+
+  for (int y = 1; y < dimensions.height - 1; y++) {
+    int current_y = start_y + y;
+
+    // Left wall
+    manage_cursor(move, ((position){start_x, current_y}));
+    buf_append(fb, line, line_len);
+
+    // Right wall
+    manage_cursor(move,
+                  ((position){start_x + dimensions.width - 1, current_y}));
+    buf_append(fb, line, line_len);
+  }
+
+  if (dimensions.height > 1) {
+    manage_cursor(move, ((position){start_x, start_y + dimensions.height - 1}));
+    for (int x = 0; x < dimensions.width; x++) {
+      buf_append(fb, line, line_len);
+    }
+  }
+
+  render_frame(fb);
 }
 
 void draw_circle(dimensions dimensions, const char *line) {
