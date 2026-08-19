@@ -89,7 +89,7 @@ void clear_window(void);
 void restore_window(void);
 
 void(manage_cursor)(cursor cursor, position position);
-void(draw_shape)(shape shape, dimensions dimensions, char *line);
+void(draw_shape)(shape shape, dimensions dimensions, const char *line);
 
 // MIAMORE : Drawing
 void draw_text(const char *text);
@@ -106,9 +106,9 @@ void render_frame(FrameBuffer *fb);
 // MIAMORE : MACROS
 
 // draw_shape macro
-#define DRAW_SHAPE_1(s) (draw)(s, (dimensions){6, 6}, ".")
-#define DRAW_SHAPE_2(s, d) (draw)(s, d, ".")
-#define DRAW_SHAPE_3(s, d, l) (draw)(s, d, l)
+#define DRAW_SHAPE_1(s) (draw_shape)(s, (dimensions){6, 6}, ".")
+#define DRAW_SHAPE_2(s, d) (draw_shape)(s, d, ".")
+#define DRAW_SHAPE_3(s, d, l) (draw_shape)(s, d, l)
 
 #define GET_DRAW_MACRO(_1, _2, _3, NAME, ...) NAME
 #define draw_shape(...)                                                        \

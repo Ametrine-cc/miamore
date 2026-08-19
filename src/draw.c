@@ -20,29 +20,39 @@
 // #include <stdlib.h>
 #include <string.h>
 
-static const char *MANAGE_SHAPE_STR[] = {
-    [square] = "square",
-    [circle] = "circle",
-    [rect] = "rect",
-    [triangle] = "triangle",
-};
+void draw_square(dimensions dimensions, const char *line) {
+  draw_text("square");
+  draw_text(line);
+}
 
-void(draw_shape)(shape shape, dimensions dimensions, char *line) {
-  const char *current_shape;
-  (void)(dimensions);
+void draw_circle(dimensions dimensions, const char *line) {
+  draw_text("circle");
+  draw_text(line);
+}
 
+void draw_rect(dimensions dimensions, const char *line) {
+  draw_text("rect");
+  draw_text(line);
+}
+
+void draw_triangle(dimensions dimensions, const char *line) {
+  draw_text("triangle");
+  draw_text(line);
+}
+
+void(draw_shape)(shape shape, dimensions dimensions, const char *line) {
   switch (shape) {
   case square:
-    current_shape = MANAGE_SHAPE_STR[square];
+    draw_square(dimensions, line);
     break;
   case circle:
-    current_shape = MANAGE_SHAPE_STR[circle];
+    draw_circle(dimensions, line);
     break;
   case rect:
-    current_shape = MANAGE_SHAPE_STR[rect];
+    draw_rect(dimensions, line);
     break;
   case triangle:
-    current_shape = MANAGE_SHAPE_STR[triangle];
+    draw_triangle(dimensions, line);
     break;
   }
 }

@@ -56,9 +56,12 @@ int main() {
   draw_border(round_line);
 
   manage_cursor(move, ((position){2, 2}));
+  draw_shape(square, ((dimensions){5, 5}));
+
+  manage_cursor(move, ((position){2, 3}));
   draw_text("Hi");
 
-  wait_for(12); // waits for 4 seconds
+  wait_for(4); // waits for 4 seconds
   clear_window();
 
   return 0;
