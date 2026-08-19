@@ -3,5 +3,6 @@
 /src/framebuffer.o
 /src/misc.o
 /src/draw.o
+/src/color.o
 /example
 /e.c

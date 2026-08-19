@@ -53,12 +53,15 @@ int main() {
   clear_window();
 
   manage_cursor(hide);
+
+  set_fg(COLOR_CYAN);
   draw_border(round_line);
 
   manage_cursor(move, ((position){5, 5}));
   draw_shape(rect, ((dimensions){5, 5}));
 
   manage_cursor(move, ((position){2, 3}));
+  set_fg(COLOR_YELLOW);
   draw_text("Hi");
 
   wait_for(4); // waits for 4 seconds

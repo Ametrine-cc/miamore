@@ -57,6 +57,36 @@ typedef struct {
   size_t len;
 } FrameBuffer;
 
+typedef struct colors_t {
+  const char *red;
+  const char *orange;
+  const char *yellow;
+  const char *green;
+  const char *blue;
+  const char *pink;
+  const char *purple;
+  const char *cyan;
+  const char *magenta;
+  const char *black;
+  const char *white;
+  const char *reset;
+} colors_t;
+
+typedef enum {
+  COLOR_RED,
+  COLOR_ORANGE,
+  COLOR_YELLOW,
+  COLOR_GREEN,
+  COLOR_BLUE,
+  COLOR_PINK,
+  COLOR_PURPLE,
+  COLOR_CYAN,
+  COLOR_MAGENTA,
+  COLOR_BLACK,
+  COLOR_WHITE,
+  COLOR_RESET
+} colors;
+
 typedef struct ASCIIEscapeCodes {
   const char *clear;
   const char *reset_styles;
@@ -70,93 +100,6 @@ static ASCIIEscapeCodes aes_instance = {.clear = "\x1b[2J",
                                         .hide_cursor = "\x1b[?25l"};
 
 static ASCIIEscapeCodes *aec = &aes_instance;
-
-// MIAMORE : colors
-typedef struct miamore_colors {
-  const char *red;
-  const char *orange;
-  const char *yellow;
-  const char *green;
-  const char *blue;
-  const char *pink;
-  const char *purple;
-  const char *cyan;
-  const char *magenta;
-  const char *black;
-  const char *white;
-} miamore_colors;
-
-typedef struct miamore_fg_colors {
-  const char *red;
-  const char *orange;
-  const char *yellow;
-  const char *green;
-  const char *blue;
-  const char *pink;
-  const char *purple;
-  const char *cyan;
-  const char *magenta;
-  const char *black;
-  const char *white;
-  const char *reset;
-} miamore_fg_colors;
-
-typedef struct miamore_bg_colors {
-  const char *red;
-  const char *orange;
-  const char *yellow;
-  const char *green;
-  const char *blue;
-  const char *pink;
-  const char *purple;
-  const char *cyan;
-  const char *magenta;
-  const char *black;
-  const char *white;
-} miamore_bg_colors;
-
-static miamore_colors colors_instance = {.red = "\x1b[38;2;231;76;60m",
-                                         .orange = "\x1b[38;2;230;126;34m",
-                                         .yellow = "\x1b[38;2;241;196;15m",
-                                         .green = "\x1b[38;2;46;204;113m",
-                                         .blue = "\x1b[38;2;52;152;219m",
-                                         .pink = "\x1b[38;2;232;67;147m",
-                                         .purple = "\x1b[38;2;142;68;173m",
-                                         .cyan = "\x1b[38;2;0;206;201m",
-                                         .magenta = "\x1b[38;2;253;121;168m",
-                                         .black = "\x1b[38;2;0;0;0m",
-                                         .white = "\x1b[38;2;255;255;255m"};
-
-static miamore_bg_colors bg_colors_instance = {
-    .red = "\x1b[48;2;231;76;60m",
-    .orange = "\x1b[48;2;230;126;34m",
-    .yellow = "\x1b[48;2;241;196;15m",
-    .green = "\x1b[48;2;46;204;113m",
-    .blue = "\x1b[48;2;52;152;219m",
-    .pink = "\x1b[48;2;232;67;147m",
-    .purple = "\x1b[48;2;142;68;173m",
-    .cyan = "\x1b[48;2;0;206;201m",
-    .magenta = "\x1b[48;2;253;121;168m",
-    .black = "\x1b[48;2;0;0;0m",
-    .white = "\x1b[48;2;255;255;255m"};
-
-static miamore_fg_colors fg_colors_instance = {
-    .red = "\x1b[38;2;231;76;60m",
-    .orange = "\x1b[38;2;230;126;34m",
-    .yellow = "\x1b[38;2;241;196;15m",
-    .green = "\x1b[38;2;46;204;113m",
-    .blue = "\x1b[38;2;52;152;219m",
-    .pink = "\x1b[38;2;232;67;147m",
-    .purple = "\x1b[38;2;142;68;173m",
-    .cyan = "\x1b[38;2;0;206;201m",
-    .magenta = "\x1b[38;2;253;121;168m",
-    .black = "\x1b[38;2;0;0;0m",
-    .white = "\x1b[38;2;255;255;255m",
-    .reset = "\x1b[0m"};
-
-static miamore_colors *colors = &colors_instance;
-static miamore_bg_colors *bg_colors = &bg_colors_instance;
-static miamore_fg_colors *fg_colors = &fg_colors_instance;
 
 typedef unsigned int seconds;
 
@@ -186,6 +129,9 @@ void draw_border(border_type border_type);
 // MIAMORE : Utilities
 void wait_for(seconds wait_time);
 int input(void);
+
+void set_fg(colors color);
+void set_bg(colors color);
 
 void buf_append(FrameBuffer *fb, const char *str, size_t len);
 void render_frame(FrameBuffer *fb);
