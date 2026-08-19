@@ -52,9 +52,11 @@ int main() {
   init_miamore();
   clear_window();
 
+  set_window_bg(COLOR_BLACK);
+
   manage_cursor(hide);
 
-  set_fg(COLOR_CYAN);
+  // set_fg(COLOR_CYAN);
   draw_border(round_line);
 
   manage_cursor(move, ((position){5, 5}));

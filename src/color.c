@@ -112,3 +112,120 @@ void set_fg(colors color) {
     break;
   }
 }
+
+void set_bg(colors color) {
+  fflush(stdout);
+
+  switch (color) {
+  case COLOR_RED:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.red);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_ORANGE:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.orange);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_YELLOW:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.yellow);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_GREEN:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.green);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_BLUE:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.blue);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_PINK:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.pink);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_PURPLE:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.purple);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_CYAN:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.cyan);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_MAGENTA:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.magenta);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_BLACK:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.black);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_WHITE:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.white);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  case COLOR_RESET:
+    snprintf(temp_buf, sizeof(temp_buf), "%s", bg_colors_instance.reset);
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    break;
+  }
+}
+
+const char *get_bg_color_str(colors color) {
+  switch (color) {
+  case COLOR_RED:
+    return bg_colors->red;
+  case COLOR_ORANGE:
+    return bg_colors->orange;
+  case COLOR_YELLOW:
+    return bg_colors->yellow;
+  case COLOR_GREEN:
+    return bg_colors->green;
+  case COLOR_BLUE:
+    return bg_colors->blue;
+  case COLOR_PINK:
+    return bg_colors->pink;
+  case COLOR_PURPLE:
+    return bg_colors->purple;
+  case COLOR_CYAN:
+    return bg_colors->cyan;
+  case COLOR_MAGENTA:
+    return bg_colors->magenta;
+  case COLOR_BLACK:
+    return bg_colors->black;
+  case COLOR_WHITE:
+    return bg_colors->white;
+  default:
+    return "\x1b[0m";
+  }
+}
+
+void set_window_bg(colors color) {
+  if (!fb)
+    return;
+
+  const char *bg_code = get_bg_color_str(color);
+  size_t bg_len = strlen(bg_code);
+
+  buf_append(fb, bg_code, bg_len);
+
+  manage_cursor(move, ((position){1, 1}));
+
+  for (int y = 0; y < window_height; y++) {
+    for (int x = 0; x < window_width; x++) {
+      buf_append(fb, " ", 1);
+    }
+  }
+
+  manage_cursor(move, ((position){1, 1}));
+  render_frame(fb);
+}

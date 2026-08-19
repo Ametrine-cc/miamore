@@ -132,6 +132,7 @@ int input(void);
 
 void set_fg(colors color);
 void set_bg(colors color);
+void set_window_bg(colors color);
 
 void buf_append(FrameBuffer *fb, const char *str, size_t len);
 void render_frame(FrameBuffer *fb);
