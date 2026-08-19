@@ -55,53 +55,51 @@ static const char *MANAGE_BORDER_STR[][6] = {
     [blocky_line] = {"█", "█", "█", "█", "█", "█"},
 };
 
-typedef void (*border)(border_type);
-
-void get_border_char(border_type border_type) {
-  printf("\n%s", MANAGE_BORDER_STR[border_type][1]);
-}
-
-static border MANAGE_BORDER_TYPES_STR[] = {
-    [single_line] = get_border_char, [double_line] = get_border_char,
-    [thick_line] = get_border_char,  [round_line] = get_border_char,
-    [blocky_line] = get_border_char,
-};
-
 void draw_border(border_type border_type) {
-  get_border_char(border_type);
-
   int height = window_height;
   int width = window_width;
 
-  if (!fb || !height || !width)
+  if (!fb || height < 2 || width < 2)
     return;
 
-  manage_cursor(move, ((position){1, 1}));
-  fflush(stdout);
-  for (int x = 0; x < width; x++)
-    buf_append(fb, "-", 1);
-  render_frame(fb);
+  const char **b = MANAGE_BORDER_STR[border_type];
+  char pos_buf[32];
+
+#define APPEND_STR(str) buf_append(fb, str, strlen(str))
+
+#define MOVE_TO(x, y)                                                          \
+  do {                                                                         \
+    int len = snprintf(pos_buf, sizeof(pos_buf), "\033[%d;%dH", (y), (x));     \
+    buf_append(fb, pos_buf, len);                                              \
+  } while (0)
+
+  MOVE_TO(1, 1);
+  APPEND_STR(b[0]); // Top-left
+  for (int x = 0; x < width - 2; x++) {
+    APPEND_STR(b[4]); // Top horizontal
+  }
+  APPEND_STR(b[1]); // Top-right
 
   for (int y = 2; y < height; y++) {
+    MOVE_TO(1, y);
+    APPEND_STR(b[5]); // Left wall
 
-    // Left wall
-    manage_cursor(move, ((position){1, y}));
-    fflush(stdout);
-    buf_append(fb, "|", 1);
-    render_frame(fb);
-
-    // Right wall
-    manage_cursor(move, ((position){width, y}));
-    fflush(stdout);
-    buf_append(fb, "|", 1);
-    render_frame(fb);
+    MOVE_TO(width, y);
+    APPEND_STR(b[5]); // Right wall
   }
 
-  // Bottom border
-  manage_cursor(move, ((position){1, height}));
-  fflush(stdout);
-  for (int x = 0; x < width; x++)
-    buf_append(fb, "-", 1);
+  MOVE_TO(1, height);
+  APPEND_STR(b[2]); // Bottom-left
+  for (int x = 0; x < width - 2; x++) {
+    APPEND_STR(b[4]); // Bottom horizontal
+  }
+
+  MOVE_TO(width, height);
+  APPEND_STR(b[3]);
+
+#undef MOVE_TO
+#undef APPEND_STR
+
   render_frame(fb);
 }
 

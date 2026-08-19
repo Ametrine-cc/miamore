@@ -53,13 +53,12 @@ int main() {
   clear_window();
 
   manage_cursor(hide);
+  draw_border(round_line);
 
   manage_cursor(move, ((position){2, 2}));
-  // draw_text("Hi");
+  draw_text("Hi");
 
-  draw_border(single_line);
-
-  wait_for(4); // waits for 4 seconds
+  wait_for(12); // waits for 4 seconds
   clear_window();
 
   return 0;
