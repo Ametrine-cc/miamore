@@ -59,15 +59,11 @@ int main() {
   // set_fg(COLOR_CYAN);
   draw_border(round_line);
 
-  // draw_shape() draws a shape with "." by default,
-  // no presets use draw_shape_ex() for
-  // different presets and color built
-  // in draw_shape_ex() requires all arguments in the
-  // function to be filled as it is made for specialised
-  // use, if you dont want this functionality please use
-  // draw_shape() instead with the seperate functions.
-
   manage_cursor(move, ((position){5, 5}));
+
+  // draw_shape() draws a shape with "." by default, allos you to specify a
+  // "line" you want it to be drawn with, recomended 1 char, not promised more
+  // than 1 will work well.
   draw_shape(rect, ((dimensions){5, 5}));
 
   // draw_shape_ex is the extended version of draw_shape, you must specify the

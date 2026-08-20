@@ -57,11 +57,6 @@ void draw_rect(dimensions dimensions, const char *line) {
   render_frame(fb);
 }
 
-void draw_circle(dimensions dimensions, const char *line) {
-  draw_text("circle");
-  draw_text(line);
-}
-
 void draw_triangle(dimensions dimensions, const char *line) {
   draw_text("triangle");
   draw_text(line);
@@ -71,9 +66,6 @@ void(draw_shape)(shape shape, dimensions dimensions, const char *line) {
   switch (shape) {
   case rect:
     draw_rect(dimensions, line);
-    break;
-  case circle:
-    draw_circle(dimensions, line);
     break;
   case triangle:
     draw_triangle(dimensions, line);

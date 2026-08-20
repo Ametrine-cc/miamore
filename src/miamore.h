@@ -29,7 +29,6 @@ typedef enum {
 
 typedef enum {
   rect,
-  circle,
   triangle,
 } shape;
 
