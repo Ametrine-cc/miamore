@@ -87,6 +87,8 @@ typedef enum {
   COLOR_RESET
 } colors;
 
+typedef enum presets { rounded_rect, bold_rect } presets;
+
 typedef struct ASCIIEscapeCodes {
   const char *clear;
   const char *reset_styles;
@@ -113,20 +115,25 @@ extern FrameBuffer *fb;
 void check_fb(void);
 
 // MIAMORE : Functions
-
 void init_miamore(void);
 void clear_window(void);
 void restore_window(void);
 
-void(manage_cursor)(cursor cursor, position position);
+// MIAMORE : Drawing
 void(draw_shape)(shape shape, dimensions dimensions, const char *line);
 
-// MIAMORE : Drawing
+void draw_shape_ex(shape shape, dimensions dimensions, position position,
+                   colors color, presets preset);
+
+void(draw_shape_at)(shape shape, dimensions dimensions, position position,
+                    const char *line);
+
 void draw_text(const char *text);
+
 void draw_border(border_type border_type);
-// void draw_box(int width, int height);
 
 // MIAMORE : Utilities
+void(manage_cursor)(cursor cursor, position position);
 void wait_for(seconds wait_time);
 int input(void);
 
@@ -144,10 +151,19 @@ void render_frame(FrameBuffer *fb);
 #define DRAW_SHAPE_2(s, d) (draw_shape)(s, d, ".")
 #define DRAW_SHAPE_3(s, d, l) (draw_shape)(s, d, l)
 
-#define GET_DRAW_MACRO(_1, _2, _3, NAME, ...) NAME
+#define GET_DRAW_SHAPE_MACRO(_1, _2, _3, NAME, ...) NAME
 #define draw_shape(...)                                                        \
-  GET_DRAW_MACRO(__VA_ARGS__, DRAW_SHAPE_3, DRAW_SHAPE_2,                      \
-                 DRAW_SHAPE_1)(__VA_ARGS__)
+  GET_DRAW_SHAPE_MACRO(__VA_ARGS__, DRAW_SHAPE_3, DRAW_SHAPE_2,                \
+                       DRAW_SHAPE_1)(__VA_ARGS__)
+
+// draw_shape_at macro
+#define DRAW_SHAPE_AT_1(s, d, p) (draw_shape_at)(s, d, p, ".")
+#define DRAW_SHAPE_AT_2(s, d, p, l) (draw_shape_at)(s, d, p, l)
+
+#define GET_DRAW_SHAPE_AT_MACRO(_1, _2, _3, _4, NAME, ...) NAME
+#define draw_shape_at(...)                                                     \
+  GET_DRAW_SHAPE_AT_MACRO(__VA_ARGS__, DRAW_SHAPE_AT_2,                        \
+                          DRAW_SHAPE_AT_1)(__VA_ARGS__)
 
 // manage_cursor macro
 #define MANAGE_CURSOR_1(c) (manage_cursor)(c, (position){0, 0})

@@ -81,6 +81,18 @@ void(draw_shape)(shape shape, dimensions dimensions, const char *line) {
   }
 }
 
+void draw_shape_ex(shape shape, dimensions dimensions, position position,
+                   colors color, presets preset) {
+  printf("hot");
+  return;
+}
+
+void(draw_shape_at)(shape shape, dimensions dimensions, position pos,
+                    const char *line) {
+  manage_cursor(move, ((position){pos.x, pos.y}));
+  draw_shape(shape, dimensions, line);
+}
+
 static const char *MANAGE_BORDER_STR[][6] = {
     [single_line] = {"┌", "┐", "└", "┘", "─", "│"},
     [double_line] = {"╔", "╗", "╚", "╝", "═", "║"},
