@@ -17,10 +17,9 @@
 #ifndef MIAMORE_H
 #define MIAMORE_H
 
-// included libraries
-#include <stddef.h>
-
 // MIAMORE : types
+typedef unsigned int seconds;
+
 typedef enum {
   hide,
   visible,
@@ -50,27 +49,6 @@ typedef struct {
   int y;
 } position;
 
-typedef struct {
-  char *data;
-  size_t capacity;
-  size_t len;
-} FrameBuffer;
-
-typedef struct colors_t {
-  const char *red;
-  const char *orange;
-  const char *yellow;
-  const char *green;
-  const char *blue;
-  const char *pink;
-  const char *purple;
-  const char *cyan;
-  const char *magenta;
-  const char *black;
-  const char *white;
-  const char *reset;
-} colors_t;
-
 typedef enum {
   COLOR_RED,
   COLOR_ORANGE,
@@ -82,36 +60,11 @@ typedef enum {
   COLOR_CYAN,
   COLOR_MAGENTA,
   COLOR_BLACK,
-  COLOR_WHITE,
-  COLOR_RESET
+  COLOR_WHITE
 } colors;
 
-typedef enum presets { rounded_rect, bold_rect } presets;
-
-typedef struct ASCIIEscapeCodes {
-  const char *clear;
-  const char *reset_styles;
-  const char *show_cursor;
-  const char *hide_cursor;
-} ASCIIEscapeCodes;
-
-static ASCIIEscapeCodes aes_instance = {.clear = "\x1b[2J",
-                                        .reset_styles = "\x1b[0m",
-                                        .show_cursor = "\x1b[?25h",
-                                        .hide_cursor = "\x1b[?25l"};
-
-static ASCIIEscapeCodes *aec = &aes_instance;
-
-typedef unsigned int seconds;
-
-extern unsigned int current_position[2];
 extern int window_width;
 extern int window_height;
-
-static char temp_buf[512];
-
-extern FrameBuffer *fb;
-void check_fb(void);
 
 // MIAMORE : Functions
 void init_miamore(void);
@@ -119,20 +72,10 @@ void clear_window(void);
 void restore_window(void);
 
 // MIAMORE : Drawing
-void(draw_shape)(shape shape, dimensions dimensions, const char *line);
-
-void draw_shape_ex(shape shape, dimensions dimensions, position position,
-                   colors color, presets preset);
-
-void(draw_shape_at)(shape shape, dimensions dimensions, position position,
-                    const char *line);
-
 void draw_text(const char *text);
-
 void draw_border(border_type border_type);
 
 // MIAMORE : Utilities
-void(manage_cursor)(cursor cursor, position position);
 void wait_for(seconds wait_time);
 int input(void);
 
@@ -140,28 +83,34 @@ void set_fg(colors color);
 void set_bg(colors color);
 void set_window_bg(colors color);
 
-void buf_append(FrameBuffer *fb, const char *str, size_t len);
-void render_frame(FrameBuffer *fb);
+// MIAMORE : implementation functions for MACRO's
+void(draw_shape)(shape shape, dimensions dimensions, const char *line,
+                 colors color);
+void(draw_shape_at)(shape shape, dimensions dimensions, position position,
+                    const char *line, colors color);
+void(manage_cursor)(cursor cursor, position position);
 
-// MIAMORE : MACROS
+// MIAMORE : MACRO's
 
 // draw_shape macro
-#define DRAW_SHAPE_1(s) (draw_shape)(s, (dimensions){6, 6}, ".")
-#define DRAW_SHAPE_2(s, d) (draw_shape)(s, d, ".")
-#define DRAW_SHAPE_3(s, d, l) (draw_shape)(s, d, l)
+#define DRAW_SHAPE_1(s) (draw_shape)(s, (dimensions){6, 6}, ".", COLOR_WHITE)
+#define DRAW_SHAPE_2(s, d) (draw_shape)(s, d, ".", COLOR_WHITE)
+#define DRAW_SHAPE_3(s, d, l) (draw_shape)(s, d, l, COLOR_WHITE)
+#define DRAW_SHAPE_4(s, d, l, c) (draw_shape)(s, d, l, c)
 
-#define GET_DRAW_SHAPE_MACRO(_1, _2, _3, NAME, ...) NAME
+#define GET_DRAW_SHAPE_MACRO(_1, _2, _3, _4, NAME, ...) NAME
 #define draw_shape(...)                                                        \
-  GET_DRAW_SHAPE_MACRO(__VA_ARGS__, DRAW_SHAPE_3, DRAW_SHAPE_2,                \
+  GET_DRAW_SHAPE_MACRO(__VA_ARGS__, DRAW_SHAPE_4, DRAW_SHAPE_3, DRAW_SHAPE_2,  \
                        DRAW_SHAPE_1)(__VA_ARGS__)
 
 // draw_shape_at macro
-#define DRAW_SHAPE_AT_1(s, d, p) (draw_shape_at)(s, d, p, ".")
-#define DRAW_SHAPE_AT_2(s, d, p, l) (draw_shape_at)(s, d, p, l)
+#define DRAW_SHAPE_AT_1(s, d, p) (draw_shape_at)(s, d, p, ".", COLOR_WHITE)
+#define DRAW_SHAPE_AT_2(s, d, p, l) (draw_shape_at)(s, d, p, l, COLOR_WHITE)
+#define DRAW_SHAPE_AT_3(s, d, p, l, c) (draw_shape_at)(s, d, p, l, c)
 
-#define GET_DRAW_SHAPE_AT_MACRO(_1, _2, _3, _4, NAME, ...) NAME
+#define GET_DRAW_SHAPE_AT_MACRO(_1, _2, _3, _4, _5, NAME, ...) NAME
 #define draw_shape_at(...)                                                     \
-  GET_DRAW_SHAPE_AT_MACRO(__VA_ARGS__, DRAW_SHAPE_AT_2,                        \
+  GET_DRAW_SHAPE_AT_MACRO(__VA_ARGS__, DRAW_SHAPE_AT_3, DRAW_SHAPE_AT_2,       \
                           DRAW_SHAPE_AT_1)(__VA_ARGS__)
 
 // manage_cursor macro

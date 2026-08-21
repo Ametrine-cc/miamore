@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.   If not, see <https://www.gnu.org/licenses/>
 
-#include "miamore.h"
+#include "global.h"
 #include <stddef.h>
 #include <stdio.h>
 // #include <stdlib.h>
@@ -62,7 +62,8 @@ void draw_triangle(dimensions dimensions, const char *line) {
   draw_text(line);
 }
 
-void(draw_shape)(shape shape, dimensions dimensions, const char *line) {
+void(draw_shape)(shape shape, dimensions dimensions, const char *line,
+                 colors color) {
   switch (shape) {
   case rect:
     draw_rect(dimensions, line);
@@ -71,18 +72,6 @@ void(draw_shape)(shape shape, dimensions dimensions, const char *line) {
     draw_triangle(dimensions, line);
     break;
   }
-}
-
-void draw_shape_ex(shape shape, dimensions dimensions, position position,
-                   colors color, presets preset) {
-  printf("hot");
-  return;
-}
-
-void(draw_shape_at)(shape shape, dimensions dimensions, position pos,
-                    const char *line) {
-  manage_cursor(move, ((position){pos.x, pos.y}));
-  draw_shape(shape, dimensions, line);
 }
 
 static const char *MANAGE_BORDER_STR[][6] = {
@@ -139,6 +128,13 @@ void draw_border(border_type border_type) {
 #undef APPEND_STR
 
   render_frame(fb);
+}
+
+void(draw_shape_at)(shape shape, dimensions dimensions, position pos,
+                    const char *line, colors color) {
+  manage_cursor(move, ((position){pos.x, pos.y}));
+  set_fg(color);
+  draw_shape(shape, dimensions, line);
 }
 
 void draw_text(const char *string) {

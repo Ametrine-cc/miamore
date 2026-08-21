@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.   If not, see <https://www.gnu.org/licenses/>
 
-#include "../src/miamore.h"
+#include "../src/include/miamore.h"
 #include <stdio.h>
 
 void test(void) {
@@ -66,21 +66,16 @@ int main() {
   // than 1 will work well.
   draw_shape(rect, ((dimensions){5, 5}));
 
-  // draw_shape_ex is the extended version of draw_shape, you must specify the
-  // location of where the shape must be drawn
-  draw_shape_ex(rect, ((dimensions){4, 4}), ((position){20, 20}), COLOR_RED,
-                rounded_rect);
-
-  // draw_shape_at is an extended version of draw_shape but allows position to
-  // be embedded in the function call, meaning that manage_cursor(move) is not
-  // needed but position is a required argument.
-  draw_shape_at(rect, ((dimensions){4, 4}), ((position){10, 10}));
-
   manage_cursor(move, ((position){2, 3}));
   set_fg(COLOR_YELLOW);
   draw_text("Hi");
 
-  wait_for(4); // waits for 4 seconds
+  draw_shape_at(rect, ((dimensions){5, 5}), ((position){10, 10}), ".",
+                COLOR_RED);
+
+  manage_cursor(move, ((position){4, 4}));
+
+  wait_for(12); // waits for 4 seconds
   clear_window();
 
   return 0;
