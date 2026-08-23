@@ -43,7 +43,7 @@ INSTALL_DATA    := $(INSTALL) -m 644
 # --- Source & Object Layout ---
 LIB_SRC       := src
 OBJ_DIR       := obj
-LIB_SRC_FILES := $(LIB_SRC)/miamore.c $(LIB_SRC)/misc.c $(LIB_SRC)/request.c
+LIB_SRC_FILES := $(LIB_SRC)/miamore.c $(LIB_SRC)/misc.c $(LIB_SRC)/request.c $(LIB_SRC)/framebuffer.c
 
 # Maps src/foo.c to obj/foo.o
 LIB_OBJS      := $(patsubst $(LIB_SRC)/%.c,$(OBJ_DIR)/%.o,$(LIB_SRC_FILES))

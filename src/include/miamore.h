@@ -35,6 +35,10 @@ typedef double seconds_t;
 
 void wait_for(seconds_t seconds);
 
+// clear_window()
+void clear_window(void);        // clear window and keep cursor ar position
+void clear_origin_window(void); // clear window and go to 1, 1
+
 // miamore_init()
 typedef struct {
   bool should_clear;
@@ -43,8 +47,6 @@ typedef struct {
 
 void init_miamore_opts(MiamoreOptions opts);
 
-#define init_miamore(...)                                                      \
-  init_miamore_opts((MiamoreOptions){                                          \
-      .should_clear = false, .enable_mouse = true, __VA_ARGS__})
+#define init_miamore(...) init_miamore_opts((MiamoreOptions){__VA_ARGS__})
 
 #endif // MIAMORE_H

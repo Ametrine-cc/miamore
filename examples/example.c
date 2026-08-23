@@ -20,22 +20,22 @@
 
 #include "../src/include/miamore.h"
 // #include <stdio.h>
-// #include <stdbool.h>
+#include <stdbool.h>
 
 int main(void) {
   // can change functionality of init with passing the argmuments .should_clear
   // = false or .enable_mouse = true by defualt the values of these arguments
   // are flipped relative to the ones shouwn in this snippet of documentation.
-  init_miamore();
+  // init_miamore();
+  init_miamore(.should_clear = true);
 
   // manage_cursor(move, ((position){5, 5}));
   // draw_text("hi");
-
-  wait_for(MS(250)); // Wait 250 milliseconds (e.g. for spinner animation)
-  // wait_for(SECONDS(2));
-  // wait_for(8); // waits for 8 seconds
-
   // clear_window();
+
+  // wait_for(MS(250)); // Wait 250 milliseconds (e.g. for spinner animation)
+  wait_for(SECONDS(2));
+  // wait_for(8); // waits for 8 seconds
 
   return 0;
 }

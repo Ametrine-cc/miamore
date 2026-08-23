@@ -21,7 +21,38 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-typedef enum screen_options { clear } screen_options;
+#include <stddef.h>
+
+#ifndef __cplusplus
+#include <stdbool.h>
+#endif
+
+// global vars
+static char temp_buf[2048];
+
+// error
+static char error_buf[512];
+extern void write_error(char *error);
+
+// screen_options enum
+typedef enum screen_options { reset, clear, clear_origin } screen_options;
+
+// init
+static bool init;
+void check_init(void);
+
+// framebuffer
+typedef struct {
+  char *data;
+  size_t capacity;
+  size_t len;
+} FrameBuffer;
+
+extern FrameBuffer *fb;
+void fb_init(void);
+
+void buf_append(FrameBuffer *fb, const char *str, size_t len);
+void render_frame(FrameBuffer *fb);
 
 // request functions
 void request_screen(screen_options screen);
