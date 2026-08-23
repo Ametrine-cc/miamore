@@ -27,6 +27,18 @@
 #include <stdbool.h>
 #endif
 
+// global miamore type enums
+typedef enum {
+  hide,
+  visible,
+  move,
+} cursor_t;
+
+typedef struct {
+  int x;
+  int y;
+} position_t;
+
 // wait_for()
 typedef double seconds_t;
 
@@ -35,9 +47,9 @@ typedef double seconds_t;
 
 void wait_for(seconds_t seconds);
 
-// clear_window()
-void clear_window(void);        // clear window and keep cursor ar position
-void clear_origin_window(void); // clear window and go to 1, 1
+// clear/clear_origin()
+void clear(void);        // clear window and keep cursor ar position
+void clear_origin(void); // clear window and go to 1, 1
 
 // miamore_init()
 typedef struct {
@@ -48,5 +60,16 @@ typedef struct {
 void init_miamore_opts(MiamoreOptions opts);
 
 #define init_miamore(...) init_miamore_opts((MiamoreOptions){__VA_ARGS__})
+
+// manage_cursor
+void(manage_cursor)(cursor_t cursor, position_t position);
+
+#define MANAGE_CURSOR_1(c) (manage_cursor)(c, (position_t){0, 0})
+#define MANAGE_CURSOR_2(c, p) (manage_cursor)(c, p)
+
+#define GET_MANAGE_CURSOR_MACRO(_1, _2, NAME, ...) NAME
+#define manage_cursor(...)                                                     \
+  GET_MANAGE_CURSOR_MACRO(__VA_ARGS__, MANAGE_CURSOR_2,                        \
+                          MANAGE_CURSOR_1)(__VA_ARGS__)
 
 #endif // MIAMORE_H

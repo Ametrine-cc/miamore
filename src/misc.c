@@ -22,14 +22,14 @@
 #include "include/miamore.h"
 #include <time.h>
 
-void clear_window(void) {
+void clear(void) {
   check_init();
-  request_screen(clear);
+  request_screen(clear_t);
 }
 
-void clear_origin_window(void) {
+void clear_origin(void) {
   check_init();
-  request_screen(clear_origin);
+  request_screen(clear_origin_t);
 }
 
 void wait_for(seconds_t seconds) {

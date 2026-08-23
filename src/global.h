@@ -21,6 +21,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#include "include/miamore.h"
 #include <stddef.h>
 
 #ifndef __cplusplus
@@ -28,14 +29,14 @@
 #endif
 
 // global vars
-static char temp_buf[2048];
+static char temp_buf[512];
 
 // error
 static char error_buf[512];
 extern void write_error(char *error);
 
 // screen_options enum
-typedef enum screen_options { reset, clear, clear_origin } screen_options;
+typedef enum screen_options { reset_t, clear_t, clear_origin_t } screen_options;
 
 // init
 static bool init;
@@ -56,5 +57,14 @@ void render_frame(FrameBuffer *fb);
 
 // request functions
 void request_screen(screen_options screen);
+void(request_cursor)(cursor_t cursor, position_t position);
+
+#define REQUEST_CURSOR_1(c) (request_cursor)(c, (position_t){0, 0})
+#define REQUEST_CURSOR_2(c, p) (request_cursor)(c, p)
+
+#define GET_REQUEST_CURSOR_MACRO(_1, _2, NAME, ...) NAME
+#define request_cursor(...)                                                    \
+  GET_REQUEST_CURSOR_MACRO(__VA_ARGS__, REQUEST_CURSOR_2,                      \
+                           REQUEST_CURSOR_1)(__VA_ARGS__)
 
 #endif // GLOBAL_H

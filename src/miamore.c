@@ -50,7 +50,7 @@ void init_miamore_opts(const MiamoreOptions opts) {
   fb_init();
 
   if (opts.should_clear) {
-    request_screen(clear_origin);
+    request_screen(clear_origin_t);
   } else {
     snprintf(error_buf, sizeof(error_buf), "error\n");
     write_error(error_buf);
@@ -70,4 +70,25 @@ void check_init(void) {
 void write_error(char *error) {
   printf("[error] %s\n", error);
   exit(1);
+}
+
+// void move_cursor(int x, int y) {
+// char seq[32];
+// int len = snprintf(seq, sizeof(seq), "\033[%d;%dH", y + 1, x + 1);
+// buf_append(fb, seq, len);
+// }
+
+// miamore functions
+void(manage_cursor)(cursor_t cursor, position_t position) {
+  switch (cursor) {
+  case hide:
+    request_cursor(hide);
+    break;
+  case visible:
+    request_cursor(visible);
+    break;
+  case move:
+    request_cursor(move, ((position_t){position.x, position.y}));
+    break;
+  }
 }

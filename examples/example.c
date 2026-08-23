@@ -28,14 +28,15 @@ int main(void) {
   // are flipped relative to the ones shouwn in this snippet of documentation.
   // init_miamore();
   init_miamore(.should_clear = true);
+  manage_cursor(hide);
 
   // manage_cursor(move, ((position){5, 5}));
   // draw_text("hi");
-  // clear_window();
+  // clear();
 
   // wait_for(MS(250)); // Wait 250 milliseconds (e.g. for spinner animation)
-  wait_for(SECONDS(2));
-  // wait_for(8); // waits for 8 seconds
+  // wait_for(SECONDS(2));
+  wait_for(8); // waits for 8 seconds
 
   return 0;
 }
