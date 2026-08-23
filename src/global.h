@@ -18,24 +18,12 @@
  * along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "../src/include/miamore.h"
-// #include <stdio.h>
-// #include <stdbool.h>
+#ifndef GLOBAL_H
+#define GLOBAL_H
 
-int main(void) {
-  // can change functionality of init with passing the argmuments .should_clear
-  // = false or .enable_mouse = true by defualt the values of these arguments
-  // are flipped relative to the ones shouwn in this snippet of documentation.
-  init_miamore();
+typedef enum screen_options { clear } screen_options;
 
-  // manage_cursor(move, ((position){5, 5}));
-  // draw_text("hi");
+// request functions
+void request_screen(screen_options screen);
 
-  wait_for(MS(250)); // Wait 250 milliseconds (e.g. for spinner animation)
-  // wait_for(SECONDS(2));
-  // wait_for(8); // waits for 8 seconds
-
-  // clear_window();
-
-  return 0;
-}
+#endif // GLOBAL_H

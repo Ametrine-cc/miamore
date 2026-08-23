@@ -1,9 +1,8 @@
 /libmiamore.a
-/src/miamore.o
-/src/framebuffer.o
-/src/misc.o
-/src/draw.o
-/src/color.o
+/libmiamore.so
+/libmiamore.so.1.0.0
+/libmiamore.so.1
+/obj/
 /example
 /e.c
 /src/.old

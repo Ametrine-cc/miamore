@@ -18,24 +18,16 @@
  * along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "../src/include/miamore.h"
-// #include <stdio.h>
-// #include <stdbool.h>
+#include "global.h"
+#include "include/miamore.h"
+#include <time.h>
 
-int main(void) {
-  // can change functionality of init with passing the argmuments .should_clear
-  // = false or .enable_mouse = true by defualt the values of these arguments
-  // are flipped relative to the ones shouwn in this snippet of documentation.
-  init_miamore();
+void wait_for(seconds_t seconds) {
+  if (seconds <= 0.0)
+    return;
 
-  // manage_cursor(move, ((position){5, 5}));
-  // draw_text("hi");
-
-  wait_for(MS(250)); // Wait 250 milliseconds (e.g. for spinner animation)
-  // wait_for(SECONDS(2));
-  // wait_for(8); // waits for 8 seconds
-
-  // clear_window();
-
-  return 0;
+  struct timespec req;
+  req.tv_sec = (time_t)seconds;
+  req.tv_nsec = (double)((seconds - req.tv_sec) * 1e9);
+  nanosleep(&req, NULL);
 }

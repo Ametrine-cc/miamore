@@ -18,24 +18,33 @@
  * along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "../src/include/miamore.h"
-// #include <stdio.h>
-// #include <stdbool.h>
+#ifndef MIAMORE_H
+#define MIAMORE_H
 
-int main(void) {
-  // can change functionality of init with passing the argmuments .should_clear
-  // = false or .enable_mouse = true by defualt the values of these arguments
-  // are flipped relative to the ones shouwn in this snippet of documentation.
-  init_miamore();
+#include <stdint.h>
 
-  // manage_cursor(move, ((position){5, 5}));
-  // draw_text("hi");
+#ifndef __cplusplus
+#include <stdbool.h>
+#endif
 
-  wait_for(MS(250)); // Wait 250 milliseconds (e.g. for spinner animation)
-  // wait_for(SECONDS(2));
-  // wait_for(8); // waits for 8 seconds
+// wait_for()
+typedef double seconds_t;
 
-  // clear_window();
+#define SECONDS(s) ((seconds_t)(s))
+#define MS(m) ((seconds_t)((m) / 1000.0))
 
-  return 0;
-}
+void wait_for(seconds_t seconds);
+
+// miamore_init()
+typedef struct {
+  bool should_clear;
+  bool enable_mouse;
+} MiamoreOptions;
+
+void init_miamore_opts(MiamoreOptions opts);
+
+#define init_miamore(...)                                                      \
+  init_miamore_opts((MiamoreOptions){                                          \
+      .should_clear = false, .enable_mouse = true, __VA_ARGS__})
+
+#endif // MIAMORE_H

@@ -87,9 +87,8 @@ If you find a bug, please help us by reporting it on the [GitHub Issues page](ht
 
 ## License
 
-This project is dual-licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)** and a **Commercial License**.
+## Licensing
+This project is licensed under the GNU Lesser General Public License v3.0 or later (LGPL-3.0-or-later) - see `LICENSE` and `LICENSE.LESSER` for details.
 
-- **Open Source / Non-Commercial Use:** You are free to use, modify, and distribute this software under the terms of the AGPL-3.0 license. See the `LICENSE` file for details.
-- **Commercial / Proprietary Use:** If you wish to use this software in a closed-source project, embed it into proprietary software, or use it without the copyleft restrictions of the AGPL-3.0, you must acquire a commercial license.
-
-To purchase a commercial license or discuss custom licensing terms, please contact [business@ametrine.cc].
+### Using this library in commercial/closed-source software
+You can use `libyourname` in closed-source projects via dynamic linking (`.so`/`.dll`). If you modify `libyourname` directly, those modifications must be released under the LGPL.
