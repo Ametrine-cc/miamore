@@ -30,7 +30,8 @@ int main(void) {
   init_miamore(.should_clear = true);
   manage_cursor(hide);
 
-  // manage_cursor(move, ((position){5, 5}));
+  manage_cursor(move, ((position_t){5, 5}));
+  manage_cursor(show);
   // draw_text("hi");
   // clear();
 

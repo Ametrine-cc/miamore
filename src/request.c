@@ -97,7 +97,7 @@ void(request_cursor)(cursor_t cursor, position_t position) {
   case hide:
     hide_cursor();
     break;
-  case visible:
+  case show:
     show_cursor();
     break;
   case move:

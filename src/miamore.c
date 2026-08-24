@@ -84,8 +84,8 @@ void(manage_cursor)(cursor_t cursor, position_t position) {
   case hide:
     request_cursor(hide);
     break;
-  case visible:
-    request_cursor(visible);
+  case show:
+    request_cursor(show);
     break;
   case move:
     request_cursor(move, ((position_t){position.x, position.y}));

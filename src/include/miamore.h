@@ -30,7 +30,7 @@
 // global miamore type enums
 typedef enum {
   hide,
-  visible,
+  show,
   move,
 } cursor_t;
 
