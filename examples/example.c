@@ -27,7 +27,24 @@ int main(void) {
   // = false or .enable_mouse = true by defualt the values of these arguments
   // are flipped relative to the ones shouwn in this snippet of documentation.
   // init_miamore();
+  // you are required to use the init_miamore() function or most of the miamore
+  // functions will fail and return errors (return error then quit at that spot)
+  //
+  //  init_miamore();
   init_miamore(.should_clear = true);
+
+  // the draw_border command can take 2 arguments, text="" and style=enum. text
+  // can be set to any const char array for example '.text="hiiii my amazing
+  // program"' and that will be outputed at the top of the border.
+  //
+  // style is an enum that has 4 distict varients for the border: normal(single
+  // line), bold(thicker line), rounded(single line with rounded edges) and
+  // block(blocky line). which can be called like this '.style=normal' for
+  // example
+  //
+  // draw_border();
+  draw_border(.text = "this is an example!", .style = normal);
+
   manage_cursor(hide);
 
   manage_cursor(move, ((position_t){5, 5}));
