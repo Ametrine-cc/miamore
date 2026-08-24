@@ -22,15 +22,9 @@
 #include "include/miamore.h"
 #include <time.h>
 
-void clear(void) {
-  check_init();
-  request_screen(clear_t);
-}
+void clear(void) { request_screen(clear_t); }
 
-void clear_origin(void) {
-  check_init();
-  request_screen(clear_origin_t);
-}
+void clear_origin(void) { request_screen(clear_origin_t); }
 
 void wait_for(seconds_t seconds) {
   if (seconds <= 0.0)

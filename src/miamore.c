@@ -72,12 +72,6 @@ void write_error(char *error) {
   exit(1);
 }
 
-// void move_cursor(int x, int y) {
-// char seq[32];
-// int len = snprintf(seq, sizeof(seq), "\033[%d;%dH", y + 1, x + 1);
-// buf_append(fb, seq, len);
-// }
-
 // miamore functions
 void(manage_cursor)(cursor_t cursor, position_t position) {
   switch (cursor) {

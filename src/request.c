@@ -93,6 +93,8 @@ void move_cursor(int x, int y) {
 }
 
 void(request_cursor)(cursor_t cursor, position_t position) {
+  check_init();
+
   switch (cursor) {
   case hide:
     hide_cursor();

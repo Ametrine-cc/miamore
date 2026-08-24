@@ -33,7 +33,12 @@ int main(void) {
   manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(show);
   // draw_text("hi");
+
+  // miamore has 2 clear functions, clear() -> which clears screen and doesnt
+  // move the cursor and clear_origin() which does the same but moves the cursor
+  // back to (1, 1)
   // clear();
+  // clear_origin();
 
   // wait_for(MS(250)); // Wait 250 milliseconds (e.g. for spinner animation)
   // wait_for(SECONDS(2));
