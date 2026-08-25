@@ -19,6 +19,7 @@
  */
 
 #include "global.h"
+#include <stdbool.h>
 #include <stdio.h>
 
 void draw_text(const char *text) {
@@ -30,3 +31,5 @@ void draw_text(const char *text) {
   buf_append(fb, temp_buf, sizeof(temp_buf));
   render_frame(fb);
 }
+
+void draw_border_opts(const BorderOptions opts) { draw_text(opts.text); }

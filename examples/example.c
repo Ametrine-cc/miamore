@@ -42,7 +42,7 @@ int main(void) {
   // block(blocky line). which can be called like this '.style=normal' for
   // example
   //
-  // draw_border();
+  draw_border(.text = "wsg");
   // draw_border(.text = "this is an example!", .style = normal);
 
   manage_cursor(hide);

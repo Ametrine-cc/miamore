@@ -44,6 +44,8 @@ typedef enum {
   triangle,
 } shape_t;
 
+typedef enum { single_l, double_l, thick_l } theme_t;
+
 typedef struct {
   int width;
   int height;
@@ -66,7 +68,6 @@ typedef struct {
   bool should_clear;
   bool enable_mouse;
 } MiamoreOptions;
-
 void init_miamore_opts(MiamoreOptions opts);
 
 #define init_miamore(...) init_miamore_opts((MiamoreOptions){__VA_ARGS__})
@@ -84,5 +85,15 @@ void(manage_cursor)(cursor_t cursor, position_t position);
 
 // draw functions
 void draw_text(const char *text);
+
+typedef struct {
+  char *text;
+  theme_t theme;
+  bool gap;
+} BorderOptions;
+void draw_border_opts(BorderOptions opts);
+
+#define draw_border(...) draw_border_opts((BorderOptions){__VA_ARGS__})
+// void(draw_border)(theme_t theme);
 
 #endif // MIAMORE_H

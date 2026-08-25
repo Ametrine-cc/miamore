@@ -19,7 +19,6 @@
  */
 
 #include "global.h"
-#include "include/miamore.h"
 #include <time.h>
 
 void clear(void) { request_screen(clear_t); }

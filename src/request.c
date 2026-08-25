@@ -19,7 +19,6 @@
  */
 
 #include "global.h"
-#include "include/miamore.h"
 #include <stdio.h>
 
 typedef struct ASCIIEscapeCodes {
@@ -111,12 +110,12 @@ void(request_cursor)(cursor_t cursor, position_t position) {
 }
 
 void(request_draw)(shape_t shape, dimensions_t dimentions, position_t position,
-                   char typeface[5][5]) {
+                   theme_t theme) {
 
   // remove unused var error during compilation
   (void)(dimentions);
   (void)(position);
-  (void)(typeface[5][5]);
+  (void)(theme);
 
   switch (shape) {
   case rect:
