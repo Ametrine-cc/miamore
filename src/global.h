@@ -61,7 +61,6 @@ void request_screen(screen_options screen);
 void(request_cursor)(cursor_t cursor, position_t position);
 void(request_draw)(shape_t shape, dimensions_t dimentions, position_t position,
                    theme_t theme);
-void request_draw_border(theme_t theme);
 
 #define REQUEST_CURSOR_1(c) (request_cursor)(c, (position_t){0, 0})
 #define REQUEST_CURSOR_2(c, p) (request_cursor)(c, p)

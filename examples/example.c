@@ -42,12 +42,8 @@ int main(void) {
   // block(blocky line). which can be called like this '.style=normal' for
   // example
   //
-  // .gap is a boolean, true if you want the title for your boder to have spaces
-  // around it to create a gap, false if you want the line to touch your title
-  // text
-  //
-  draw_border(.text = "wsg");
-  // draw_border(.text = "this is an example!", .style = normal, .gap = true);
+  // draw_border(.text = "wsg");
+  draw_border(.text = "this is an example!", .theme = single_l);
 
   manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(show);

@@ -93,7 +93,6 @@ void draw_text(const char *text);
 typedef struct {
   char *text;
   theme_t theme;
-  bool gap;
 } BorderOptions;
 void draw_border_opts(BorderOptions opts);
 #define draw_border(...) draw_border_opts((BorderOptions){__VA_ARGS__})

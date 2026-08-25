@@ -19,7 +19,6 @@
  */
 
 #include "global.h"
-#include "include/miamore.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -92,6 +91,8 @@ void draw_border_opts(const BorderOptions opts) {
   manage_cursor(move, ((position_t){2, 0}));
 
   if (opts.text != NULL) {
-    draw_text(opts.text);
+    char buf[512];
+    snprintf(buf, sizeof(buf), " %s ", opts.text);
+    draw_text(buf);
   }
 }
