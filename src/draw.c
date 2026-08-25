@@ -27,13 +27,11 @@ void draw_text(const char *text) {
   check_init();
   fflush(stdout);
 
-  snprintf(temp_buf, sizeof(temp_buf), "%s", text);
-
-  buf_append(fb, temp_buf, sizeof(temp_buf));
+  buf_append(fb, text, strlen(text));
   render_frame(fb);
 }
 
-static const char *MANAGE_BORDER_STR[][6] = {
+static const char *BORDER_THEME_STR[][6] = {
     [single_l] = {"┌", "┐", "└", "┘", "─", "│"},
     [double_l] = {"╔", "╗", "╚", "╝", "═", "║"},
     [thick_l] = {"┏", "┓", "┗", "┛", "━", "┃"},
@@ -49,7 +47,7 @@ void draw_border_opts(const BorderOptions opts) {
   if (height < 2 || width < 2)
     return;
 
-  const char **b = MANAGE_BORDER_STR[opts.theme];
+  const char **b = BORDER_THEME_STR[opts.theme];
   char pos_buf[32];
 
 #define APPEND_STR(str) buf_append(fb, str, strlen(str))

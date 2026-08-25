@@ -19,8 +19,12 @@
  */
 
 #include "global.h"
+#include "include/miamore.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/ioctl.h>
+#include <termios.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -47,4 +51,65 @@ void calc_window_size(void) {
   } else {
     perror("ioctl TIOCGWINSZ failed");
   }
+}
+
+int input(void) {
+  struct termios oldt, newt;
+  int ch;
+
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+  ch = getchar();
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+  return ch;
+}
+
+char *input_ex(void) {
+  size_t capacity = 16;
+  size_t length = 0;
+
+  char *input_buf = malloc(capacity);
+  if (!input_buf)
+    return NULL;
+
+  struct termios oldt, newt;
+  int ch;
+
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+  while ((ch = getchar()) != EOF && ch != '\n') {
+    if (length + 1 >= capacity) {
+      capacity *= 2;
+      char *temp = realloc(input_buf, capacity);
+      if (!temp) {
+        free(input_buf);
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+        return NULL;
+      }
+      input_buf = temp;
+    }
+
+    input_buf[length++] = (char)ch;
+    input_buf[length] = '\0';
+
+    char char_str[2] = {(char)ch, '\0'};
+    buf_append(fb, char_str, 1);
+
+    render_frame(fb);
+  }
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+  input_buf[length] = '\0';
+
+  return input_buf;
 }

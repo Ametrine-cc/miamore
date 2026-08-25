@@ -19,8 +19,8 @@
  */
 
 #include "../src/include/miamore.h"
-// #include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 int main(void) {
   // can change functionality of init with passing the argmuments .should_clear
@@ -47,6 +47,14 @@ int main(void) {
 
   manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(show);
+
+  // short input, single char
+  int ch = input();
+  printf("short-mode said -> %c\n", ch);
+
+  // long input multi_char -> till enter_key pressed
+  char *ch_ex = input_ex();
+  printf("long-mode said -> %s\n", ch_ex);
 
   // draw hello world to the screen
   // draw_text("Hello,");

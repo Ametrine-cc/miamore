@@ -64,6 +64,10 @@ typedef double seconds_t;
 
 void wait_for(seconds_t seconds);
 
+// input/long_input()
+int input(void);
+char *input_ex(void);
+
 // clear/clear_origin()
 void clear(void);        // clear window and keep cursor ar position
 void clear_origin(void); // clear window and go to 1, 1
