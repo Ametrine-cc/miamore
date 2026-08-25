@@ -22,6 +22,24 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+void input_example() {
+
+  char buf[512];
+
+  // short input, single char
+  int ch = input();
+  snprintf(buf, sizeof(buf), "short-mode said -> %c", ch);
+  draw_text(buf);
+
+  // long input multi_char -> till enter_key pressed
+  manage_cursor(move, ((position_t){5, 6}));
+
+  char *ch_ex = input_ex();
+  manage_cursor(move, ((position_t){5, 7}));
+  snprintf(buf, sizeof(buf), "long-mode said -> %s", ch_ex);
+  draw_text(buf);
+}
+
 int main(void) {
   // can change functionality of init with passing the argmuments .should_clear
   // = false or .enable_mouse = true by defualt the values of these arguments
@@ -48,33 +66,21 @@ int main(void) {
   manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(show);
 
-  char buf[512];
-
-  // short input, single char
-  int ch = input();
-  snprintf(buf, sizeof(buf), "short-mode said -> %c", ch);
-  draw_text(buf);
-
-  // long input multi_char -> till enter_key pressed
-  manage_cursor(move, ((position_t){5, 6}));
-
-  char *ch_ex = input_ex();
-  manage_cursor(move, ((position_t){5, 7}));
-  snprintf(buf, sizeof(buf), "long-mode said -> %s", ch_ex);
-  draw_text(buf);
-
-  // draw hello world to the screen
+  // draw hello world to the screen "\n" is only needed if you want a new line
   // draw_text("Hello,");
   // draw_text(" World!\n");
 
   // miamore has 2 clear functions, clear() -> which clears screen and doesnt
   // move the cursor and clear_origin() which does the same but moves the cursor
   // back to (1, 1)
+  //
   // clear();
+  // clear_origin();
 
   // wait_for(MS(250)); // Wait 250 milliseconds
   wait_for(SECONDS(2)); // Wait for 2 seconds
   // wait_for(8); // Wait for 8 seconds
+
   clear_origin();
 
   return 0;
