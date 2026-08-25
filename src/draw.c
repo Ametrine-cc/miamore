@@ -19,6 +19,7 @@
  */
 
 #include "global.h"
+#include "include/miamore.h"
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -32,4 +33,38 @@ void draw_text(const char *text) {
   render_frame(fb);
 }
 
-void draw_border_opts(const BorderOptions opts) { draw_text(opts.text); }
+void draw_border_opts(const BorderOptions opts) {
+  check_init();
+
+  // draw_text(opts.text);
+  int width = window_width;
+  int height = window_height;
+
+  fflush(stdout);
+  manage_cursor(move, ((position_t){0, 1}));
+
+  for (int x = 0; x < width; x++)
+    buf_append(fb, "-", 1);
+  render_frame(fb);
+
+  for (int y = 2; y < height; y++) {
+    // Left wall
+    manage_cursor(move, ((position_t){1, y}));
+    fflush(stdout);
+    buf_append(fb, "|", 1);
+    render_frame(fb);
+
+    // Right wall
+    manage_cursor(move, ((position_t){width, y}));
+    fflush(stdout);
+    buf_append(fb, "|", 1);
+    render_frame(fb);
+  }
+
+  // Bottom border
+  manage_cursor(move, ((position_t){1, height}));
+  fflush(stdout);
+  for (int x = 0; x < width; x++)
+    buf_append(fb, "-", 1);
+  render_frame(fb);
+}

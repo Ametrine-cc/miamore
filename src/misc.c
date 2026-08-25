@@ -19,7 +19,10 @@
  */
 
 #include "global.h"
+#include <stdio.h>
+#include <sys/ioctl.h>
 #include <time.h>
+#include <unistd.h>
 
 void clear(void) { request_screen(clear_t); }
 
@@ -33,4 +36,15 @@ void wait_for(seconds_t seconds) {
   req.tv_sec = (time_t)seconds;
   req.tv_nsec = (double)((seconds - req.tv_sec) * 1e9);
   nanosleep(&req, NULL);
+}
+
+void calc_window_size(void) {
+  struct winsize w;
+
+  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == 0) {
+    window_height = w.ws_row;
+    window_width = w.ws_col;
+  } else {
+    perror("ioctl TIOCGWINSZ failed");
+  }
 }

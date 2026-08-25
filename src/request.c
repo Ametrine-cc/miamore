@@ -20,6 +20,7 @@
 
 #include "global.h"
 #include <stdio.h>
+#include <string.h>
 
 typedef struct ASCIIEscapeCodes {
   const char *clear;
@@ -44,23 +45,23 @@ void request_screen(screen_options screen) {
   switch (screen) {
   case reset_t:
     snprintf(temp_buf, sizeof(temp_buf), "%s", aec->reset_styles);
-    buf_append(fb, temp_buf, sizeof(temp_buf));
+    buf_append(fb, temp_buf, strlen(temp_buf));
     render_frame(fb);
 
     break;
   case clear_t:
     snprintf(temp_buf, sizeof(temp_buf), "%s", aec->clear);
-    buf_append(fb, temp_buf, sizeof(temp_buf));
+    buf_append(fb, temp_buf, strlen(temp_buf));
     render_frame(fb);
 
     break;
   case clear_origin_t:
     snprintf(temp_buf, sizeof(temp_buf), "%s", aec->clear);
-    buf_append(fb, temp_buf, sizeof(temp_buf));
+    buf_append(fb, temp_buf, strlen(temp_buf));
     render_frame(fb);
 
     snprintf(temp_buf, sizeof(temp_buf), "%s", aec->origin);
-    buf_append(fb, temp_buf, sizeof(temp_buf));
+    buf_append(fb, temp_buf, strlen(temp_buf));
     render_frame(fb);
 
     break;
@@ -71,7 +72,7 @@ void show_cursor() {
   fflush(stdout);
 
   snprintf(temp_buf, sizeof(temp_buf), "%s", aec->show_cursor);
-  buf_append(fb, temp_buf, sizeof(temp_buf));
+  buf_append(fb, temp_buf, strlen(temp_buf));
   render_frame(fb);
 }
 
@@ -79,7 +80,7 @@ void hide_cursor() {
   fflush(stdout);
 
   snprintf(temp_buf, sizeof(temp_buf), "%s", aec->hide_cursor);
-  buf_append(fb, temp_buf, sizeof(temp_buf));
+  buf_append(fb, temp_buf, strlen(temp_buf));
   render_frame(fb);
 }
 
@@ -87,7 +88,7 @@ void move_cursor(int x, int y) {
   fflush(stdout);
 
   snprintf(temp_buf, sizeof(temp_buf), "\033[%d;%dH", y + 1, x + 1);
-  buf_append(fb, temp_buf, sizeof(temp_buf));
+  buf_append(fb, temp_buf, strlen(temp_buf));
   render_frame(fb);
 }
 

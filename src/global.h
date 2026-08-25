@@ -33,7 +33,7 @@ static char temp_buf[2048];
 static char default_typeface[5][5];
 
 // error
-static char error_buf[512];
+static char error_buf[2048];
 extern void write_error(char *error);
 
 // screen_options enum

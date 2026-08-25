@@ -27,6 +27,11 @@
 #include <stdbool.h>
 #endif
 
+// global miamore vars
+extern int window_width;
+extern int window_height;
+void calc_window_size(void);
+
 // global miamore type enums
 typedef enum {
   hide,
@@ -69,7 +74,6 @@ typedef struct {
   bool enable_mouse;
 } MiamoreOptions;
 void init_miamore_opts(MiamoreOptions opts);
-
 #define init_miamore(...) init_miamore_opts((MiamoreOptions){__VA_ARGS__})
 
 // manage_cursor
@@ -92,8 +96,6 @@ typedef struct {
   bool gap;
 } BorderOptions;
 void draw_border_opts(BorderOptions opts);
-
 #define draw_border(...) draw_border_opts((BorderOptions){__VA_ARGS__})
-// void(draw_border)(theme_t theme);
 
 #endif // MIAMORE_H

@@ -24,6 +24,8 @@
 #include <stdlib.h>
 
 FrameBuffer *fb = NULL;
+int window_width;
+int window_height;
 
 void fb_init(void) {
   if (!fb) {
@@ -46,6 +48,7 @@ void fb_init(void) {
 
 void init_miamore_opts(const MiamoreOptions opts) {
   init = true;
+  calc_window_size();
   fb_init();
 
   if (opts.should_clear) {

@@ -42,27 +42,29 @@ int main(void) {
   // block(blocky line). which can be called like this '.style=normal' for
   // example
   //
+  // .gap is a boolean, true if you want the title for your boder to have spaces
+  // around it to create a gap, false if you want the line to touch your title
+  // text
+  //
   draw_border(.text = "wsg");
-  // draw_border(.text = "this is an example!", .style = normal);
-
-  manage_cursor(hide);
+  // draw_border(.text = "this is an example!", .style = normal, .gap = true);
 
   manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(show);
 
   // draw hello world to the screen
-  draw_text("Hello,");
-  draw_text(" World!\n");
+  // draw_text("Hello,");
+  // draw_text(" World!\n");
 
   // miamore has 2 clear functions, clear() -> which clears screen and doesnt
   // move the cursor and clear_origin() which does the same but moves the cursor
   // back to (1, 1)
   // clear();
-  // clear_origin();
 
-  // wait_for(MS(250)); // Wait 250 milliseconds (e.g. for spinner animation)
-  // wait_for(SECONDS(2));
-  wait_for(8); // waits for 8 seconds
+  // wait_for(MS(250)); // Wait 250 milliseconds
+  wait_for(SECONDS(2)); // Wait for 2 seconds
+  // wait_for(8); // Wait for 8 seconds
+  clear_origin();
 
   return 0;
 }
