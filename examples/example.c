@@ -43,13 +43,16 @@ int main(void) {
   // example
   //
   // draw_border();
-  draw_border(.text = "this is an example!", .style = normal);
+  // draw_border(.text = "this is an example!", .style = normal);
 
   manage_cursor(hide);
 
   manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(show);
-  // draw_text("hi");
+
+  // draw hello world to the screen
+  draw_text("Hello,");
+  draw_text(" World!\n");
 
   // miamore has 2 clear functions, clear() -> which clears screen and doesnt
   // move the cursor and clear_origin() which does the same but moves the cursor

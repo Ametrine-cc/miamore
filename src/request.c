@@ -106,4 +106,22 @@ void(request_cursor)(cursor_t cursor, position_t position) {
     move_cursor(position.x, position.y);
     break;
   }
+
+  request_draw(rect, ((dimensions_t){20, 20}));
+}
+
+void(request_draw)(shape_t shape, dimensions_t dimentions, position_t position,
+                   char typeface[5][5]) {
+
+  // remove unused var error during compilation
+  (void)(dimentions);
+  (void)(position);
+  (void)(typeface[5][5]);
+
+  switch (shape) {
+  case rect:
+    break;
+  case triangle:
+    break;
+  }
 }

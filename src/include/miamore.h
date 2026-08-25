@@ -39,6 +39,16 @@ typedef struct {
   int y;
 } position_t;
 
+typedef enum {
+  rect,
+  triangle,
+} shape_t;
+
+typedef struct {
+  int width;
+  int height;
+} dimensions_t;
+
 // wait_for()
 typedef double seconds_t;
 
@@ -71,5 +81,8 @@ void(manage_cursor)(cursor_t cursor, position_t position);
 #define manage_cursor(...)                                                     \
   GET_MANAGE_CURSOR_MACRO(__VA_ARGS__, MANAGE_CURSOR_2,                        \
                           MANAGE_CURSOR_1)(__VA_ARGS__)
+
+// draw functions
+void draw_text(const char *text);
 
 #endif // MIAMORE_H
