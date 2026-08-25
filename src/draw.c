@@ -22,6 +22,7 @@
 #include "include/miamore.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 void draw_text(const char *text) {
   check_init();
@@ -33,38 +34,64 @@ void draw_text(const char *text) {
   render_frame(fb);
 }
 
+static const char *MANAGE_BORDER_STR[][6] = {
+    [single_l] = {"┌", "┐", "└", "┘", "─", "│"},
+    [double_l] = {"╔", "╗", "╚", "╝", "═", "║"},
+    [thick_l] = {"┏", "┓", "┗", "┛", "━", "┃"},
+    [round_l] = {"╭", "╮", "╰", "╯", "─", "│"},
+    [blocky_l] = {"█", "█", "█", "█", "█", "█"},
+};
+
 void draw_border_opts(const BorderOptions opts) {
-  check_init();
-
-  // draw_text(opts.text);
-  int width = window_width;
   int height = window_height;
+  int width = window_width;
 
-  fflush(stdout);
-  manage_cursor(move, ((position_t){0, 1}));
+  check_init();
+  if (height < 2 || width < 2)
+    return;
 
-  for (int x = 0; x < width; x++)
-    buf_append(fb, "-", 1);
-  render_frame(fb);
+  const char **b = MANAGE_BORDER_STR[opts.theme];
+  char pos_buf[32];
+
+#define APPEND_STR(str) buf_append(fb, str, strlen(str))
+
+#define MOVE_TO(x, y)                                                          \
+  do {                                                                         \
+    int len = snprintf(pos_buf, sizeof(pos_buf), "\x1b[%d;%dH", (y), (x));     \
+    buf_append(fb, pos_buf, len);                                              \
+  } while (0)
+
+  MOVE_TO(1, 1);
+  APPEND_STR(b[0]); // Top-left
+  for (int x = 0; x < width - 2; x++) {
+    APPEND_STR(b[4]); // Top horizontal
+  }
+  APPEND_STR(b[1]); // Top-right
 
   for (int y = 2; y < height; y++) {
-    // Left wall
-    manage_cursor(move, ((position_t){1, y}));
-    fflush(stdout);
-    buf_append(fb, "|", 1);
-    render_frame(fb);
+    MOVE_TO(1, y);
+    APPEND_STR(b[5]); // Left wall
 
-    // Right wall
-    manage_cursor(move, ((position_t){width, y}));
-    fflush(stdout);
-    buf_append(fb, "|", 1);
-    render_frame(fb);
+    MOVE_TO(width, y);
+    APPEND_STR(b[5]); // Right wall
   }
 
-  // Bottom border
-  manage_cursor(move, ((position_t){1, height}));
-  fflush(stdout);
-  for (int x = 0; x < width; x++)
-    buf_append(fb, "-", 1);
+  MOVE_TO(1, height);
+  APPEND_STR(b[2]); // Bottom-left
+  for (int x = 0; x < width - 2; x++) {
+    APPEND_STR(b[4]); // Bottom horizontal
+  }
+
+  MOVE_TO(width, height);
+  APPEND_STR(b[3]);
+
+#undef MOVE_TO
+#undef APPEND_STR
+
   render_frame(fb);
+  manage_cursor(move, ((position_t){2, 0}));
+
+  if (opts.text != NULL) {
+    draw_text(opts.text);
+  }
 }

@@ -49,7 +49,7 @@ typedef enum {
   triangle,
 } shape_t;
 
-typedef enum { single_l, double_l, thick_l } theme_t;
+typedef enum { single_l, double_l, thick_l, round_l, blocky_l } theme_t;
 
 typedef struct {
   int width;
