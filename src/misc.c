@@ -78,6 +78,8 @@ char *input_ex(void) {
   if (!input_buf)
     return NULL;
 
+  input_buf[0] = '\0';
+
   struct termios oldt, newt;
   int ch;
 
@@ -87,29 +89,37 @@ char *input_ex(void) {
   tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
   while ((ch = getchar()) != EOF && ch != '\n') {
-    if (length + 1 >= capacity) {
-      capacity *= 2;
-      char *temp = realloc(input_buf, capacity);
-      if (!temp) {
-        free(input_buf);
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-        return NULL;
+
+    if (ch == 127 || ch == '\b') {
+      if (length > 0) {
+        length--;
+        input_buf[length] = '\0';
+
+        buf_append(fb, "\b \b", 3);
+        render_frame(fb);
       }
-      input_buf = temp;
+    } else {
+      if (length + 1 >= capacity) {
+        capacity *= 2;
+        char *temp = realloc(input_buf, capacity);
+        if (!temp) {
+          free(input_buf);
+          tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+          return NULL;
+        }
+        input_buf = temp;
+      }
+
+      input_buf[length++] = (char)ch;
+      input_buf[length] = '\0';
+
+      char char_str[2] = {(char)ch, '\0'};
+      buf_append(fb, char_str, 1);
+      render_frame(fb);
     }
-
-    input_buf[length++] = (char)ch;
-    input_buf[length] = '\0';
-
-    char char_str[2] = {(char)ch, '\0'};
-    buf_append(fb, char_str, 1);
-
-    render_frame(fb);
   }
 
   tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-
-  input_buf[length] = '\0';
 
   return input_buf;
 }

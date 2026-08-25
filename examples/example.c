@@ -48,13 +48,20 @@ int main(void) {
   manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(show);
 
+  char buf[512];
+
   // short input, single char
   int ch = input();
-  printf("short-mode said -> %c\n", ch);
+  snprintf(buf, sizeof(buf), "short-mode said -> %c", ch);
+  draw_text(buf);
 
   // long input multi_char -> till enter_key pressed
+  manage_cursor(move, ((position_t){5, 6}));
+
   char *ch_ex = input_ex();
-  printf("long-mode said -> %s\n", ch_ex);
+  manage_cursor(move, ((position_t){5, 7}));
+  snprintf(buf, sizeof(buf), "long-mode said -> %s", ch_ex);
+  draw_text(buf);
 
   // draw hello world to the screen
   // draw_text("Hello,");
