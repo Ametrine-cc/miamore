@@ -46,7 +46,7 @@ typedef struct {
 
 typedef enum {
   rect,
-  triangle,
+  // triangle,
 } shape_t;
 
 typedef enum { single_l, double_l, thick_l, round_l, blocky_l } theme_t;
@@ -95,10 +95,17 @@ void(manage_cursor)(cursor_t cursor, position_t position);
 void draw_text(const char *text);
 
 typedef struct {
+  theme_t theme;
+  dimensions_t dimensions;
+  position_t position;
+} ShapeOptions;
+void draw_shape_opts(shape_t shape, ShapeOptions opts);
+#define draw_shape(s, ...) draw_shape_opts((s), (ShapeOptions){__VA_ARGS__})
+
+typedef struct {
   char *text;
   theme_t theme;
 } BorderOptions;
 void draw_border_opts(BorderOptions opts);
 #define draw_border(...) draw_border_opts((BorderOptions){__VA_ARGS__})
-
 #endif // MIAMORE_H

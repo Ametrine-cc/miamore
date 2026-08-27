@@ -121,7 +121,7 @@ void(request_draw)(shape_t shape, dimensions_t dimentions, position_t position,
   switch (shape) {
   case rect:
     break;
-  case triangle:
-    break;
+    // case triangle:
+    // break;
   }
 }

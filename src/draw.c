@@ -94,3 +94,12 @@ void draw_border_opts(const BorderOptions opts) {
     draw_text(buf);
   }
 }
+
+void draw_shape_opts(shape_t shape, ShapeOptions opts) {
+  char text[512];
+  snprintf(text, sizeof(text), "cheese burger");
+
+  manage_cursor(move, ((position_t){5, 10}));
+  buf_append(fb, text, strlen(text));
+  render_frame(fb);
+}

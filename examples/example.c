@@ -61,14 +61,14 @@ int main(void) {
   // example
   //
   // draw_border(.text = "wsg");
-  draw_border(.text = "this is an example!", .theme = single_l);
+  draw_border(.text = "this is an example!", .theme = thick_l);
 
   manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(show);
 
   // draw hello world to the screen "\n" is only needed if you want a new line
-  // draw_text("Hello,");
-  // draw_text(" World!\n");
+  draw_text("Hello,");
+  draw_text(" World!\n");
 
   // miamore has 2 clear functions, clear() -> which clears screen and doesnt
   // move the cursor and clear_origin() which does the same but moves the cursor
@@ -76,6 +76,8 @@ int main(void) {
   //
   // clear();
   // clear_origin();
+
+  draw_shape(rect, .theme = single_l);
 
   // wait_for(MS(250)); // Wait 250 milliseconds
   wait_for(SECONDS(2)); // Wait for 2 seconds
