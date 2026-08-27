@@ -59,8 +59,6 @@ void render_frame(FrameBuffer *fb);
 // request functions
 void request_screen(screen_options screen);
 void(request_cursor)(cursor_t cursor, position_t position);
-void(request_draw)(shape_t shape, dimensions_t dimentions, position_t position,
-                   theme_t theme);
 
 #define REQUEST_CURSOR_1(c) (request_cursor)(c, (position_t){0, 0})
 #define REQUEST_CURSOR_2(c, p) (request_cursor)(c, p)
@@ -70,12 +68,4 @@ void(request_draw)(shape_t shape, dimensions_t dimentions, position_t position,
   GET_REQUEST_CURSOR_MACRO(__VA_ARGS__, REQUEST_CURSOR_2,                      \
                            REQUEST_CURSOR_1)(__VA_ARGS__)
 
-#define REQUEST_DRAW_1(s, d) (request_draw)(s, d, (position_t){1, 1}, single_l)
-#define REQUEST_DRAW_2(s, d, p) (request_draw)(c, d, p, single_l)
-#define REQUEST_DRAW_3(s, d, p, t) (request_draw)(c, d, p, t)
-
-#define GET_REQUEST_DRAW_MACRO(_1, _2, _3, _4, NAME, ...) NAME
-#define request_draw(...)                                                      \
-  GET_REQUEST_DRAW_MACRO(__VA_ARGS__, REQUEST_DRAW_3, REQUEST_DRAW_2,          \
-                         REQUEST_DRAW_1)(__VA_ARGS__)
 #endif // GLOBAL_H

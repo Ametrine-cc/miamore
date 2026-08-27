@@ -32,7 +32,7 @@ void draw_text(const char *text) {
   render_frame(fb);
 }
 
-static const char *BORDER_THEME_STR[][6] = {
+static const char *THEME_STR[][6] = {
     [single_l] = {"┌", "┐", "└", "┘", "─", "│"},
     [double_l] = {"╔", "╗", "╚", "╝", "═", "║"},
     [thick_l] = {"┏", "┓", "┗", "┛", "━", "┃"},
@@ -48,7 +48,7 @@ void draw_border_opts(const BorderOptions opts) {
   if (height < 2 || width < 2)
     return;
 
-  const char **b = BORDER_THEME_STR[opts.theme];
+  const char **b = THEME_STR[opts.theme];
   char pos_buf[32];
 
 #define APPEND_STR(str) buf_append(fb, str, strlen(str))
@@ -96,7 +96,79 @@ void draw_border_opts(const BorderOptions opts) {
   }
 }
 
+void draw_rect(int width, int height, int theme) {
+  if (!height || !width)
+    return;
+  fflush(stdout);
+
+  int unsigned origin_x = cursor_x;
+  int unsigned origin_y = cursor_y;
+
+  const char **st = THEME_STR[theme];
+
+  // check not 1, 1
+  if (height <= 1 || width <= 1) {
+    snprintf(temp_buf, sizeof(temp_buf),
+             "under or equal to 1x1, not supported");
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+    return;
+  }
+
+  // draw origin corner
+  buf_append(fb, st[0], strlen(st[0]));
+  render_frame(fb);
+
+  unsigned int cur_pos_x = origin_x + 1;
+  unsigned int cur_pos_y = origin_y;
+
+  manage_cursor(move, ((position_t){cur_pos_x, cur_pos_y}));
+  for (int x = 2; x < width; x++) {
+    buf_append(fb, st[4], strlen(st[4]));
+  }
+  render_frame(fb);
+
+  buf_append(fb, st[1], strlen(st[1]));
+  render_frame(fb);
+
+  unsigned int cur_pos_side_r = origin_x + width - 1;
+
+  manage_cursor(move, ((position_t){cur_pos_side_r, cur_pos_y + 1}));
+  buf_append(fb, st[5], strlen(st[5]));
+  render_frame(fb);
+
+  // for (int y = 2; y < height; y++) {
+
+  //   // Left wall
+  //   manage_cursor(move, ((position_t){1, y}));
+  //   fflush(stdout);
+  //   buf_append(fb, "|", 1);
+  //   render_frame(fb);
+
+  //   // Right wall
+  //   manage_cursor(move, ((position_t){width, y}));
+  //   fflush(stdout);
+  //   buf_append(fb, "|", 1);
+  //   render_frame(fb);
+  // }
+
+  // // Bottom border
+  // manage_cursor(move, ((position_t){1, height}));
+  // fflush(stdout);
+  // for (int x = 0; x < width; x++)
+  //   buf_append(fb, "-", 1);
+  // render_frame(fb);
+}
+
 void draw_shape_opts(shape_t shape, ShapeOptions opts) {
-  request_draw(shape,
-               ((dimensions_t){opts.dimensions.width, opts.dimensions.height}));
+  check_init();
+  fflush(stdout);
+
+  switch (shape) {
+  case rect:
+    draw_rect(opts.dimensions.width, opts.dimensions.height, opts.theme);
+    break;
+  default:
+    break;
+  }
 }

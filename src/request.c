@@ -91,6 +91,9 @@ void move_cursor(int x, int y) {
   snprintf(temp_buf, sizeof(temp_buf), "\033[%d;%dH", y + 1, x + 1);
   buf_append(fb, temp_buf, strlen(temp_buf));
   render_frame(fb);
+
+  cursor_x = x;
+  cursor_y = y;
 }
 
 void(request_cursor)(cursor_t cursor, position_t position) {
@@ -106,60 +109,6 @@ void(request_cursor)(cursor_t cursor, position_t position) {
     break;
   case move:
     move_cursor(position.x, position.y);
-    break;
-  }
-}
-
-void draw_box(int width, int height) {
-  if (!height || !width)
-    return;
-
-  manage_cursor(move, ((position_t){1, 1}));
-  fflush(stdout);
-  for (int x = 0; x < width; x++)
-    buf_append(fb, "-", 1);
-  render_frame(fb);
-
-  for (int y = 2; y < height; y++) {
-
-    // Left wall
-    manage_cursor(move, ((position_t){1, y}));
-    fflush(stdout);
-    buf_append(fb, "|", 1);
-    render_frame(fb);
-
-    // Right wall
-    manage_cursor(move, ((position_t){width, y}));
-    fflush(stdout);
-    buf_append(fb, "|", 1);
-    render_frame(fb);
-  }
-
-  // Bottom border
-  manage_cursor(move, ((position_t){1, height}));
-  fflush(stdout);
-  for (int x = 0; x < width; x++)
-    buf_append(fb, "-", 1);
-  render_frame(fb);
-}
-
-void(request_draw)(shape_t shape, dimensions_t dimentions, position_t position,
-                   theme_t theme) {
-  check_init();
-  fflush(stdout);
-
-  // remove unused var error during compilation
-  (void)(dimentions);
-  (void)(position);
-  (void)(theme);
-
-  char tx[512];
-
-  switch (shape) {
-  case rect:
-    draw_box(dimentions.width, dimentions.height);
-    break;
-  default:
     break;
   }
 }

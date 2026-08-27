@@ -28,8 +28,12 @@
 #endif
 
 // global miamore vars
-extern int window_width;
-extern int window_height;
+extern unsigned int window_width;
+extern unsigned int window_height;
+
+extern unsigned int cursor_x;
+extern unsigned int cursor_y;
+
 void calc_window_size(void);
 
 // global miamore type enums

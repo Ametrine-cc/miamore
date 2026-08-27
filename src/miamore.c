@@ -24,8 +24,11 @@
 #include <stdlib.h>
 
 FrameBuffer *fb = NULL;
-int window_width;
-int window_height;
+int unsigned window_width;
+int unsigned window_height;
+
+int unsigned cursor_x;
+int unsigned cursor_y;
 
 void fb_init(void) {
   if (!fb) {
