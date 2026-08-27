@@ -30,7 +30,7 @@ void buf_append(FrameBuffer *buf, const char *str, size_t len) {
     return;
 
   if (buf->len + len > buf->capacity) {
-    size_t new_cap = (buf->capacity == 0) ? 1024 : (buf->len + len) * 2;
+    size_t new_cap = (buf->capacity == 0) ? 2048 : (buf->len + len) * 2;
     char *new_data = realloc(buf->data, new_cap);
     if (!new_data)
       return;

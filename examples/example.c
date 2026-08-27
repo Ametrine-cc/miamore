@@ -77,7 +77,8 @@ int main(void) {
   // clear();
   // clear_origin();
 
-  draw_shape(rect, .theme = single_l);
+  manage_cursor(move, ((position_t){5, 10}));
+  draw_shape(rect, .theme = single_l, ((dimensions_t){6, 6}));
 
   // wait_for(MS(250)); // Wait 250 milliseconds
   wait_for(SECONDS(2)); // Wait for 2 seconds

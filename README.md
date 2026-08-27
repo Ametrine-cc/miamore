@@ -16,9 +16,6 @@ miamore also streamlines some processes about normal nurses such as the ability 
 *   `clang` (to compile the code).
 *   `make` (automate build and install process).
 
-#### note: miamore relies on '-lm'('-l' is the link, 'm' is the math library) the C math library so if that isn't present on your system miamore will NOT compile as it is a dependency.
-
-
 Install `miamore` from source:
 
 ```bash
