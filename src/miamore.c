@@ -18,10 +18,13 @@
  * along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "include/miamore.h"
 #include "global.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <termios.h>
+#include <unistd.h>
 
 FrameBuffer *fb = NULL;
 int unsigned window_width;
@@ -56,9 +59,9 @@ void init_miamore_opts(const MiamoreOptions opts) {
 
   if (opts.should_clear) {
     request_screen(clear_origin_t);
-  } else {
-    snprintf(error_buf, sizeof(error_buf), "error\n");
-    write_error(error_buf);
+  }
+  if (opts.disable_mouse) {
+    request_screen(disable_mouse);
   }
 }
 
@@ -88,6 +91,46 @@ void(manage_cursor)(cursor_t cursor, position_t position) {
     break;
   case move:
     request_cursor(move, ((position_t){position.x, position.y}));
+    break;
+  }
+}
+
+__attribute__((destructor)) static void lib_auto_cleanup(void) {
+  tcflush(STDIN_FILENO, TCIFLUSH);
+
+  struct termios t;
+  if (tcgetattr(STDIN_FILENO, &t) == 0) {
+    t.c_lflag |= (ECHO | ICANON);
+    tcsetattr(STDIN_FILENO, TCSANOW, &t);
+  }
+}
+
+void disable_keyboard_echo(void) {
+  struct termios t;
+  tcgetattr(STDIN_FILENO, &t);
+  t.c_lflag &= ~ECHO;
+  tcsetattr(STDIN_FILENO, TCSANOW, &t);
+}
+
+void restore_keyboard_echo(void) {
+  tcflush(STDIN_FILENO, TCIFLUSH);
+
+  struct termios t;
+  tcgetattr(STDIN_FILENO, &t);
+  t.c_lflag |= ECHO;
+  tcsetattr(STDIN_FILENO, TCSANOW, &t);
+}
+
+void manage_keys(keys_t keyboard) {
+  check_init();
+  fflush(stdout);
+
+  switch (keyboard) {
+  case enable:
+    restore_keyboard_echo();
+    break;
+  case disable:
+    disable_keyboard_echo();
     break;
   }
 }

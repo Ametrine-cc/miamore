@@ -43,6 +43,8 @@ typedef enum {
   move,
 } cursor_t;
 
+typedef enum { disable, enable } keys_t;
+
 typedef struct {
   int x;
   int y;
@@ -79,10 +81,13 @@ void clear_origin(void); // clear window and go to 1, 1
 // miamore_init()
 typedef struct {
   bool should_clear;
-  bool enable_mouse;
+  bool disable_mouse;
 } MiamoreOptions;
 void init_miamore_opts(MiamoreOptions opts);
 #define init_miamore(...) init_miamore_opts((MiamoreOptions){__VA_ARGS__})
+
+// manage_keys
+void manage_keys(keys_t keyboard);
 
 // manage_cursor
 void(manage_cursor)(cursor_t cursor, position_t position);

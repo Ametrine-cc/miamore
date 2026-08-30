@@ -37,7 +37,12 @@ static char error_buf[2048];
 extern void write_error(char *error);
 
 // screen_options enum
-typedef enum screen_options { reset_t, clear_t, clear_origin_t } screen_options;
+typedef enum screen_options {
+  reset_t,
+  clear_t,
+  clear_origin_t,
+  disable_mouse,
+} screen_options;
 
 // init
 static bool init;

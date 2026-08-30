@@ -66,6 +66,15 @@ void request_screen(screen_options screen) {
     render_frame(fb);
 
     break;
+  case disable_mouse:
+    snprintf(temp_buf, sizeof(temp_buf), "\x1b[?1000l");
+    strcat(temp_buf, "\x1b[?1003l");
+    strcat(temp_buf, "\x1b[?1006l");
+    // snprintf(temp_buf, sizeof(temp_buf), "disable_mouse");
+    buf_append(fb, temp_buf, strlen(temp_buf));
+    render_frame(fb);
+
+    // manage_cursor(move, ((position_t){5, 6}));
   }
 }
 

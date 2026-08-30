@@ -50,7 +50,8 @@ int main(void) {
   // functions will fail and return errors (return error then quit at that spot)
   //
   //  init_miamore();
-  init_miamore(.should_clear = true);
+  init_miamore(.should_clear = true, .disable_mouse = true);
+  manage_keys(disable);
 
   // the draw_border command can take 2 arguments, text="" and style=enum. text
   // can be set to any const char array for example '.text="hiiii my amazing
@@ -84,8 +85,8 @@ int main(void) {
   draw_shape(rect, .theme = single_l, ((dimensions_t){6, 6}));
 
   // wait_for(MS(250)); // Wait 250 milliseconds
-  // wait_for(SECONDS(2)); // Wait for 2 seconds
-  wait_for(8); // Wait for 8 seconds
+  wait_for(SECONDS(2)); // Wait for 2 seconds
+  // wait_for(8); // Wait for 8 seconds
 
   clear_origin();
 

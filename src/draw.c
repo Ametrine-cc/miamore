@@ -33,6 +33,7 @@ void draw_text(const char *text) {
 }
 
 static const char *THEME_STR[][6] = {
+    //             0    1    2    3    4    5
     [single_l] = {"┌", "┐", "└", "┘", "─", "│"},
     [double_l] = {"╔", "╗", "╚", "╝", "═", "║"},
     [thick_l] = {"┏", "┓", "┗", "┛", "━", "┃"},
