@@ -116,49 +116,58 @@ void draw_rect(int width, int height, int theme) {
     return;
   }
 
-  // draw origin corner
+  // Top-Left Corner
+  manage_cursor(move, ((position_t){origin_x, origin_y}));
   buf_append(fb, st[0], strlen(st[0]));
   render_frame(fb);
 
-  unsigned int cur_pos_x = origin_x + 1;
-  unsigned int cur_pos_y = origin_y;
-
-  manage_cursor(move, ((position_t){cur_pos_x, cur_pos_y}));
+  // Top Bar
+  manage_cursor(move, ((position_t){origin_x + 1, origin_y}));
   for (int x = 2; x < width; x++) {
     buf_append(fb, st[4], strlen(st[4]));
   }
   render_frame(fb);
 
+  // Top-Right Corner
+  manage_cursor(move, ((position_t){origin_x + width - 1, origin_y}));
   buf_append(fb, st[1], strlen(st[1]));
   render_frame(fb);
 
-  unsigned int cur_pos_side_r = origin_x + width - 1;
+  // Right Wall
+  for (int y = 1; y < height - 1; y++) {
+    manage_cursor(move, ((position_t){origin_x + width - 1, origin_y + y}));
+    buf_append(fb, st[5], strlen(st[5]));
+    render_frame(fb);
+  }
 
-  manage_cursor(move, ((position_t){cur_pos_side_r, cur_pos_y + 1}));
-  buf_append(fb, st[5], strlen(st[5]));
+  // Left Wall
+  for (int y = 1; y < height - 1; y++) {
+    manage_cursor(move, ((position_t){origin_x, origin_y + y}));
+    buf_append(fb, st[5], strlen(st[5]));
+    render_frame(fb);
+  }
+
+  // Bottom-Left Corner
+  manage_cursor(move, ((position_t){origin_x, origin_y + height - 1}));
+  buf_append(fb, st[2], strlen(st[2]));
   render_frame(fb);
 
-  // for (int y = 2; y < height; y++) {
+  // Bottom Bar
+  manage_cursor(move, ((position_t){origin_x + 1, origin_y + height - 1}));
+  for (int x = 2; x < width; x++) {
+    buf_append(fb, st[4], strlen(st[4]));
+  }
+  render_frame(fb);
 
-  //   // Left wall
-  //   manage_cursor(move, ((position_t){1, y}));
-  //   fflush(stdout);
-  //   buf_append(fb, "|", 1);
-  //   render_frame(fb);
+  // Bottom-Right Corner
+  manage_cursor(move,
+                ((position_t){origin_x + width - 1, origin_y + height - 1}));
+  buf_append(fb, st[3], strlen(st[3]));
+  render_frame(fb);
 
-  //   // Right wall
-  //   manage_cursor(move, ((position_t){width, y}));
-  //   fflush(stdout);
-  //   buf_append(fb, "|", 1);
-  //   render_frame(fb);
-  // }
+  manage_cursor(move, ((position_t){origin_x, origin_y + height + 1}));
 
-  // // Bottom border
-  // manage_cursor(move, ((position_t){1, height}));
-  // fflush(stdout);
-  // for (int x = 0; x < width; x++)
-  //   buf_append(fb, "-", 1);
-  // render_frame(fb);
+  fflush(stdout);
 }
 
 void draw_shape_opts(shape_t shape, ShapeOptions opts) {

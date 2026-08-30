@@ -82,11 +82,11 @@ int main(void) {
   manage_cursor(move, ((position_t){5, 10}));
 
   // position becomes the shape origin (cursor position becomes top left corner)
-  draw_shape(rect, .theme = single_l, ((dimensions_t){6, 6}));
+  draw_shape(rect, .theme = single_l, ((dimensions_t){26, 12}));
 
   // wait_for(MS(250)); // Wait 250 milliseconds
-  wait_for(SECONDS(2)); // Wait for 2 seconds
-  // wait_for(8); // Wait for 8 seconds
+  // wait_for(SECONDS(2)); // Wait for 2 seconds
+  wait_for(8); // Wait for 8 seconds
 
   clear_origin();
 
