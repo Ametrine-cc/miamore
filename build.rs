@@ -27,8 +27,9 @@ fn main() {
     let current_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
 
     let status = Command::new("make")
+        .arg("static")
         .status()
-        .expect("Failed to execute `make`. Ensure make and GCC are installed.");
+        .expect("Failed to execute `make`.");
 
     if !status.success() {
         panic!("`make` failed to build the native miamore C library.");

@@ -10,10 +10,9 @@ readme = "README.md"
 
 include = [
     "src/**/*",
-    "build/*",
     "Makefile",
     "build.rs",
-    "bindings/rust/*",
+    "bindings/**/*",
     "README.md",
     "LICENSE",
     "COPYING.LESSER"
