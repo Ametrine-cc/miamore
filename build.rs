@@ -24,23 +24,24 @@ use std::path::PathBuf;
 use std::process::Command;
 
 fn main() {
-    let current_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
+    let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     let status = Command::new("make")
-        .arg("static")
+        .arg("-B")
+        .env("BUILD_DIR", &out_dir)
+        .env("OBJ_DIR", out_dir.join("obj"))
         .status()
         .expect("Failed to execute `make`.");
 
     if !status.success() {
-        panic!("`make` failed to build the native miamore C library.");
+        panic!("`make` failed to compile the native miamore library.");
     }
 
-    println!("cargo:rustc-link-search=native={}/build", current_dir);
+    println!("cargo:rustc-link-search=native={}", out_dir.display());
     println!("cargo:rustc-link-lib=static=miamore");
 
     println!("cargo:rerun-if-changed=Makefile");
     println!("cargo:rerun-if-changed=src/include/miamore.h");
-    println!("cargo:rerun-if-changed=build/libmiamore.a");
 
     let bindings = bindgen::Builder::default()
         .header("src/include/miamore.h")
@@ -54,6 +55,5 @@ fn main() {
     let bindings_str = bindings.to_string();
     let patched_bindings = bindings_str.replace("extern \"C\" {", "unsafe extern \"C\" {");
 
-    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
-    fs::write(out_path.join("bindings.rs"), patched_bindings).expect("Couldn't write bindings!");
+    fs::write(out_dir.join("bindings.rs"), patched_bindings).expect("Couldn't write bindings!");
 }
