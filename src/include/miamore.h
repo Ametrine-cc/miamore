@@ -119,4 +119,24 @@ typedef struct {
 } BorderOptions;
 void draw_border_opts(BorderOptions opts);
 #define draw_border(...) draw_border_opts((BorderOptions){__VA_ARGS__})
+
+// color functions
+typedef enum colors_t {
+  red,
+  orange,
+  yellow,
+  green,
+  blue,
+  pink,
+  purple,
+  cyan,
+  magenta,
+  black,
+  white,
+} colors_t;
+
+char *give_color(colors_t color);
+void set_fg(colors_t);
+void set_bg(colors_t);
+
 #endif // MIAMORE_H

@@ -73,4 +73,22 @@ void(request_cursor)(cursor_t cursor, position_t position);
   GET_REQUEST_CURSOR_MACRO(__VA_ARGS__, REQUEST_CURSOR_2,                      \
                            REQUEST_CURSOR_1)(__VA_ARGS__)
 
+// color functions
+bool supports_truecolor(void);
+
+typedef struct colors_str {
+  char *red_str;
+  char *orange_str;
+  char *yellow_str;
+  char *green_str;
+  char *blue_str;
+  char *pink_str;
+  char *purple_str;
+  char *cyan_str;
+  char *magenta_str;
+  char *black_str;
+  char *white_str;
+  char *reset_str;
+} colors_str;
+
 #endif // GLOBAL_H

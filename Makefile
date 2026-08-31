@@ -47,17 +47,18 @@ INSTALL_DATA    := $(INSTALL) -m 644
 RS_TARGET     := target/
 LIB_SRC       := src
 OBJ_DIR       := obj
-LIB_SRC_FILES := $(LIB_SRC)/miamore.c $(LIB_SRC)/misc.c $(LIB_SRC)/request.c $(LIB_SRC)/framebuffer.c $(LIB_SRC)/draw.c
+LIB_SRC_FILES := $(LIB_SRC)/miamore.c $(LIB_SRC)/misc.c $(LIB_SRC)/request.c $(LIB_SRC)/framebuffer.c $(LIB_SRC)/draw.c $(LIB_SRC)/color.c
 
 # Maps src/foo.c to obj/foo.o
 LIB_OBJS      := $(patsubst $(LIB_SRC)/%.c,$(OBJ_DIR)/%.o,$(LIB_SRC_FILES))
 LIB_HEADER    := $(LIB_SRC)/miamore.h
 
 # --- Output Artifacts ---
-STATIC_OUT    := libmiamore.a
-REAL_SO_OUT   := libmiamore.so.$(VERSION)
-SO_NAME       := libmiamore.so.$(SOVERSION)
-DYNAMIC_OUT   := libmiamore.so
+BUILD_DIR     := build
+STATIC_OUT    := $(BUILD_DIR)/libmiamore.a
+REAL_SO_OUT   := $(BUILD_DIR)/libmiamore.so.$(VERSION)
+SO_NAME       := $(BUILD_DIR)/libmiamore.so.$(SOVERSION)
+DYNAMIC_OUT   := $(BUILD_DIR)/libmiamore.so
 
 # --- Example Layout ---
 EXAMPLE_SRC    := examples
@@ -77,7 +78,7 @@ rust-build: build/libmiamore.a
 
 # --- Ensure obj/ Directory Exists ---
 $(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR) $(BUILD_DIR)
 
 # --- Pattern Rule: Compiles src/%.c into obj/%.o ---
 $(OBJ_DIR)/%.o: $(LIB_SRC)/%.c | $(OBJ_DIR)
@@ -132,4 +133,4 @@ uninstall:
 
 # --- Clean ---
 clean:
-	rm -rf $(OBJ_DIR) $(BUILD_SRC) $(RS_TARGET)
+	rm -rf $(OBJ_DIR) $(BUILD_DIR) $(RS_TARGET)

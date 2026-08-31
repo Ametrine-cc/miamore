@@ -28,7 +28,6 @@
 #include <unistd.h>
 
 void clear(void) { request_screen(clear_t); }
-
 void clear_origin(void) { request_screen(clear_origin_t); }
 
 void wait_for(seconds_t seconds) {
@@ -121,4 +120,25 @@ char *input_ex(void) {
   tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 
   return input_buf;
+}
+
+bool supports_truecolor(void) {
+  const char *colorterm = getenv("COLORTERM");
+  if (colorterm != NULL) {
+    if (strcmp(colorterm, "truecolor") == 0 ||
+        strcmp(colorterm, "24bit") == 0) {
+      return true;
+    }
+  }
+
+  const char *term = getenv("TERM");
+  if (term != NULL) {
+    if (strstr(term, "direct") != NULL || strstr(term, "truecolor") != NULL ||
+        strstr(term, "24bit") != NULL || strcmp(term, "kitty") == 0 ||
+        strcmp(term, "alacritty") == 0 || strcmp(term, "wezterm") == 0) {
+      return true;
+    }
+  }
+
+  return false;
 }
