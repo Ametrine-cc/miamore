@@ -1,5 +1,5 @@
 [package]
-name = "miamore_rs"
+name = "miamore-rs"
 version = "0.1.0"
 authors = [
     "Noticxs <noticxs@ametrine.cc>",
