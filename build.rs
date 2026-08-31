@@ -26,19 +26,18 @@ use std::process::{Command, Stdio};
 fn main() {
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
-    let status = Command::new("make")
-        .arg("-B")
-        .stdin(Stdio::null())
-        .env_remove("MAKEFLAGS")
-        .env_remove("MFLAGS")
-        .env("BUILD_DIR", &out_dir)
-        .env("OBJ_DIR", out_dir.join("obj"))
-        .status()
-        .expect("Failed to execute `make`.");
+    cc::Build::new()
+        .file("src/color.c")
+        .file("src/draw.c")
+        .file("src/framebuffer.c")
+        .file("src/miamore.c")
+        .file("src/misc.c")
+        .file("src/request.c")
+        .include("src/include")
+        .out_dir(&out_dir)
+        .compile("miamore");
 
-    if !status.success() {
-        panic!("`make` failed to compile the native miamore library.");
-    }
+    println!("cargo:rerun-if-changed=src/");
 
     println!("cargo:rustc-link-search=native={}", out_dir.display());
     println!("cargo:rustc-link-lib=static=miamore");
