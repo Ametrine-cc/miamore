@@ -8,6 +8,17 @@ license = "LGPL-3.0"
 repository = "https://github.com/Ametrine-cc/miamore"
 readme = "README.md"
 
+include = [
+    "src/**/*",
+    "build/*",
+    "Makefile",
+    "build.rs",
+    "bindings/rust/*",
+    "README.md",
+    "LICENSE",
+    "COPYING.LESSER"
+]
+
 [lib]
 path = "bindings/rust/miamore.rs"
 
