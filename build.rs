@@ -21,13 +21,16 @@
 use std::env;
 use std::fs;
 use std::path::PathBuf;
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 fn main() {
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     let status = Command::new("make")
         .arg("-B")
+        .stdin(Stdio::null())
+        .env_remove("MAKEFLAGS")
+        .env_remove("MFLAGS")
         .env("BUILD_DIR", &out_dir)
         .env("OBJ_DIR", out_dir.join("obj"))
         .status()
