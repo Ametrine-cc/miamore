@@ -33,6 +33,8 @@ int unsigned window_height;
 int unsigned cursor_x;
 int unsigned cursor_y;
 
+bool enable_truecolor;
+
 void fb_init(void) {
   if (!fb) {
     fb = malloc(sizeof(FrameBuffer));

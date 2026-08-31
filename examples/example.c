@@ -63,6 +63,7 @@ int main(void) {
   // example
   //
   // draw_border(.text = "wsg");
+  set_fg(red);
   draw_border(.text = "this is an example!", .theme = thick_l);
 
   manage_cursor(move, ((position_t){5, 5}));

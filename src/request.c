@@ -73,6 +73,8 @@ void request_screen(screen_options screen) {
 
     buf_append(fb, temp_buf, strlen(temp_buf));
     render_frame(fb);
+
+    break;
   }
 }
 

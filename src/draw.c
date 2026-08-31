@@ -172,6 +172,7 @@ void draw_rect(int width, int height, int theme) {
 
 void draw_shape_opts(shape_t shape, ShapeOptions opts) {
   check_init();
+  manage_cursor(move, ((position_t){opts.position.x, opts.position.y}));
   fflush(stdout);
 
   switch (shape) {
