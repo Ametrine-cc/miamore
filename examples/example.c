@@ -1,56 +1,94 @@
-// miamore: The C tui library
-// Copyright (C) 2026  Ametrine Foundation
+/*
+ * miamore - A terminal user interface library
+ * Copyright (C) 2026 Ametrine Foundation
+ *
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Affero General Public License for more details.
-
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.   If not, see <https://www.gnu.org/licenses/>
-
-#include "../src/miamore.h"
+#include "../src/include/miamore.h"
+#include <stdbool.h>
 #include <stdio.h>
 
-void test(void) {
-  clear_window();   // clears terminal window (does NOT move cursor position)
-  restore_window(); // moves cursor to position 1,1 (top left corner) and
-                    // restores default text style
-                    // manage_cursor(move, (position){1, 1})
-                    // does the same thing without restoring text style
+void input_example() {
+  // scanf("", str); alternative to using scanf() fron stdio.h
 
-  manage_cursor(move, ((position){.x = 4, .y = 1}));
-  draw_text("dollars billllls\n");
+  char buf[512];
 
-  // draw_shape(circle, ((dimensions){2, 2}));
-  // or with designated initializers
-  // draw_shape(rect, (dimensions){.width = 2, .height = 2});
+  // short input, single char
+  int ch = input();
+  snprintf(buf, sizeof(buf), "short-mode said -> %c", ch);
+  draw_text(buf);
 
-  manage_cursor(hide);
-  wait_for(4); // waits for 4 seconds
+  // long input multi_char -> till enter_key pressed
+  manage_cursor(move, ((position_t){5, 6}));
 
-  clear_window(); // clears window and moves back 1,1
-  draw_text("hiii welcome!!!\n");
+  char *ch_ex = input_ex();
+  manage_cursor(move, ((position_t){5, 7}));
+  snprintf(buf, sizeof(buf), "long-mode said -> %s", ch_ex);
+  draw_text(buf);
 }
 
-int main() {
-  init_miamore();
-  clear_window();
+int main(void) {
+  // can change functionality of init with passing the argmuments .should_clear
+  // = false or .enable_mouse = true by defualt the values of these arguments
+  // are flipped relative to the ones shouwn in this snippet of documentation.
+  // init_miamore();
+  // you are required to use the init_miamore() function or most of the miamore
+  // functions will fail and return errors (return error then quit at that spot)
+  //
+  //  init_miamore();
+  init_miamore(.should_clear = true, .disable_mouse = true);
+  manage_keys(disable);
 
-  manage_cursor(hide);
+  // the draw_border command can take 2 arguments, text="" and style=enum. text
+  // can be set to any const char array for example '.text="hiiii my amazing
+  // program"' and that will be outputed at the top of the border.
+  //
+  // style is an enum that has 4 distict varients for the border: normal(single
+  // line), bold(thicker line), rounded(single line with rounded edges) and
+  // block(blocky line). which can be called like this '.style=normal' for
+  // example
+  //
+  // draw_border(.text = "wsg");
+  draw_border(.text = "this is an example!", .theme = thick_l);
 
-  manage_cursor(move, ((position){2, 2}));
-  draw_text("Hi");
+  manage_cursor(move, ((position_t){5, 5}));
+  manage_cursor(show);
 
-  draw_border();
+  // draw hello world to the screen "\n" is only needed if you want a new line
+  draw_text("Hello,");
+  draw_text(" World!\n");
 
-  wait_for(4); // waits for 4 seconds
-  clear_window();
+  // miamore has 2 clear functions, clear() -> which clears screen and doesnt
+  // move the cursor and clear_origin() which does the same but moves the cursor
+  // back to (1, 1)
+  //
+  // clear();
+  // clear_origin();
+
+  manage_cursor(move, ((position_t){5, 10}));
+
+  // position becomes the shape origin (cursor position becomes top left corner)
+  draw_shape(rect, .theme = single_l, ((dimensions_t){26, 12}));
+
+  // wait_for(MS(250)); // Wait 250 milliseconds
+  // wait_for(SECONDS(2)); // Wait for 2 seconds
+  wait_for(8); // Wait for 8 seconds
+
+  clear_origin();
 
   return 0;
 }

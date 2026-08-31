@@ -1,40 +1,39 @@
-// miamore: The C tui library
-// Copyright (C) 2026  Ametrine Foundation
+/*
+ * miamore - A terminal user interface library
+ * Copyright (C) 2026 Ametrine Foundation
+ *
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Affero General Public License for more details.
-
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.   If not, see <https://www.gnu.org/licenses/>
-
-#include "miamore.h"
-// #include <math.h>
+#include "include/miamore.h"
+#include "global.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/ioctl.h>
+#include <termios.h>
 #include <unistd.h>
 
-// | 24-bit Foreground | \033[38;2;<r>;<g>;<b>m  | Truecolor RGB support |
-// | ----------------- | ----------------------- | ----------------------|
-// | 24-bit Background | \033[48;2;<r>;<g>;<b>m  | Truecolor RGB support |
-
-// globals
 FrameBuffer *fb = NULL;
-int window_width;
-int window_height;
+int unsigned window_width;
+int unsigned window_height;
 
-typedef void (*cursor_action)(int, int);
-typedef void (*cursor_visibility)(const char *cursor);
+int unsigned cursor_x;
+int unsigned cursor_y;
 
-void check_fb(void) {
+void fb_init(void) {
   if (!fb) {
     fb = malloc(sizeof(FrameBuffer));
     if (!fb)
@@ -53,66 +52,87 @@ void check_fb(void) {
   fb->len = 0;
 }
 
-// window_size
-void calc_window_size(void) {
-  struct winsize w;
+void init_miamore_opts(const MiamoreOptions opts) {
+  init = true;
+  calc_window_size();
+  fb_init();
 
-  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == 0) {
-    window_height = w.ws_row;
-    window_width = w.ws_col;
-
-    // printf("Width in pixels:  %d\n", w.ws_xpixel);
-    // printf("Height in pixels: %d\n", w.ws_ypixel);
-  } else {
-    perror("ioctl TIOCGWINSZ failed");
+  if (opts.should_clear) {
+    request_screen(clear_origin_t);
+  }
+  if (opts.disable_mouse) {
+    request_screen(disable_mouse);
   }
 }
 
-// init function
-void init_miamore(void) {
-  calc_window_size();
-  check_fb();
-
-  // printf("%dx%d", window_width, window_height);
-  // manage_cursor(hide);
+void check_init(void) {
+  if (!init) {
+    snprintf(error_buf, sizeof(error_buf), "miamore not initialised");
+    write_error(error_buf);
+  } else {
+    return;
+    ;
+  }
 }
 
-// functions
-void move_cursor(int x, int y) {
-  char seq[32];
-  int len = snprintf(seq, sizeof(seq), "\033[%d;%dH", y + 1, x + 1);
-  buf_append(fb, seq, len);
+void write_error(char *error) {
+  printf("[error] %s\n", error);
+  exit(1);
 }
-
-void show_hide(const char *set) {
-  snprintf(temp_buf, sizeof(temp_buf), "%s", set);
-
-  buf_append(fb, temp_buf, sizeof(temp_buf));
-  render_frame(fb);
-  fflush(stdout);
-}
-
-static cursor_visibility manage_cursor_visibility[] = {
-    [hide] = show_hide,
-    [visible] = show_hide,
-};
-static cursor_action manage_cursor_action[] = {
-    [move] = move_cursor,
-};
 
 // miamore functions
-void(manage_cursor)(cursor cursor, position position) {
+void(manage_cursor)(cursor_t cursor, position_t position) {
   switch (cursor) {
   case hide:
-    manage_cursor_visibility[cursor](aec->hide_cursor);
+    request_cursor(hide);
     break;
-  case visible:
-    manage_cursor_visibility[cursor](aec->show_cursor);
+  case show:
+    request_cursor(show);
     break;
   case move:
-    manage_cursor_action[cursor](position.x, position.y);
+    request_cursor(move, ((position_t){position.x, position.y}));
     break;
   }
+}
 
+__attribute__((destructor)) static void lib_auto_cleanup(void) {
+  tcflush(STDIN_FILENO, TCIFLUSH);
+
+  struct termios t;
+  if (tcgetattr(STDIN_FILENO, &t) == 0) {
+    t.c_lflag |= (ECHO | ICANON);
+    tcsetattr(STDIN_FILENO, TCSANOW, &t);
+  }
+}
+
+void disable_keyboard_echo(void) {
+  struct termios t;
+  tcgetattr(STDIN_FILENO, &t);
+  t.c_lflag &= ~ECHO;
+  tcsetattr(STDIN_FILENO, TCSANOW, &t);
+}
+
+void restore_keyboard_echo(void) {
+  tcflush(STDIN_FILENO, TCIFLUSH);
+
+  struct termios t;
+  tcgetattr(STDIN_FILENO, &t);
+  t.c_lflag |= ECHO;
+  tcsetattr(STDIN_FILENO, TCSANOW, &t);
+}
+
+void test(char *string) { printf("%s\n", string); }
+
+void manage_keys(keys_t keyboard) {
+  check_init();
   fflush(stdout);
+
+  switch (keyboard) {
+  case enable:
+    restore_keyboard_echo();
+    break;
+  case disable:
+    disable_keyboard_echo();
+    break;
+  }
 }

@@ -1,0 +1,11 @@
+[package]
+name = "miamore_rs"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "bindings/rust/miamore.rs"
+
+[build-dependencies]
+bindgen = "0.70.1"
+cc = "1.0"

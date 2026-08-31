@@ -1,7 +1,8 @@
-/libmiamore.a
-/src/miamore.o
-/src/framebuffer.o
-/src/misc.o
-/src/draw.o
+/build/
+/obj/
 /example
 /e.c
+/m.c
+/target
+/src/.old
+/Cargo.lock
