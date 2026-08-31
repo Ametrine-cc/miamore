@@ -21,7 +21,6 @@
 use std::env;
 use std::fs;
 use std::path::PathBuf;
-use std::process::{Command, Stdio};
 
 fn main() {
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
