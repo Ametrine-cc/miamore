@@ -1,7 +1,12 @@
 [package]
 name = "miamore_rs"
 version = "0.1.0"
+authors = ["Noticxs noticxs@ametrine.cc"]
 edition = "2024"
+description = "A lightweight C TUI Library. C library and this is the official Rust bindings for it"
+license = "LGPL-3.0"
+repository = "https://github.com/Ametrine-cc/miamore"
+readme = "README.md"
 
 [lib]
 path = "bindings/rust/miamore.rs"
