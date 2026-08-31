@@ -1,9 +1,7 @@
-/libmiamore.a
-/libmiamore.so
-/libmiamore.so.1.0.0
-/libmiamore.so.1
+/build/
 /obj/
 /example
 /e.c
 /m.c
+/target
 /src/.old

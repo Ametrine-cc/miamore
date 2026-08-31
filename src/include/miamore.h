@@ -27,6 +27,8 @@
 #include <stdbool.h>
 #endif
 
+void test(char *string);
+
 // global miamore vars
 extern unsigned int window_width;
 extern unsigned int window_height;

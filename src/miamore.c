@@ -121,6 +121,8 @@ void restore_keyboard_echo(void) {
   tcsetattr(STDIN_FILENO, TCSANOW, &t);
 }
 
+void test(char *string) { printf("%s\n", string); }
+
 void manage_keys(keys_t keyboard) {
   check_init();
   fflush(stdout);

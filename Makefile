@@ -24,6 +24,9 @@ AR        := ar
 ARFLAGS   := rcs
 LDFLAGS   := -lm
 
+GO        := go
+CARGO     := cargo
+
 # --- Versioning ---
 VERSION   := 1.0.0
 SOVERSION := 1
@@ -41,6 +44,7 @@ INSTALL_PROGRAM := $(INSTALL) -m 755
 INSTALL_DATA    := $(INSTALL) -m 644
 
 # --- Source & Object Layout ---
+RS_TARGET     := target/
 LIB_SRC       := src
 OBJ_DIR       := obj
 LIB_SRC_FILES := $(LIB_SRC)/miamore.c $(LIB_SRC)/misc.c $(LIB_SRC)/request.c $(LIB_SRC)/framebuffer.c $(LIB_SRC)/draw.c
@@ -61,9 +65,15 @@ EXAMPLE_FILE   := $(EXAMPLE_SRC)/example.c
 EXAMPLE_TARGET := example
 
 # --- Targets ---
-.PHONY: all dynamic install uninstall example clean
+.PHONY: all dynamic install uninstall example rust-test rust-build clean
 
 all: $(STATIC_OUT)
+
+rust-test: build/libmiamore.a
+	cargo test -- --nocapture
+
+rust-build: build/libmiamore.a
+	cargo build --release
 
 # --- Ensure obj/ Directory Exists ---
 $(OBJ_DIR):
@@ -122,5 +132,4 @@ uninstall:
 
 # --- Clean ---
 clean:
-	rm -rf $(OBJ_DIR)
-	rm -f $(STATIC_OUT) $(REAL_SO_OUT) $(SO_NAME) $(DYNAMIC_OUT) $(EXAMPLE_TARGET)
+	rm -rf $(OBJ_DIR) $(BUILD_SRC) $(RS_TARGET)
