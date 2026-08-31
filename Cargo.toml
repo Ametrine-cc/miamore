@@ -2,6 +2,10 @@
 name = "miamore_rs"
 version = "0.1.0"
 authors = ["Noticxs noticxs@ametrine.cc"]
+authors = [
+    "Noticxs <noticxs@ametrine.cc>",
+    "Ametrine Foundation <business@ametrine.cc>",
+]
 edition = "2024"
 description = "A lightweight C TUI Library. C library and this is the official Rust bindings for it"
 license = "LGPL-3.0"
