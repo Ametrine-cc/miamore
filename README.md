@@ -4,65 +4,55 @@ Making TUI applications simply
 `miamore` is a library for `C` allowing you to make TUI apps simply.
 
 `miamore` exists as a ncurses replacement(not drop in, syntax is very different) allowing developers to make TUI applications much easier with more features.
-
 miamore adds native 24-bit colors and the support to make animations directly in the library without having to add extra boilerplate in your main codebase.
-
 miamore also streamlines some processes about normal nurses such as the ability to create shapes with our 'draw()' function.
+More information can be found on the [Ametrine Foundation Documentation website](https://docs.ametrine.cc/libraries/miamore)
 
 ## Installing miamore:
 
-### System
-*   `Linux`
+### Dependencies
+
+*   `Linux` (other `UNIX-Like` or `UNIX` system have not been tested).
 *   `clang` (to compile the code).
 *   `make` (automate build and install process).
 
 Install `miamore` from source:
 
+### Cloning miamore
 ```bash
 # All distrobutions
 git clone https://github.com/Ametrine-cc/miamore.git
 cd miamore
 
-# --- Building and installing miamore ---
-sudo make clean # Remove any miamore files that may already exist
+```
 
-make # run the make command to build everything initially then install
+### Building miamore
+```bash
+# building the .a lib
+make static
+
+# building the .so library
+make dynamic
+
+# building rust bindings
+# needs either static or dynamic library to be built before hand
+make rust-build
+
+# building both .a, .so and the rust bindings
+make all
+```
+
+### Installing miamore
+```bash
+# To use these commands use superuser privilages (sudo or doas)
+# To install the library on your system
 sudo make install
 
-# --- To uninstall run the uninstall command instead ---
+# To uninstall run the uninstall command instead
 sudo make uninstall
 ```
 
-## Using miamore:
-
-When using `miamore`, the library must be linked during compilation. You can do this in two ways:
-
-In `clang` or `gcc`:
-
-```bash
-# --- Include the libmiamore.a for compilation ---
-clang src/PROJECT_NAME -lmiamore -o PROJECT_NAME
-```
-
-The example shows `clang` but can be swapped out interchangeably with `gcc`.
-
-In `cmake`:
-
-```bash
-# --- Dependencies ---
-find_library(MIAMORE_PATH NAMES miamore)
-
-# --- Check if it was actually found ---
-if(NOT MIAMORE_PATH)
-  message(FATAL_ERROR "miamore not found! Did you install with 'sudo/doas make install' to install the library?")
-endif()
-
-target_link_libraries(PROJECT_NAME PRIVATE ${MIAMORE_PATH})
-```
-
-Replace `"PROJECT_NAME"` with your project name. All code presented is drag-and-droppable.
-
-More information can be found on the [Ametrine Foundation Documentation website](https://docs.ametrine.cc/libraries/miamore)
+Examples can be found in `examples/example.c` and by running `make rust-test` after compilation
 
 ## How to contribute?
 
