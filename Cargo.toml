@@ -1,6 +1,6 @@
 [package]
 name = "miamore"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
     "Noticxs <noticxs@ametrine.cc>",
     "Ametrine Foundation <business@ametrine.cc>"
