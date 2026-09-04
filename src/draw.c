@@ -24,7 +24,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void draw_error(const char *function, const char *text, unsigned error_code) {
+void draw_text_error(const char *function, const char *text,
+                     unsigned error_code) {
   check_init();
   fflush(stdout);
 

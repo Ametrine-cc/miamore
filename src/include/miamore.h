@@ -108,8 +108,8 @@ void(manage_cursor)(cursor_t cursor, position_t position);
 
 // draw functions
 void draw_text(const char *text);
-void draw_error(const char *function, const char *text,
-                unsigned int error_code);
+void draw_text_error(const char *function, const char *text,
+                     unsigned int error_code);
 
 typedef struct {
   theme_t theme;
