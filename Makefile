@@ -52,7 +52,8 @@ LIB_SRC_FILES := $(LIB_SRC)/miamore.c \
                  $(LIB_SRC)/request.c \
                  $(LIB_SRC)/framebuffer.c \
                  $(LIB_SRC)/draw.c \
-                 $(LIB_SRC)/color.c
+                 $(LIB_SRC)/color.c \
+                 $(LIB_SRC)/animate.c
 
 # Maps src/foo.c to obj/foo.o
 LIB_OBJS      := $(patsubst $(LIB_SRC)/%.c,$(OBJ_DIR)/%.o,$(LIB_SRC_FILES))

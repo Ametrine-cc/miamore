@@ -29,6 +29,10 @@
 
 void test(char *string);
 
+// Version MAJOR.MINOR.PATCH
+
+// 0.1.1
+
 // global miamore vars
 extern unsigned int window_width;
 extern unsigned int window_height;
@@ -138,5 +142,24 @@ typedef enum colors_t {
 char *give_color(colors_t color);
 void set_fg(colors_t);
 void set_bg(colors_t);
+
+// V0.2.1
+
+typedef enum {
+  PRESET_NONE = 0,
+  PRESET_CAT,
+} animation_preset_t;
+
+typedef struct {
+  char **frames;
+  animation_preset_t preset;
+  theme_t theme;
+  dimensions_t dimensions;
+  position_t position;
+} AnimationOptions;
+
+char **animate_impl(AnimationOptions opts);
+
+#define animate(...) animate_impl((AnimationOptions){__VA_ARGS__})
 
 #endif // MIAMORE_H
