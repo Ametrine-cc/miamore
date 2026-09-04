@@ -70,7 +70,7 @@ If you find a bug, please help us by reporting it on the [GitHub Issues page](ht
 
 *   Lead Developer - [Noticxs](https://github.com/Noticxs)
 
-### Contributers:
+### Contributers
 Thank you to all the people who have contributed to the miamore project, no matter how big the update or change we appreciate everyone's help.
 
 Here is a list of our contributers to v0.2.1:
