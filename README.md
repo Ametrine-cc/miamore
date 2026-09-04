@@ -75,7 +75,7 @@ If you find a bug, please help us by reporting it on the [GitHub Issues page](ht
 ### Contributers:
 Thank you to all the people who have contributed to the miamore project, no matter how big the update or change we appreciate everyone's help.
 
-### Our Contributers:
+Here is a list of our contributers to v0.2.1:
 *   Noticxs
 *   nitinbhat972
 
@@ -84,4 +84,6 @@ Thank you to all the people who have contributed to the miamore project, no matt
 This project is licensed under the GNU Lesser General Public License v3.0 or later (LGPL-3.0-or-later) - see `LICENSE` and `LICENSE.LESSER` for details.
 
 ### Using this library in commercial/closed-source software
-You can use `libyourname` in closed-source projects via dynamic linking (`.so`/`.dll`). If you modify `libyourname` directly, those modifications must be released under the LGPL.
+You can use miamore in closed-source projects via dynamic linking (`.so`/`.dll`). If you modify miamore directly, those modifications must be released under the LGPL.
+
+For any further questions on licensing please contact on our business [email](mailto:email@domain.com?subject=Your%20Licensing issues)

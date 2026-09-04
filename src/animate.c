@@ -21,6 +21,8 @@
 #include "include/miamore.h"
 #include <stdio.h>
 
+// void animation_opts(AnimationPresets opts, char **frames) {}
+
 char **animate_impl(AnimationOptions opts) {
   char **target_frames = opts.frames;
 
@@ -32,5 +34,3 @@ char **animate_impl(AnimationOptions opts) {
   /* Handle animation rendering / generation logic */
   return target_frames;
 }
-
-// void animation_opts(AnimationPresets opts, char **frames) {}
