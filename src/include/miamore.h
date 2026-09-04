@@ -152,8 +152,6 @@ typedef enum {
   KITTY,
 } animation_preset_t;
 
-typedef unsigned int fps_t;
-
 typedef struct {
   char **frames;
   animation_preset_t preset;
@@ -164,6 +162,7 @@ char **animate_impl(AnimationOptions opts);
 
 #define animate(...) animate_impl((AnimationOptions){__VA_ARGS__})
 
-void animation_render(char **animation, fps_t fps);
+void animation_render(char **animation, unsigned int fps,
+                      unsigned int duration);
 
 #endif // MIAMORE_H
