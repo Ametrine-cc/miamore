@@ -72,9 +72,15 @@ If you find a bug, please help us by reporting it on the [GitHub Issues page](ht
 
 *   Lead Developer - [Noticxs](https://github.com/Noticxs)
 
+### Contributers:
+Thank you to all the people who have contributed to the miamore project, no matter how big the update or change we appreciate everyone's help.
+
+### Our Contributers:
+*   Noticxs
+*   nitinbhat972
+
 ## License
 
-## Licensing
 This project is licensed under the GNU Lesser General Public License v3.0 or later (LGPL-3.0-or-later) - see `LICENSE` and `LICENSE.LESSER` for details.
 
 ### Using this library in commercial/closed-source software
