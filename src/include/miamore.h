@@ -162,4 +162,6 @@ char **animate_impl(AnimationOptions opts);
 
 #define animate(...) animate_impl((AnimationOptions){__VA_ARGS__})
 
+void animation_render(char **animation);
+
 #endif // MIAMORE_H

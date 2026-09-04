@@ -94,14 +94,11 @@ int main(void) {
 
   // Passing a preset via designated initializer
   char **cat_animation = animate(.preset = PRESET_CAT);
+  animation_render(cat_animation);
 
   // Passing raw char** frames directly (positional argument for field 1)
-  // char **my_frames_array = {};
+  // char *my_frames_array[] = {};
   // char **custom_animation = animate(my_frames_array);
-
-  // Mixing options freely
-  // char **styled_animation =
-  // animate(.frames = my_frames_array, .theme = single_l);
 
   wait_for(4); // Wait for 4 seconds
   clear_origin();

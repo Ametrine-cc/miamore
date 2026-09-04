@@ -21,16 +21,34 @@
 #include "include/miamore.h"
 #include <stdio.h>
 
-// void animation_opts(AnimationPresets opts, char **frames) {}
+static char *cat_frames[] = {
+    /* Frame 1: Neutral */
+    " /\\_/\\ \n"
+    "( o.o )\n"
+    " > ^ < ",
+
+    /* Frame 2: Blink */
+    " /\\_/\\ \n"
+    "( -.- )\n"
+    " > ^ < ",
+
+    /* Frame 3: Wink & Tail */
+    " /\\_/\\ \n"
+    "( ~.o ) ~\n"
+    " > ^ < ",
+
+    NULL};
+
+char **load_preset_frames(animation_preset_t preset) { return cat_frames; }
 
 char **animate_impl(AnimationOptions opts) {
   char **target_frames = opts.frames;
 
   if (!target_frames && opts.preset != PRESET_NONE) {
-    // target_frames = load_preset_frames(opts.preset);
-    printf("%d\n", opts.preset);
+    target_frames = load_preset_frames(opts.preset);
   }
 
-  /* Handle animation rendering / generation logic */
   return target_frames;
 }
+
+void animation_render(char **animation) { printf("%s", animation[1]); }
