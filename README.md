@@ -86,4 +86,4 @@ This project is licensed under the GNU Lesser General Public License v3.0 or lat
 ### Using this library in commercial/closed-source software
 You can use miamore in closed-source projects via dynamic linking (`.so`/`.dll`). If you modify miamore directly, those modifications must be released under the LGPL.
 
-For any further questions on licensing please contact on our business [Email](mailto:business%40ametrine.cc?subject=Licensing%20issues)
+For any further questions on licensing please contact on our business [email](mailto:business%40ametrine.cc?subject=Licensing%20issues).
