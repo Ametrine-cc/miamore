@@ -39,7 +39,14 @@ static char *cat_frames[] = {
 
     NULL};
 
-char **load_preset_frames(animation_preset_t preset) { return cat_frames; }
+char **load_preset_frames(animation_preset_t preset) {
+  switch (preset) {
+  case KITTY:
+    return cat_frames;
+  case PRESET_NONE:
+    return NULL;
+  }
+}
 
 char **animate_impl(AnimationOptions opts) {
   char **target_frames = opts.frames;
@@ -51,4 +58,12 @@ char **animate_impl(AnimationOptions opts) {
   return target_frames;
 }
 
-void animation_render(char **animation) { printf("%s", animation[1]); }
+void animation_render(char **animation, fps_t fps) {
+  if (NULL == animation) {
+    draw_error(__PRETTY_FUNCTION__,
+               "cannot animate this.\nPlease check codebase as returned NULL!",
+               1);
+  }
+  printf("%d\n", fps);
+  printf("%s", animation[1]);
+}

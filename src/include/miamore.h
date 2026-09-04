@@ -108,6 +108,8 @@ void(manage_cursor)(cursor_t cursor, position_t position);
 
 // draw functions
 void draw_text(const char *text);
+void draw_error(const char *function, const char *text,
+                unsigned int error_code);
 
 typedef struct {
   theme_t theme;
@@ -147,14 +149,14 @@ void set_bg(colors_t);
 
 typedef enum {
   PRESET_NONE = 0,
-  PRESET_CAT,
+  KITTY,
 } animation_preset_t;
+
+typedef unsigned int fps_t;
 
 typedef struct {
   char **frames;
   animation_preset_t preset;
-  theme_t theme;
-  dimensions_t dimensions;
   position_t position;
 } AnimationOptions;
 
@@ -162,6 +164,6 @@ char **animate_impl(AnimationOptions opts);
 
 #define animate(...) animate_impl((AnimationOptions){__VA_ARGS__})
 
-void animation_render(char **animation);
+void animation_render(char **animation, fps_t fps);
 
 #endif // MIAMORE_H

@@ -19,10 +19,23 @@
  */
 
 #include "global.h"
-#include "include/miamore.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+void draw_error(const char *function, const char *text, unsigned error_code) {
+  check_init();
+  fflush(stdout);
+
+  snprintf(error_buf, sizeof(error_buf), "[%s] -> %s : error_code %d\n",
+           function, text, error_code);
+
+  buf_append(fb, error_buf, strlen(error_buf));
+  render_frame(fb);
+
+  exit(error_code);
+}
 
 void draw_text(const char *text) {
   check_init();
