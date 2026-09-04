@@ -57,7 +57,6 @@ char **animate_impl(AnimationOptions opts) {
   if (!target_frames && opts.preset != PRESET_NONE) {
     target_frames = load_preset_frames(opts.preset);
   }
-
   return target_frames;
 }
 
@@ -90,6 +89,9 @@ void animation_render(char **animation, unsigned int fps,
 
   long long anim_start_time = get_time_ns();
 
+  int origin_x = cursor_x;
+  int origin_y = cursor_y;
+
   while (1) {
     long long current_time = get_time_ns();
     long long total_elapsed_ns = current_time - anim_start_time;
@@ -101,12 +103,33 @@ void animation_render(char **animation, unsigned int fps,
     int current_frame_index = (total_elapsed_ns / frame_delay_ns) % num_frames;
     char *current_frame = animation[current_frame_index];
 
-    printf("\x1b[H\x1b[J");
-
+    request_screen(clear_t);
     fflush(stdout);
-    buf_append(fb, current_frame, strlen(current_frame));
+
+    const char *start = current_frame;
+    int line_offset = 0;
+
+    while (*start != '\0') {
+      const char *end = strchr(start, '\n');
+      int len = end ? (end - start) : (int)strlen(start);
+
+      char pos_str[32];
+      sprintf(pos_str, "\x1b[%d;%dH", origin_y + line_offset, origin_x);
+      buf_append(fb, pos_str, strlen(pos_str));
+
+      buf_append(fb, start, len);
+
+      if (!end)
+        break;
+
+      start = end + 1;
+      line_offset++;
+    }
+
     render_frame(fb);
     fflush(stdout);
+
+    request_cursor(move, ((position_t){origin_x, origin_y + line_offset + 1}));
 
     long long draw_time = get_time_ns() - current_time;
     long long sleep_ns = frame_delay_ns - draw_time;

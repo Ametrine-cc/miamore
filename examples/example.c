@@ -94,14 +94,16 @@ int main(void) {
 
   // Passing a preset via designated initializer
   char **cat_animation = animate(.preset = KITTY);
+
+  manage_cursor(move, ((position_t){5, 5}));
   animation_render(cat_animation, 4, 2);
 
   // Passing raw char** frames directly (positional argument for field 1)
   // char *my_frames_array[] = {};
   // char **custom_animation = animate(my_frames_array);
 
-  wait_for(4); // Wait for 4 seconds
   clear_origin();
+  wait_for(4); // Wait for 4 seconds
 
   return 0;
 }
