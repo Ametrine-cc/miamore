@@ -65,5 +65,5 @@ void animation_render(char **animation, fps_t fps) {
                1);
   }
   printf("%d\n", fps);
-  printf("%s", animation[1]);
+  printf("%s\n", animation[1]);
 }
