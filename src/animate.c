@@ -47,6 +47,8 @@ char **load_preset_frames(animation_preset_t preset) {
   case PRESET_NONE:
     return NULL;
   }
+
+  return NULL;
 }
 
 extern pthread_mutex_t stdout_mutex;
