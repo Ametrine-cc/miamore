@@ -305,7 +305,7 @@ mod tests {
             },
         );
 
-        set_fg(colors_t::red);
+        set_fg(colors_t::white);
 
         let anim = StartAnimation::new()
             .preset(animation_preset_t::KITTY)
