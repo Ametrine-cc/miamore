@@ -151,6 +151,17 @@ pub fn set_bg(color: colors_t) {
 
 /// added in v0.2.1
 
+/// Draw Error Text
+
+pub fn draw_text_error(function: &str, text: &str, error_code: u32) {
+    let txt = CString::new(text).expect("String contained null bytes");
+    let func = CString::new(function).expect("String contained null bytes");
+
+    unsafe {
+        sys::draw_text_error(func.as_ptr(), txt.as_ptr(), error_code);
+    }
+}
+
 /// Animation Support
 
 pub struct AnimationHandle {
@@ -303,9 +314,17 @@ mod tests {
 
         std::thread::sleep(std::time::Duration::from_secs(2));
 
-        anim.stop();
+        let mut runtime: bool = true;
 
-        wait_for_seconds(8.0);
-        clear_origin();
+        while runtime {
+            let input = input();
+
+            if input == b'q' as i32 {
+                clear_origin();
+                runtime = false;
+            }
+        }
+
+        anim.stop();
     }
 }
