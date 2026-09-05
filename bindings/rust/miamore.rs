@@ -25,15 +25,17 @@
 #![allow(non_snake_case)]
 
 use std::ffi::{CStr, CString};
-use std::os::raw::c_char;
+use std::os::raw::{c_char, c_void};
+use std::ptr;
 
 pub mod sys {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 
 pub use sys::{
-    BorderOptions, MiamoreOptions, ShapeOptions, colors_t, cursor_t, dimensions_t, keys_t,
-    position_t, seconds_t, shape_t, theme_t,
+    AnimationOptions, /* v0.2.1 */
+    BorderOptions, MiamoreOptions, ShapeOptions, animation_preset_t, /* v0.2.1 */
+    colors_t, cursor_t, dimensions_t, keys_t, position_t, seconds_t, shape_t, theme_t,
 };
 
 pub fn window_width() -> u32 {
@@ -147,6 +149,107 @@ pub fn set_bg(color: colors_t) {
     }
 }
 
+/// added in v0.2.1
+
+/// Animation Support
+
+pub struct AnimationHandle {
+    handle: *mut c_void,
+}
+
+unsafe impl Send for AnimationHandle {}
+
+impl AnimationHandle {
+    pub fn stop(self) {
+        if !self.handle.is_null() {
+            unsafe {
+                sys::end_animation(self.handle);
+            }
+        }
+    }
+}
+
+pub struct StartAnimation {
+    frames: Vec<CString>,
+    preset: animation_preset_t,
+    fps: u32,
+}
+
+impl StartAnimation {
+    pub fn new() -> Self {
+        Self {
+            frames: Vec::new(),
+            preset: animation_preset_t::PRESET_NONE,
+            fps: 30,
+        }
+    }
+
+    pub fn preset(mut self, preset: animation_preset_t) -> Self {
+        self.preset = preset;
+        self
+    }
+
+    pub fn fps(mut self, fps: u32) -> Self {
+        self.fps = fps;
+        self
+    }
+
+    pub fn frame(mut self, frame_str: &str) -> Self {
+        if let Ok(c_str) = CString::new(frame_str) {
+            self.frames.push(c_str);
+        }
+        self
+    }
+
+    pub fn start(self) -> AnimationHandle {
+        let mut c_ptrs: Vec<*mut c_char> = self
+            .frames
+            .iter()
+            .map(|s| s.as_ptr() as *mut c_char)
+            .collect();
+
+        if !c_ptrs.is_empty() {
+            c_ptrs.push(ptr::null_mut());
+        }
+
+        let opts = AnimationOptions {
+            frames: if c_ptrs.is_empty() {
+                ptr::null_mut()
+            } else {
+                c_ptrs.as_mut_ptr()
+            },
+            preset: self.preset,
+            fps: self.fps as _,
+        };
+
+        let handle = unsafe { sys::animate_impl(opts) };
+        AnimationHandle { handle }
+    }
+}
+
+pub struct MiamoreStdoutLock;
+
+impl MiamoreStdoutLock {
+    pub fn lock() -> Self {
+        unsafe {
+            libc::pthread_mutex_lock(
+                std::ptr::addr_of_mut!(sys::stdout_mutex) as *mut libc::pthread_mutex_t
+            );
+        }
+        Self
+    }
+}
+
+impl Drop for MiamoreStdoutLock {
+    fn drop(&mut self) {
+        unsafe {
+            libc::pthread_mutex_unlock(
+                std::ptr::addr_of_mut!(sys::stdout_mutex) as *mut libc::pthread_mutex_t
+            );
+        }
+    }
+}
+
 /// Test function
 pub fn test(s: &str) {
     let c_string = CString::new(s).expect("String contained null bytes");
@@ -190,6 +293,17 @@ mod tests {
                 position: position_t { x: 5, y: 12 },
             },
         );
+
+        set_fg(colors_t::red);
+
+        let anim = StartAnimation::new()
+            .preset(animation_preset_t::KITTY)
+            .fps(4)
+            .start();
+
+        std::thread::sleep(std::time::Duration::from_secs(2));
+
+        anim.stop();
 
         wait_for_seconds(8.0);
         clear_origin();

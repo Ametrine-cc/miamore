@@ -27,3 +27,6 @@ path = "bindings/rust/miamore.rs"
 [build-dependencies]
 bindgen = "0.70.1"
 cc = "1.0"
+
+[dependencies]
+libc = "0.2.189"
