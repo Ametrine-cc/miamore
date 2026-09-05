@@ -21,6 +21,7 @@
 #ifndef MIAMORE_H
 #define MIAMORE_H
 
+#include <pthread.h>
 #include <stdint.h>
 
 #ifndef __cplusplus
@@ -155,12 +156,15 @@ typedef enum {
 typedef struct {
   char **frames;
   animation_preset_t preset;
-  position_t position;
   unsigned int fps;
-  unsigned int duration;
 } AnimationOptions;
-void animate_impl(AnimationOptions opts);
 
-#define animate(...) animate_impl((AnimationOptions){__VA_ARGS__})
+void *animate_impl(AnimationOptions opts);
+
+extern pthread_mutex_t stdout_mutex;
+
+#define start_animation(...) animate_impl((AnimationOptions){__VA_ARGS__})
+
+void end_animation(void *handle);
 
 #endif // MIAMORE_H

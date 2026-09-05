@@ -19,8 +19,22 @@
  */
 
 #include "../src/include/miamore.h"
+#include <pthread.h>
 #include <stdbool.h>
 #include <stdio.h>
+// #include <string.h>
+
+static char *kitten_frames[] = {
+    /* Frame 1: Neutral */
+    " /\\_/\\ \033[1B\033[7D( o.o )\033[1B\033[7D > ^ < ",
+
+    /* Frame 2: Blink */
+    " /\\_/\\ \033[1B\033[7D( -.- )\033[1B\033[7D > ^ < ",
+
+    /* Frame 3: Wink & Tail */
+    " /\\_/\\ \033[1B\033[7D( ~.o ) ~\033[1B\033[9D > ^ < ",
+
+    NULL};
 
 void input_example() {
   // scanf("", str); alternative to using scanf() fron stdio.h
@@ -92,16 +106,26 @@ int main(void) {
 
   // Drawing animations in miamore
 
-  // Passing a preset via designated initializer
   manage_cursor(move, ((position_t){5, 5}));
-  animate(.preset = KITTY);
+  // Passing a preset via designated initializer
+  void *animate_kitty = start_animation(.frames = kitten_frames, .fps = 4);
 
-  // Passing raw char** frames directly (positional argument for field 1)
-  // char *my_frames_array[] = {};
-  // char **custom_animation = animate(my_frames_array);
+  while (1) {
+    int user = input();
+
+    if ('q' == user) {
+      end_animation(animate_kitty);
+      break;
+    }
+
+    pthread_mutex_lock(&stdout_mutex);
+    printf("%c", user);
+    fflush(stdout);
+    pthread_mutex_unlock(&stdout_mutex);
+  }
 
   clear_origin();
-  wait_for(4); // Wait for 4 seconds
+  // wait_for(4); // Wait for 4 seconds
 
   return 0;
 }
