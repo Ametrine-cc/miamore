@@ -156,13 +156,11 @@ typedef struct {
   char **frames;
   animation_preset_t preset;
   position_t position;
+  unsigned int fps;
+  unsigned int duration;
 } AnimationOptions;
-
-char **animate_impl(AnimationOptions opts);
+void animate_impl(AnimationOptions opts);
 
 #define animate(...) animate_impl((AnimationOptions){__VA_ARGS__})
-
-void animation_render(char **animation, unsigned int fps,
-                      unsigned int duration);
 
 #endif // MIAMORE_H

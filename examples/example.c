@@ -93,10 +93,8 @@ int main(void) {
   // Drawing animations in miamore
 
   // Passing a preset via designated initializer
-  char **cat_animation = animate(.preset = KITTY);
-
   manage_cursor(move, ((position_t){5, 5}));
-  animation_render(cat_animation, 4, 2);
+  animate(.preset = KITTY);
 
   // Passing raw char** frames directly (positional argument for field 1)
   // char *my_frames_array[] = {};

@@ -19,12 +19,14 @@
  */
 
 #include "global.h"
-#include "include/miamore.h"
-#include <stdio.h>
+#include <pthread.h>
+// #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
-static char *cat_frames[] = {
+pthread_mutex_t stdout_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static char *kitty_frames[] = {
     /* Frame 1: Neutral */
     " /\\_/\\ \n"
     "( o.o )\n"
@@ -45,101 +47,36 @@ static char *cat_frames[] = {
 char **load_preset_frames(animation_preset_t preset) {
   switch (preset) {
   case KITTY:
-    return cat_frames;
+    return kitty_frames;
   case PRESET_NONE:
     return NULL;
   }
 }
 
-char **animate_impl(AnimationOptions opts) {
-  char **target_frames = opts.frames;
-
-  if (!target_frames && opts.preset != PRESET_NONE) {
-    target_frames = load_preset_frames(opts.preset);
-  }
-  return target_frames;
-}
-
-long long get_time_ns(void) {
-  struct timespec ts;
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  return (long long)ts.tv_sec * 1000000000LL + ts.tv_nsec;
-}
-
-void animation_render(char **animation, unsigned int fps,
-                      unsigned int duration) {
+void *animation_render() {
 
   if (NULL == animation) {
     draw_text_error(__PRETTY_FUNCTION__, "cannot animate this (NULL).", 1);
     return;
   }
 
-  unsigned int num_frames = 0;
-  while (animation[num_frames] != NULL) {
-    num_frames++;
+  int frame = 0;
+}
+
+void animate_impl(AnimationOptions opts) {
+  char **target_frames = opts.frames;
+
+  pthread_t anim_thread;
+
+  if (!target_frames && opts.preset != PRESET_NONE) {
+    target_frames = load_preset_frames(opts.preset);
   }
 
-  if (num_frames == 0) {
-    draw_text_error(__PRETTY_FUNCTION__, "Animation array is empty!", 1);
-    return;
-  }
+  pthread_create(&anim_thread, NULL, animation_render, NULL);
+}
 
-  long long duration_ns = (long long)duration * 1000000000LL;
-  long long frame_delay_ns = 1000000000LL / fps;
-
-  long long anim_start_time = get_time_ns();
-
-  int origin_x = cursor_x;
-  int origin_y = cursor_y;
-
-  while (1) {
-    long long current_time = get_time_ns();
-    long long total_elapsed_ns = current_time - anim_start_time;
-
-    if (total_elapsed_ns >= duration_ns) {
-      break;
-    }
-
-    int current_frame_index = (total_elapsed_ns / frame_delay_ns) % num_frames;
-    char *current_frame = animation[current_frame_index];
-
-    request_screen(clear_t);
-    fflush(stdout);
-
-    const char *start = current_frame;
-    int line_offset = 0;
-
-    while (*start != '\0') {
-      const char *end = strchr(start, '\n');
-      int len = end ? (end - start) : (int)strlen(start);
-
-      char pos_str[32];
-      sprintf(pos_str, "\x1b[%d;%dH", origin_y + line_offset, origin_x);
-      buf_append(fb, pos_str, strlen(pos_str));
-
-      buf_append(fb, start, len);
-
-      if (!end)
-        break;
-
-      start = end + 1;
-      line_offset++;
-    }
-
-    render_frame(fb);
-    fflush(stdout);
-
-    request_cursor(move, ((position_t){origin_x, origin_y + line_offset + 1}));
-
-    long long draw_time = get_time_ns() - current_time;
-    long long sleep_ns = frame_delay_ns - draw_time;
-
-    if (sleep_ns > 0) {
-      struct timespec req = {.tv_sec = (time_t)(sleep_ns / 1000000000LL),
-                             .tv_nsec = (long)(sleep_ns % 1000000000LL)};
-      nanosleep(&req, NULL);
-    }
-  }
-
-  fflush(stdout);
+long long get_time_ns(void) {
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return (long long)ts.tv_sec * 1000000000LL + ts.tv_nsec;
 }
