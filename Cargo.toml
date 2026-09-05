@@ -1,12 +1,12 @@
 [package]
 name = "miamore"
-version = "0.1.1"
+version = "0.2.1"
 authors = [
     "Noticxs <noticxs@ametrine.cc>",
     "Ametrine Foundation <business@ametrine.cc>"
 ]
 edition = "2024"
-description = "A lightweight C TUI Library. C library and this is the official Rust bindings for it"
+description = "A lightweight C TUI Library. These are the official Rust bindings for miamore"
 license = "LGPL-3.0"
 repository = "https://github.com/Ametrine-cc/miamore"
 readme = "README.md"
