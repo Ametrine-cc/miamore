@@ -142,11 +142,12 @@ typedef enum colors_t {
   white,
 } colors_t;
 
-char *give_color(colors_t color);
 void set_fg(colors_t);
 void set_bg(colors_t);
 
 // V0.2.1
+char *give_bg_color(colors_t color);
+char *give_fg_color(colors_t color);
 
 typedef enum {
   PRESET_NONE = 0,

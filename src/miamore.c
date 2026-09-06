@@ -36,6 +36,12 @@ int unsigned window_height;
 int unsigned cursor_x;
 int unsigned cursor_y;
 
+bool init;
+
+char error_buf[MAX_BUFFER_SIZE];
+char temp_buf[MAX_BUFFER_SIZE];
+char default_typeface[5][5];
+
 bool enable_truecolor;
 
 void fb_init(void) {

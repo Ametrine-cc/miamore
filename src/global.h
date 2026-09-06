@@ -29,11 +29,14 @@
 #endif
 
 // global vars
-static char temp_buf[2048];
-static char default_typeface[5][5];
+
+#define MAX_BUFFER_SIZE 2048
+
+extern char temp_buf[MAX_BUFFER_SIZE];
+extern char default_typeface[5][5];
 
 // error
-static char error_buf[2048];
+extern char error_buf[MAX_BUFFER_SIZE];
 extern void write_error(char *error);
 
 // screen_options enum
@@ -45,7 +48,7 @@ typedef enum screen_options {
 } screen_options;
 
 // init
-static bool init;
+extern bool init;
 void check_init(void);
 
 // framebuffer

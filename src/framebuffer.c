@@ -46,6 +46,8 @@ void render_frame(FrameBuffer *buf) {
   if (!buf || buf->len == 0)
     return;
 
-  write(STDOUT_FILENO, buf->data, buf->len);
+  int res = write(STDOUT_FILENO, buf->data, buf->len);
+  if (!res)
+    printf("error with framebuffer\n");
   buf->len = 0;
 }
