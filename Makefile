@@ -26,8 +26,8 @@ LDFLAGS  ?= -lm
 CARGO    ?= cargo
 
 # --- Versioning ---
-VERSION   := 1.0.0
-SOVERSION := 1
+VERSION   := 0.2.1
+SOVERSION := 2
 
 # --- Install Paths ---
 PREFIX      ?= /usr/local
