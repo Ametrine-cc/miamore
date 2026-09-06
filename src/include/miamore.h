@@ -109,8 +109,6 @@ void(manage_cursor)(cursor_t cursor, position_t position);
 
 // draw functions
 void draw_text(const char *text);
-void draw_text_error(const char *function, const char *text,
-                     unsigned int error_code);
 
 typedef struct {
   theme_t theme;
@@ -149,6 +147,7 @@ void set_bg(colors_t);
 char *give_bg_color(colors_t color);
 char *give_fg_color(colors_t color);
 
+// Animation functions
 typedef enum {
   PRESET_NONE = 0,
   KITTY,
@@ -167,5 +166,16 @@ extern pthread_mutex_t stdout_mutex;
 #define start_animation(...) animate_impl((AnimationOptions){__VA_ARGS__})
 
 void end_animation(void *handle);
+
+// Debug functions
+typedef struct {
+  const char *function;
+  const char *error;
+} DebugOptions;
+
+typedef enum { console, tui } DebugType;
+
+void debug_opts(DebugType type, DebugOptions opts);
+#define debug(t, ...) debug_opts((t), (DebugOptions){__VA_ARGS__})
 
 #endif // MIAMORE_H

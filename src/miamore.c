@@ -265,3 +265,21 @@ bool supports_truecolor(void) {
 
   return false;
 }
+
+void debug_opts(DebugType type, DebugOptions opts) {
+  check_init();
+  fflush(stdout);
+
+  snprintf(error_buf, sizeof(error_buf), "[%s] -> %s\n", opts.function,
+           opts.error);
+
+  switch (type) {
+  case console:
+    printf("%s\n", error_buf);
+    break;
+  case tui:
+    buf_append(fb, error_buf, strlen(error_buf));
+    render_frame(fb);
+    break;
+  }
+}

@@ -33,9 +33,9 @@ pub mod sys {
 }
 
 pub use sys::{
-    AnimationOptions, /* v0.2.1 */
-    BorderOptions, MiamoreOptions, ShapeOptions, animation_preset_t, /* v0.2.1 */
-    colors_t, cursor_t, dimensions_t, keys_t, position_t, seconds_t, shape_t, theme_t,
+    AnimationOptions, BorderOptions, DebugOptions, DebugType, MiamoreOptions, ShapeOptions,
+    animation_preset_t, colors_t, cursor_t, dimensions_t, keys_t, position_t, seconds_t, shape_t,
+    theme_t,
 };
 
 pub fn window_width() -> u32 {
@@ -161,14 +161,16 @@ pub fn set_bg(color: colors_t) {
 
 /// added in v0.2.1
 
-/// Draw Error Text
+/// Debug Function
 
-pub fn draw_text_error(function: &str, text: &str, error_code: u32) {
-    let txt = CString::new(text).expect("String contained null bytes");
-    let func = CString::new(function).expect("String contained null bytes");
+pub fn debug(debug_type: DebugType, debug_options: Option<DebugOptions>) {
+    let opts = debug_options.unwrap_or(DebugOptions {
+        function: c"".as_ptr(),
+        error: c"".as_ptr(),
+    });
 
     unsafe {
-        sys::draw_text_error(func.as_ptr(), txt.as_ptr(), error_code);
+        sys::debug_opts(debug_type, opts);
     }
 }
 
@@ -303,6 +305,21 @@ mod tests {
 
         manage_keys(keys_t::disable);
 
+        // Use debug
+        debug(
+            DebugType::tui,
+            Some(DebugOptions {
+                function: c"test".as_ptr(),
+                error: c"This is an example of a debug error".as_ptr(),
+            }),
+        );
+
+        // Wait for 2 seconds
+        wait_for_seconds(2.0);
+
+        // Clear screen
+        clear_origin();
+
         // Drawing border
         draw_border("!Rust test!", theme_t::thick_l);
 
@@ -354,5 +371,16 @@ mod tests {
         }
 
         anim.stop();
+
+        debug(
+            DebugType::tui,
+            Some(DebugOptions {
+                function: c"test_2".as_ptr(),
+                error: c"This is an example of a debug error through the console raw with printf()"
+                    .as_ptr(),
+            }),
+        );
+
+        wait_for_seconds(2.0);
     }
 }

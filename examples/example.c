@@ -135,6 +135,16 @@ int main(void) {
   init_miamore(true, true);
   manage_keys(disable);
 
+  // Use debug
+  debug(tui, .error = "test",
+        .function = "This is an example of a debug error");
+
+  // Wait for 2 seconds
+  wait_for(2.0);
+
+  // Clear screen
+  clear_origin();
+
   // Drawing border
   draw_border("!C test!", thick_l);
 
@@ -171,6 +181,11 @@ int main(void) {
   }
 
   end_animation(animate_kitty);
+
+  // Use debug with console
+  debug(console, .function = "test_2",
+        .error = "This is an example of a debug error through the console raw "
+                 "with printf()");
 
   return 0;
 }

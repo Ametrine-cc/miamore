@@ -61,7 +61,8 @@ void *animation_render(void *arg) {
   anim_worker_t *worker = (anim_worker_t *)arg;
 
   if (NULL == worker->animation) {
-    draw_text_error(__PRETTY_FUNCTION__, "cannot animate this (NULL).", 1);
+    debug(tui, .function = __PRETTY_FUNCTION__,
+          .error = "cannot animate this (NULL).");
     free(worker);
     return NULL;
   }
@@ -72,7 +73,8 @@ void *animation_render(void *arg) {
   }
 
   if (num_frames == 0) {
-    draw_text_error(__PRETTY_FUNCTION__, "Animation array is empty!", 1);
+    debug(tui, .function = __PRETTY_FUNCTION__,
+          .error = "Animation array is empty!");
     free(worker);
     return NULL;
   }
