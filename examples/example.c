@@ -186,6 +186,5 @@ int main(void) {
   debug(console, .function = "test_2",
         .error = "This is an example of a debug error through the console raw "
                  "with printf()");
-
   return 0;
 }
