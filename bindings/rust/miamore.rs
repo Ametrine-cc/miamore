@@ -271,10 +271,12 @@ pub fn test(s: &str) {
 
 #[cfg(test)]
 mod tests {
+    use std::arch::x86_64::_mm_maskz_rorv_epi64;
+
     use super::*;
 
     #[test]
-    fn test_miamore_example() {
+    fn miamore_test() {
         init_miamore(true, true);
 
         manage_keys(keys_t::disable);
@@ -306,6 +308,8 @@ mod tests {
         );
 
         set_fg(colors_t::white);
+
+        manage_cursor(cursor_t::move_, Some(position_t { x: 20, y: 4 }));
 
         let anim = StartAnimation::new()
             .preset(animation_preset_t::KITTY)

@@ -24,17 +24,20 @@
 #include <stdio.h>
 // #include <string.h>
 
-static char *kitten_frames[] = {
-    /* Frame 1: Neutral */
-    " /\\_/\\ \033[1B\033[7D( o.o )\033[1B\033[7D > ^ < ",
+/* Frame 1: Neutral */
+const char *f1[] = {" /\\_/\\", "( o.o )", " > ^ <", NULL};
 
-    /* Frame 2: Blink */
-    " /\\_/\\ \033[1B\033[7D( x.x )\033[1B\033[7D > ^ < ",
+/* Frame 2: Blink */
+const char *f2[] = {" /\\_/\\", "( -.- )", " > ^ <", NULL};
 
-    /* Frame 3: Wink & Tail */
-    " /\\_/\\ \033[1B\033[7D( ~.o ) ~\033[1B\033[9D > ^ < ",
+/* Frame 3: Wink & Tail */
+const char *f3[] = {" /\\_/\\", "( ~.o ) ~", " > ^ <", NULL};
 
-    NULL};
+/* Kitten Frames (full) */
+const char **kitten_frames[] = {f1, f2, f3, NULL};
+
+// Also works with type casting
+// const char **kitten_frames[] = {f1, f2, f3, (const char *[]){"", ""}, NULL};
 
 void input_example() {
   // scanf("", str); alternative to using scanf() fron stdio.h
@@ -76,16 +79,16 @@ int main(void) {
   // block(blocky line). which can be called like this '.style=normal' for
   // example
   //
-  draw_border(.text = "wsg");
-  set_fg(red);
-  draw_border(.text = "this is an example!", .theme = thick_l);
+  // draw_border(.text = "wsg");
+  // set_fg(red);
+  // draw_border(.text = "this is an example!", .theme = thick_l);
 
-  manage_cursor(move, ((position_t){5, 5}));
-  manage_cursor(show);
+  // manage_cursor(move, ((position_t){5, 5}));
+  // manage_cursor(show);
 
   // draw hello world to the screen "\n" is only needed if you want a new line
-  draw_text("Hello,");
-  draw_text(" World!\n");
+  // draw_text("Hello,");
+  // draw_text(" World!\n");
 
   // miamore has 2 clear functions, clear() -> which clears screen and doesnt
   // move the cursor and clear_origin() which does the same but moves the cursor
@@ -94,21 +97,24 @@ int main(void) {
   // clear();
   // clear_origin();
 
-  manage_cursor(move, ((position_t){5, 10}));
+  // manage_cursor(move, ((position_t){5, 10}));
 
   // position becomes the shape origin (cursor position becomes top left corner)
-  draw_shape(rect, .theme = single_l, ((dimensions_t){26, 12}));
+  // draw_shape(rect, .theme = single_l, ((dimensions_t){26, 12}));
 
   // wait_for(MS(250)); // Wait 250 milliseconds
   // wait_for(SECONDS(2)); // Wait for 2 seconds
-  wait_for(2); // Wait for 2 seconds
+  // wait_for(2); // Wait for 2 seconds
   clear_origin();
 
   // Drawing animations in miamore
 
-  manage_cursor(move, ((position_t){5, 5}));
+  // manage_cursor(move, ((position_t){5, 5}));
+  manage_cursor(hide);
   // Passing a preset via designated initializer
-  void *animate_kitty = start_animation(.frames = kitten_frames, .fps = 4);
+  // void *animate_kitty = start_animation(.preset = KITTY, .fps = 4);
+  void *animate_kitty =
+      start_animation(.frames = (const char ***)kitten_frames, .fps = 4);
 
   while (1) {
     int user = input();
@@ -118,10 +124,10 @@ int main(void) {
       break;
     }
 
-    pthread_mutex_lock(&stdout_mutex);
-    printf("%c", user);
-    fflush(stdout);
-    pthread_mutex_unlock(&stdout_mutex);
+    // pthread_mutex_lock(&stdout_mutex);
+    // printf("%c", user);
+    // fflush(stdout);
+    // pthread_mutex_unlock(&stdout_mutex);
   }
 
   clear_origin();

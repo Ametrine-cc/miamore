@@ -18,7 +18,6 @@
  * along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// #include "global.h"
 #include "include/miamore.h"
 #include <pthread.h>
 #include <stdio.h>
@@ -30,13 +29,25 @@ pthread_mutex_t stdout_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static char *kitty_frames[] = {
     /* Frame 1: Neutral */
-    " /\\_/\\ \033[1B\033[7D( o.o )\033[1B\033[7D > ^ < ",
+    " /\\_/\\ \x1b[1B\x1b[7D( o.o )\x1b[1B\x1b[7D > ^ < ",
 
     /* Frame 2: Blink */
-    " /\\_/\\ \033[1B\033[7D( -.- )\033[1B\033[7D > ^ < ",
+    " /\\_/\\ \x1b[1B\x1b[7D( -.- )\x1b[1B\x1b[7D > ^ < ",
 
     /* Frame 3: Wink & Tail */
-    " /\\_/\\ \033[1B\033[7D( ~.o ) ~\033[1B\033[9D > ^ < ",
+    " /\\_/\\ \x1b[1B\x1b[7D( ~.o ) ~\x1b[1B\x1b[9D > ^ < ",
+
+    NULL};
+
+static char *doggo_frames[] = {
+    /* Frame 1: Neutral */
+    " /\\_/\\ \x1b[1B\x1b[7D( o.o )\x1b[1B\x1b[7D > ^ < ",
+
+    /* Frame 2: Blink */
+    " /\\_/\\ \x1b[1B\x1b[7D( -.- )\x1b[1B\x1b[7D > ^ < ",
+
+    /* Frame 3: Wink & Tail */
+    " /\\_/\\ \x1b[1B\x1b[7D( ~.o ) ~\x1b[1B\x1b[9D > ^ < ",
 
     NULL};
 
@@ -44,8 +55,8 @@ char **load_preset_frames(animation_preset_t preset) {
   switch (preset) {
   case KITTY:
     return kitty_frames;
-  case PRESET_NONE:
-    return NULL;
+  case DOGGO:
+    return doggo_frames;
   }
 
   return NULL;
@@ -123,26 +134,35 @@ void *animation_render(void *arg) {
 }
 
 void *animate_impl(AnimationOptions opts) {
-  char **target_frames = opts.frames;
+  const char ***target_frames = opts.frames;
 
-  if (!target_frames && opts.preset != PRESET_NONE) {
-    target_frames = load_preset_frames(opts.preset);
+  // if (!target_frames) {
+  //   target_frames = load_preset_frames(opts.preset);
+  // }
+
+  for (int f = 0; target_frames[f] != NULL; f++) {
+    printf("FRAME: %d\n", f + 1);
+
+    for (int l = 0; target_frames[f][l] != NULL; l++) {
+      printf("%s\n", target_frames[f][l]);
+    }
+    printf("\n");
   }
 
-  anim_worker_t *worker = malloc(sizeof(anim_worker_t));
-  if (!worker)
-    return 0;
+  // anim_worker_t *worker = malloc(sizeof(anim_worker_t));
+  // if (!worker)
+  //   return 0;
 
-  worker->running = 1;
-  worker->animation = target_frames;
-  worker->fps = opts.fps;
+  // worker->running = 1;
+  // worker->animation = target_frames;
+  // worker->fps = opts.fps;
 
-  if (pthread_create(&worker->thread, NULL, animation_render, worker) != 0) {
-    free(worker);
-    return NULL;
-  }
+  // if (pthread_create(&worker->thread, NULL, animation_render, worker) != 0) {
+  //   free(worker);
+  //   return NULL;
+  // }
 
-  return (void *)worker;
+  // return (void *)worker;
 }
 
 void end_animation(void *handle) {
