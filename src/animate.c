@@ -80,10 +80,8 @@ void *animation_render(void *arg) {
   long long frame_delay_ns = 1000000000LL / (worker->fps ? worker->fps : 1);
   long long start_time = get_time_ns();
 
-  pthread_mutex_lock(&stdout_mutex);
-  printf("\x1b[s");
-  fflush(stdout);
-  pthread_mutex_unlock(&stdout_mutex);
+  int origin_x = cursor_x;
+  int origin_y = cursor_y;
 
   while (worker->running) {
     long long current_time = get_time_ns();
@@ -92,13 +90,15 @@ void *animation_render(void *arg) {
     int current_frame_index = (total_elapsed_ns / frame_delay_ns) % num_frames;
 
     pthread_mutex_lock(&stdout_mutex);
-    printf("\x1b[u");
 
     for (int l = 0; worker->animation[current_frame_index][l] != NULL; l++) {
-      const char *current_line = worker->animation[current_frame_index][l];
 
-      printf("%s\x1b[K\n", current_line);
+      manage_cursor(move, ((position_t){.x = origin_x, .y = origin_y + l}));
+
+      const char *current_line = worker->animation[current_frame_index][l];
+      printf("%s\033[K", current_line);
     }
+
     fflush(stdout);
     pthread_mutex_unlock(&stdout_mutex);
 

@@ -80,15 +80,15 @@ int main(void) {
   // example
   //
   // draw_border(.text = "wsg");
-  // set_fg(red);
-  // draw_border(.text = "this is an example!", .theme = thick_l);
+  set_fg(white);
+  draw_border(.text = "C example!", .theme = thick_l);
 
-  // manage_cursor(move, ((position_t){5, 5}));
-  // manage_cursor(show);
+  manage_cursor(move, ((position_t){5, 5}));
+  manage_cursor(show);
 
   // draw hello world to the screen "\n" is only needed if you want a new line
-  // draw_text("Hello,");
-  // draw_text(" World!\n");
+  draw_text("Hello,");
+  draw_text(" World!\n");
 
   // miamore has 2 clear functions, clear() -> which clears screen and doesnt
   // move the cursor and clear_origin() which does the same but moves the cursor
@@ -97,19 +97,19 @@ int main(void) {
   // clear();
   // clear_origin();
 
-  // manage_cursor(move, ((position_t){5, 10}));
+  manage_cursor(move, ((position_t){5, 10}));
 
   // position becomes the shape origin (cursor position becomes top left corner)
-  // draw_shape(rect, .theme = single_l, ((dimensions_t){26, 12}));
+  draw_shape(rect, .theme = single_l, ((dimensions_t){26, 12}));
 
   // wait_for(MS(250)); // Wait 250 milliseconds
-  // wait_for(SECONDS(2)); // Wait for 2 seconds
+  wait_for(SECONDS(2)); // Wait for 2 seconds
   // wait_for(2); // Wait for 2 seconds
   clear_origin();
 
   // Drawing animations in miamore
 
-  // manage_cursor(move, ((position_t){5, 5}));
+  manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(hide);
   // Passing a preset via designated initializer
   void *animate_kitty = start_animation(.preset = KITTY, .fps = 4);
@@ -123,11 +123,6 @@ int main(void) {
       end_animation(animate_kitty);
       break;
     }
-
-    // pthread_mutex_lock(&stdout_mutex);
-    // printf("%c", user);
-    // fflush(stdout);
-    // pthread_mutex_unlock(&stdout_mutex);
   }
 
   clear_origin();
