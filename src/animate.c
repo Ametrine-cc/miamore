@@ -27,47 +27,26 @@
 
 pthread_mutex_t stdout_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static char *kitty_frames[] = {
+/* KITTY Frames (full) */
+
+const char **kitty_frames[] = {
     /* Frame 1: Neutral */
-    " /\\_/\\ \x1b[1B\x1b[7D( o.o )\x1b[1B\x1b[7D > ^ < ",
+    (const char *[]){" /\\_/\\", "( o.o )", " > ^ <", NULL},
 
     /* Frame 2: Blink */
-    " /\\_/\\ \x1b[1B\x1b[7D( -.- )\x1b[1B\x1b[7D > ^ < ",
+    (const char *[]){" /\\_/\\", "( -.- )", " > ^ <", NULL},
 
     /* Frame 3: Wink & Tail */
-    " /\\_/\\ \x1b[1B\x1b[7D( ~.o ) ~\x1b[1B\x1b[9D > ^ < ",
+    (const char *[]){" /\\_/\\", "( ~.o ) ~", " > ^ <", NULL},
 
     NULL};
-
-static char *doggo_frames[] = {
-    /* Frame 1: Neutral */
-    " /\\_/\\ \x1b[1B\x1b[7D( o.o )\x1b[1B\x1b[7D > ^ < ",
-
-    /* Frame 2: Blink */
-    " /\\_/\\ \x1b[1B\x1b[7D( -.- )\x1b[1B\x1b[7D > ^ < ",
-
-    /* Frame 3: Wink & Tail */
-    " /\\_/\\ \x1b[1B\x1b[7D( ~.o ) ~\x1b[1B\x1b[9D > ^ < ",
-
-    NULL};
-
-char **load_preset_frames(animation_preset_t preset) {
-  switch (preset) {
-  case KITTY:
-    return kitty_frames;
-  case DOGGO:
-    return doggo_frames;
-  }
-
-  return NULL;
-}
 
 extern pthread_mutex_t stdout_mutex;
 
 typedef struct {
   pthread_t thread;
   volatile int running;
-  char **animation;
+  const char ***animation;
   unsigned int fps;
   unsigned int duration;
 } anim_worker_t;
@@ -78,67 +57,72 @@ long long get_time_ns(void) {
   return (long long)ts.tv_sec * 1000000000LL + ts.tv_nsec;
 }
 
-void *animation_render(void *arg) {
-  anim_worker_t *worker = (anim_worker_t *)arg;
+// void *animation_render(void *arg) {
+//   anim_worker_t *worker = (anim_worker_t *)arg;
 
-  if (NULL == worker->animation) {
-    draw_text_error(__PRETTY_FUNCTION__, "cannot animate this (NULL).", 1);
-    free(worker);
-    return NULL;
-  }
+//   if (NULL == worker->animation) {
+//     draw_text_error(__PRETTY_FUNCTION__, "cannot animate this (NULL).", 1);
+//     free(worker);
+//     return NULL;
+//   }
 
-  unsigned int num_frames = 0;
-  while (worker->animation[num_frames] != NULL) {
-    num_frames++;
-  }
+//   unsigned int num_frames = 0;
+//   while (worker->animation[num_frames] != NULL) {
+//     num_frames++;
+//   }
 
-  if (num_frames == 0) {
-    draw_text_error(__PRETTY_FUNCTION__, "Animation array is empty!", 1);
-    free(worker);
-    return NULL;
-  }
+//   if (num_frames == 0) {
+//     draw_text_error(__PRETTY_FUNCTION__, "Animation array is empty!", 1);
+//     free(worker);
+//     return NULL;
+//   }
 
-  long long frame_delay_ns = 1000000000LL / (worker->fps ? worker->fps : 1);
-  long long start_time = get_time_ns();
+//   long long frame_delay_ns = 1000000000LL / (worker->fps ? worker->fps : 1);
+//   long long start_time = get_time_ns();
 
-  while (worker->running) {
-    long long current_time = get_time_ns();
-    long long total_elapsed_ns = current_time - start_time;
+//   while (worker->running) {
+//     long long current_time = get_time_ns();
+//     long long total_elapsed_ns = current_time - start_time;
 
-    int current_frame_index = (total_elapsed_ns / frame_delay_ns) % num_frames;
-    char *current_frame = worker->animation[current_frame_index];
+//     int current_frame_index = (total_elapsed_ns / frame_delay_ns) %
+//     num_frames; char *current_frame = worker->animation[current_frame_index];
 
-    pthread_mutex_lock(&stdout_mutex);
+//     pthread_mutex_lock(&stdout_mutex);
 
-    printf("\033[s");
-    printf("%s", current_frame);
-    printf("\033[u");
+//     printf("\033[s");
+//     printf("%s", current_frame);
+//     printf("\033[u");
 
-    fflush(stdout);
+//     fflush(stdout);
 
-    pthread_mutex_unlock(&stdout_mutex);
+//     pthread_mutex_unlock(&stdout_mutex);
 
-    long long draw_time = get_time_ns() - current_time;
-    long long remaining_sleep_ns = frame_delay_ns - draw_time;
+//     long long draw_time = get_time_ns() - current_time;
+//     long long remaining_sleep_ns = frame_delay_ns - draw_time;
 
-    while (remaining_sleep_ns > 0 && worker->running) {
-      long long chunk =
-          remaining_sleep_ns > 10000000LL ? 10000000LL : remaining_sleep_ns;
-      struct timespec req = {.tv_sec = 0, .tv_nsec = (long)chunk};
-      nanosleep(&req, NULL);
-      remaining_sleep_ns -= chunk;
-    }
-  }
+//     while (remaining_sleep_ns > 0 && worker->running) {
+//       long long chunk =
+//           remaining_sleep_ns > 10000000LL ? 10000000LL : remaining_sleep_ns;
+//       struct timespec req = {.tv_sec = 0, .tv_nsec = (long)chunk};
+//       nanosleep(&req, NULL);
+//       remaining_sleep_ns -= chunk;
+//     }
+//   }
 
-  return NULL;
-}
+//   return NULL;
+// }
 
 void *animate_impl(AnimationOptions opts) {
   const char ***target_frames = opts.frames;
 
-  // if (!target_frames) {
-  //   target_frames = load_preset_frames(opts.preset);
-  // }
+  if (!target_frames && opts.preset != PRESET_NONE) {
+    switch (opts.preset) {
+    case KITTY:
+      target_frames = kitty_frames;
+    case PRESET_NONE:
+      break;
+    }
+  }
 
   for (int f = 0; target_frames[f] != NULL; f++) {
     printf("FRAME: %d\n", f + 1);
@@ -149,20 +133,20 @@ void *animate_impl(AnimationOptions opts) {
     printf("\n");
   }
 
-  // anim_worker_t *worker = malloc(sizeof(anim_worker_t));
-  // if (!worker)
-  //   return 0;
+  anim_worker_t *worker = malloc(sizeof(anim_worker_t));
+  if (!worker)
+    return 0;
 
-  // worker->running = 1;
-  // worker->animation = target_frames;
-  // worker->fps = opts.fps;
+  worker->running = 1;
+  worker->animation = target_frames;
+  worker->fps = opts.fps;
 
   // if (pthread_create(&worker->thread, NULL, animation_render, worker) != 0) {
-  //   free(worker);
-  //   return NULL;
+  // free(worker);
+  // return NULL;
   // }
 
-  // return (void *)worker;
+  return (void *)worker;
 }
 
 void end_animation(void *handle) {

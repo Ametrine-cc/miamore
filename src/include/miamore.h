@@ -149,12 +149,9 @@ void set_bg(colors_t);
 // V0.2.1
 
 typedef enum {
+  PRESET_NONE = 0,
   KITTY,
-  DOGGO,
 } animation_preset_t;
-
-#define MAX_FRAMES 200
-#define MAX_LINES 200
 
 typedef struct {
   const char ***frames;

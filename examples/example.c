@@ -112,9 +112,9 @@ int main(void) {
   // manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(hide);
   // Passing a preset via designated initializer
-  // void *animate_kitty = start_animation(.preset = KITTY, .fps = 4);
-  void *animate_kitty =
-      start_animation(.frames = (const char ***)kitten_frames, .fps = 4);
+  void *animate_kitty = start_animation(.preset = KITTY, .fps = 4);
+  // void *animate_kitty =
+  // start_animation(.frames = (const char ***)kitten_frames, .fps = 4);
 
   while (1) {
     int user = input();
