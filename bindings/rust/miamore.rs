@@ -181,7 +181,7 @@ impl AnimationHandle {
 }
 
 pub struct StartAnimation {
-    frames: Vec<CString>,
+    frames: Vec<Vec<CString>>,
     preset: animation_preset_t,
     fps: u32,
 }
@@ -206,28 +206,41 @@ impl StartAnimation {
     }
 
     pub fn frame(mut self, frame_str: &str) -> Self {
-        if let Ok(c_str) = CString::new(frame_str) {
-            self.frames.push(c_str);
+        let mut lines = Vec::new();
+        for line in frame_str.lines() {
+            if let Ok(c_str) = CString::new(line) {
+                lines.push(c_str);
+            }
         }
+        self.frames.push(lines);
         self
     }
 
     pub fn start(self) -> AnimationHandle {
-        let mut c_ptrs: Vec<*mut c_char> = self
-            .frames
-            .iter()
-            .map(|s| s.as_ptr() as *mut c_char)
+        let mut c_lines_vecs: Vec<Vec<*mut c_char>> = Vec::with_capacity(self.frames.len());
+
+        for frame in &self.frames {
+            let mut c_lines: Vec<*mut c_char> =
+                frame.iter().map(|s| s.as_ptr() as *mut c_char).collect();
+
+            c_lines.push(ptr::null_mut());
+            c_lines_vecs.push(c_lines);
+        }
+
+        let mut c_frames: Vec<*mut *mut c_char> = c_lines_vecs
+            .iter_mut()
+            .map(|lines| lines.as_mut_ptr())
             .collect();
 
-        if !c_ptrs.is_empty() {
-            c_ptrs.push(ptr::null_mut());
+        if !c_frames.is_empty() {
+            c_frames.push(ptr::null_mut());
         }
 
         let opts = AnimationOptions {
-            frames: if c_ptrs.is_empty() {
+            frames: if c_frames.is_empty() {
                 ptr::null_mut()
             } else {
-                c_ptrs.as_mut_ptr()
+                c_frames.as_mut_ptr() as *mut _
             },
             preset: self.preset,
             fps: self.fps as _,
@@ -271,8 +284,6 @@ pub fn test(s: &str) {
 
 #[cfg(test)]
 mod tests {
-    use std::arch::x86_64::_mm_maskz_rorv_epi64;
-
     use super::*;
 
     #[test]

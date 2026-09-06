@@ -96,7 +96,7 @@ void *animation_render(void *arg) {
       manage_cursor(move, ((position_t){.x = origin_x, .y = origin_y + l}));
 
       const char *current_line = worker->animation[current_frame_index][l];
-      printf("%s\033[K", current_line);
+      printf("%s\x1b[K", current_line);
     }
 
     fflush(stdout);
