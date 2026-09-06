@@ -27,7 +27,7 @@ CARGO    ?= cargo
 
 # --- Versioning ---
 VERSION   := 0.2.1
-SOVERSION := 2
+SOVERSION := 0
 
 # --- Install Paths ---
 PREFIX      ?= /usr/local
