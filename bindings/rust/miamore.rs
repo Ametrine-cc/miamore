@@ -334,6 +334,7 @@ mod tests {
 
         manage_cursor(cursor_t::move_, Some(position_t { x: 20, y: 4 }));
 
+        // Animation
         let anim = StartAnimation::new()
             .preset(animation_preset_t::KITTY)
             .fps(4)
