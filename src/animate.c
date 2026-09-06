@@ -57,60 +57,65 @@ long long get_time_ns(void) {
   return (long long)ts.tv_sec * 1000000000LL + ts.tv_nsec;
 }
 
-// void *animation_render(void *arg) {
-//   anim_worker_t *worker = (anim_worker_t *)arg;
+void *animation_render(void *arg) {
+  anim_worker_t *worker = (anim_worker_t *)arg;
 
-//   if (NULL == worker->animation) {
-//     draw_text_error(__PRETTY_FUNCTION__, "cannot animate this (NULL).", 1);
-//     free(worker);
-//     return NULL;
-//   }
+  if (NULL == worker->animation) {
+    draw_text_error(__PRETTY_FUNCTION__, "cannot animate this (NULL).", 1);
+    free(worker);
+    return NULL;
+  }
 
-//   unsigned int num_frames = 0;
-//   while (worker->animation[num_frames] != NULL) {
-//     num_frames++;
-//   }
+  unsigned int num_frames = 0;
+  while (worker->animation[num_frames] != NULL) {
+    num_frames++;
+  }
 
-//   if (num_frames == 0) {
-//     draw_text_error(__PRETTY_FUNCTION__, "Animation array is empty!", 1);
-//     free(worker);
-//     return NULL;
-//   }
+  if (num_frames == 0) {
+    draw_text_error(__PRETTY_FUNCTION__, "Animation array is empty!", 1);
+    free(worker);
+    return NULL;
+  }
 
-//   long long frame_delay_ns = 1000000000LL / (worker->fps ? worker->fps : 1);
-//   long long start_time = get_time_ns();
+  long long frame_delay_ns = 1000000000LL / (worker->fps ? worker->fps : 1);
+  long long start_time = get_time_ns();
 
-//   while (worker->running) {
-//     long long current_time = get_time_ns();
-//     long long total_elapsed_ns = current_time - start_time;
+  pthread_mutex_lock(&stdout_mutex);
+  printf("\x1b[s");
+  fflush(stdout);
+  pthread_mutex_unlock(&stdout_mutex);
 
-//     int current_frame_index = (total_elapsed_ns / frame_delay_ns) %
-//     num_frames; char *current_frame = worker->animation[current_frame_index];
+  while (worker->running) {
+    long long current_time = get_time_ns();
+    long long total_elapsed_ns = current_time - start_time;
 
-//     pthread_mutex_lock(&stdout_mutex);
+    int current_frame_index = (total_elapsed_ns / frame_delay_ns) % num_frames;
 
-//     printf("\033[s");
-//     printf("%s", current_frame);
-//     printf("\033[u");
+    pthread_mutex_lock(&stdout_mutex);
+    printf("\x1b[u");
 
-//     fflush(stdout);
+    for (int l = 0; worker->animation[current_frame_index][l] != NULL; l++) {
+      const char *current_line = worker->animation[current_frame_index][l];
 
-//     pthread_mutex_unlock(&stdout_mutex);
+      printf("%s\x1b[K\n", current_line);
+    }
+    fflush(stdout);
+    pthread_mutex_unlock(&stdout_mutex);
 
-//     long long draw_time = get_time_ns() - current_time;
-//     long long remaining_sleep_ns = frame_delay_ns - draw_time;
+    long long draw_time = get_time_ns() - current_time;
+    long long remaining_sleep_ns = frame_delay_ns - draw_time;
 
-//     while (remaining_sleep_ns > 0 && worker->running) {
-//       long long chunk =
-//           remaining_sleep_ns > 10000000LL ? 10000000LL : remaining_sleep_ns;
-//       struct timespec req = {.tv_sec = 0, .tv_nsec = (long)chunk};
-//       nanosleep(&req, NULL);
-//       remaining_sleep_ns -= chunk;
-//     }
-//   }
+    while (remaining_sleep_ns > 0 && worker->running) {
+      long long chunk =
+          remaining_sleep_ns > 10000000LL ? 10000000LL : remaining_sleep_ns;
+      struct timespec req = {.tv_sec = 0, .tv_nsec = (long)chunk};
+      nanosleep(&req, NULL);
+      remaining_sleep_ns -= chunk;
+    }
+  }
 
-//   return NULL;
-// }
+  return NULL;
+}
 
 void *animate_impl(AnimationOptions opts) {
   const char ***target_frames = opts.frames;
@@ -124,15 +129,6 @@ void *animate_impl(AnimationOptions opts) {
     }
   }
 
-  for (int f = 0; target_frames[f] != NULL; f++) {
-    printf("FRAME: %d\n", f + 1);
-
-    for (int l = 0; target_frames[f][l] != NULL; l++) {
-      printf("%s\n", target_frames[f][l]);
-    }
-    printf("\n");
-  }
-
   anim_worker_t *worker = malloc(sizeof(anim_worker_t));
   if (!worker)
     return 0;
@@ -141,10 +137,10 @@ void *animate_impl(AnimationOptions opts) {
   worker->animation = target_frames;
   worker->fps = opts.fps;
 
-  // if (pthread_create(&worker->thread, NULL, animation_render, worker) != 0) {
-  // free(worker);
-  // return NULL;
-  // }
+  if (pthread_create(&worker->thread, NULL, animation_render, worker) != 0) {
+    free(worker);
+    return NULL;
+  }
 
   return (void *)worker;
 }
