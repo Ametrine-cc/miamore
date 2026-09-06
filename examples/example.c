@@ -58,7 +58,7 @@ void input_example() {
   draw_text(buf);
 }
 
-int main(void) {
+void ctest() {
   // can change functionality of init with passing the argmuments .should_clear
   // = false or .enable_mouse = true by defualt the values of these arguments
   // are flipped relative to the ones shouwn in this snippet of documentation.
@@ -111,6 +111,7 @@ int main(void) {
 
   manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(hide);
+
   // Passing a preset via designated initializer
   void *animate_kitty = start_animation(.preset = KITTY, .fps = 4);
   // void *animate_kitty =
@@ -125,8 +126,51 @@ int main(void) {
     }
   }
 
-  clear_origin();
   // wait_for(4); // Wait for 4 seconds
+  clear_origin();
+}
+
+int main(void) {
+  // Init miamore
+  init_miamore(true, true);
+  manage_keys(disable);
+
+  // Drawing border
+  draw_border("!C test!", thick_l);
+
+  // Managing cursor
+  manage_cursor(move, ((position_t){5, 5}));
+  manage_cursor(show);
+
+  // Setting foreground color
+  set_fg(cyan);
+
+  // Drawing text
+  draw_text("Hello, ");
+  draw_text("World!");
+
+  // Drawing shapes
+  draw_shape(rect, double_l, ((dimensions_t){26, 12}), ((position_t){5, 12}));
+
+  set_fg(white);
+
+  manage_cursor(move, ((position_t){20, 4}));
+
+  // Animation
+  void *animate_kitty = start_animation(.preset = KITTY, .fps = 4);
+
+  bool runtime = true;
+
+  while (runtime) {
+    int user = input();
+
+    if ('q' == user) {
+      clear_origin();
+      runtime = false;
+    }
+  }
+
+  end_animation(animate_kitty);
 
   return 0;
 }

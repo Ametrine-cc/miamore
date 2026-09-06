@@ -127,9 +127,19 @@ pub fn draw_border(text: &str, theme: theme_t) {
 }
 
 /// Color Functions
-pub fn give_color(_color: colors_t) -> String {
+pub fn give_fg_color(_color: colors_t) -> String {
     unsafe {
-        let ptr = sys::give_color(_color);
+        let ptr = sys::give_fg_color(_color);
+        if ptr.is_null() {
+            return String::new();
+        }
+        CStr::from_ptr(ptr).to_string_lossy().into_owned()
+    }
+}
+
+pub fn give_bg_color(_color: colors_t) -> String {
+    unsafe {
+        let ptr = sys::give_bg_color(_color);
         if ptr.is_null() {
             return String::new();
         }
@@ -288,24 +298,26 @@ mod tests {
 
     #[test]
     fn miamore_test() {
+        // Init miamore
         init_miamore(true, true);
 
         manage_keys(keys_t::disable);
 
+        // Drawing border
         draw_border("!Rust test!", theme_t::thick_l);
 
+        // Managing cursor
         manage_cursor(cursor_t::move_, Some(position_t { x: 5, y: 5 }));
         manage_cursor(cursor_t::show, None);
 
-        // setting foreground color
+        // Setting foreground color
         set_fg(colors_t::blue);
-        // let ptr = give_color(colors_t::green);
-        // draw_text(&ptr);
 
+        // Drawing text
         draw_text("Hello,");
         draw_text(" World!\n");
 
-        //
+        // Drawing shapes
         draw_shape(
             shape_t::rect,
             ShapeOptions {
