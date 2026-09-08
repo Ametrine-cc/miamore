@@ -50,14 +50,14 @@ void fb_init(void) {
     if (!fb)
       return;
 
-    fb->data = malloc(2048);
+    fb->data = malloc(65536);
     if (!fb->data) {
       free(fb);
       fb = NULL;
       return;
     }
 
-    fb->capacity = 2048;
+    fb->capacity = 65536;
   }
 
   fb->len = 0;

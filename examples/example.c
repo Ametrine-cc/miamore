@@ -165,6 +165,7 @@ int main(void) {
   set_fg(white);
 
   // Animation
+  // You should not use manage_cursor() to set the position of an animation
   void *animate_kitty =
       start_animation(.preset = KITTY, .fps = 4,
                       .position = ((position_t){20, 4}), .color = green);

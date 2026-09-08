@@ -24,9 +24,10 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-use std::ffi::{CStr, CString};
-use std::os::raw::{c_char, c_void};
-use std::ptr;
+use std::{
+    ffi::{CStr, CString, c_char, c_void},
+    ptr::{self, null, null_mut},
+};
 
 pub mod sys {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
@@ -176,112 +177,96 @@ pub fn debug(debug_type: DebugType, debug_options: Option<DebugOptions>) {
 
 /// Animation Support
 
-pub struct AnimationHandle {
-    handle: *mut c_void,
+struct AnimationContext {
+    c_handle: *mut c_void,
+    frames_ptr: *mut *mut *const i8,
 }
 
-unsafe impl Send for AnimationHandle {}
-
-impl AnimationHandle {
-    pub fn stop(self) {
-        if !self.handle.is_null() {
-            unsafe {
-                sys::end_animation(self.handle);
-            }
-        }
-    }
-}
-
-pub struct StartAnimation {
-    frames: Vec<Vec<CString>>,
-    preset: animation_preset_t,
+pub fn start_animation(
+    frames: Option<&[Vec<String>]>,
+    preset: Option<animation_preset_t>,
     fps: u32,
+    position: position_t,
+    color: colors_t,
+) -> *mut c_void {
+    let frames_ptr = match frames {
+        Some(rust_frames) => {
+            let mut c_rows: Vec<*mut *const i8> = rust_frames
+                .iter()
+                .map(|row| {
+                    let mut c_strings: Vec<*const i8> = row
+                        .iter()
+                        .map(|s| {
+                            let cstring = CString::new(s.as_str()).expect("Null byte found");
+                            cstring.into_raw() as *const i8
+                        })
+                        .collect();
+
+                    c_strings.push(null());
+                    let c_strings_boxed = c_strings.into_boxed_slice();
+                    Box::into_raw(c_strings_boxed) as *mut *const i8
+                })
+                .collect();
+
+            c_rows.push(null_mut());
+            let c_rows_boxed = c_rows.into_boxed_slice();
+            Box::into_raw(c_rows_boxed) as *mut *mut *const i8
+        }
+        None => null_mut(),
+    };
+
+    let actual_preset = preset.unwrap_or(animation_preset_t::PRESET_NONE);
+
+    let opts = AnimationOptions {
+        frames: frames_ptr,
+        preset: actual_preset,
+        fps,
+        position,
+        color,
+    };
+
+    let c_handle = unsafe { sys::animate_impl(opts) };
+
+    let context = Box::new(AnimationContext {
+        c_handle,
+        frames_ptr,
+    });
+
+    Box::into_raw(context) as *mut c_void
 }
 
-impl StartAnimation {
-    pub fn new() -> Self {
-        Self {
-            frames: Vec::new(),
-            preset: animation_preset_t::PRESET_NONE,
-            fps: 30,
-        }
+pub fn end_animation(handle: *mut c_void) {
+    if handle.is_null() {
+        return;
     }
 
-    pub fn preset(mut self, preset: animation_preset_t) -> Self {
-        self.preset = preset;
-        self
-    }
+    unsafe {
+        let context = Box::from_raw(handle as *mut AnimationContext);
 
-    pub fn fps(mut self, fps: u32) -> Self {
-        self.fps = fps;
-        self
-    }
+        sys::end_animation(context.c_handle);
 
-    pub fn frame(mut self, frame_str: &str) -> Self {
-        let mut lines = Vec::new();
-        for line in frame_str.lines() {
-            if let Ok(c_str) = CString::new(line) {
-                lines.push(c_str);
+        let frames_ptr = context.frames_ptr;
+        if !frames_ptr.is_null() {
+            let mut row_count = 0;
+
+            while !(*frames_ptr.add(row_count)).is_null() {
+                let row_ptr = *frames_ptr.add(row_count);
+                let mut col_count = 0;
+
+                while !(*row_ptr.add(col_count)).is_null() {
+                    let c_str_ptr = *row_ptr.add(col_count) as *mut i8;
+                    let _ = CString::from_raw(c_str_ptr);
+                    col_count += 1;
+                }
+
+                let row_slice = ptr::slice_from_raw_parts_mut(row_ptr, col_count + 1);
+                let _ = Box::from_raw(row_slice);
+
+                row_count += 1;
             }
-        }
-        self.frames.push(lines);
-        self
-    }
 
-    pub fn start(self) -> AnimationHandle {
-        let mut c_lines_vecs: Vec<Vec<*mut c_char>> = Vec::with_capacity(self.frames.len());
-
-        for frame in &self.frames {
-            let mut c_lines: Vec<*mut c_char> =
-                frame.iter().map(|s| s.as_ptr() as *mut c_char).collect();
-
-            c_lines.push(ptr::null_mut());
-            c_lines_vecs.push(c_lines);
-        }
-
-        let mut c_frames: Vec<*mut *mut c_char> = c_lines_vecs
-            .iter_mut()
-            .map(|lines| lines.as_mut_ptr())
-            .collect();
-
-        if !c_frames.is_empty() {
-            c_frames.push(ptr::null_mut());
-        }
-
-        let opts = AnimationOptions {
-            frames: if c_frames.is_empty() {
-                ptr::null_mut()
-            } else {
-                c_frames.as_mut_ptr() as *mut _
-            },
-            preset: self.preset,
-            fps: self.fps as _,
-        };
-
-        let handle = unsafe { sys::animate_impl(opts) };
-        AnimationHandle { handle }
-    }
-}
-
-pub struct MiamoreStdoutLock;
-
-impl MiamoreStdoutLock {
-    pub fn lock() -> Self {
-        unsafe {
-            libc::pthread_mutex_lock(
-                std::ptr::addr_of_mut!(sys::stdout_mutex) as *mut libc::pthread_mutex_t
-            );
-        }
-        Self
-    }
-}
-
-impl Drop for MiamoreStdoutLock {
-    fn drop(&mut self) {
-        unsafe {
-            libc::pthread_mutex_unlock(
-                std::ptr::addr_of_mut!(sys::stdout_mutex) as *mut libc::pthread_mutex_t
-            );
+            let grid_slice = ptr::slice_from_raw_parts_mut(frames_ptr, row_count + 1);
+            let _ = Box::from_raw(grid_slice);
         }
     }
 }
@@ -356,15 +341,21 @@ mod tests {
 
         set_fg(colors_t::white);
 
-        manage_cursor(cursor_t::move_, Some(position_t { x: 20, y: 4 }));
-
         // Animation
-        let anim = StartAnimation::new()
-            .preset(animation_preset_t::KITTY)
-            .fps(4)
-            .start();
+        // You should not use manage_cursor() to set the position of an animation
+
+        // let data = vec![vec![String::from("snake")]];
+        let anim = start_animation(
+            None, // Some(&data) // Pass in custom frames
+            Some(animation_preset_t::KITTY),
+            4,
+            position_t { x: 20, y: 4 },
+            colors_t::green,
+        );
 
         std::thread::sleep(std::time::Duration::from_micros(20));
+
+        set_fg(colors_t::yellow);
 
         manage_cursor(cursor_t::move_, Some(position_t { x: 4, y: 4 }));
         draw_text("hiya");
@@ -379,7 +370,7 @@ mod tests {
             }
         }
 
-        anim.stop();
+        end_animation(anim);
         close_miamore();
 
         debug(

@@ -76,12 +76,15 @@ typedef struct {
 void *animation_render(void *arg) {
   anim_worker_t *worker = (anim_worker_t *)arg;
 
-  if (NULL == worker->animation)
+  if (worker == NULL || worker->animation == NULL)
     return NULL;
 
   unsigned int num_frames = 0;
-  while (worker->animation[num_frames] != NULL)
+
+  while (worker->animation[num_frames] != NULL) {
     num_frames++;
+  }
+
   if (num_frames == 0)
     return NULL;
 
@@ -93,7 +96,10 @@ void *animation_render(void *arg) {
     long long total_elapsed_ns = current_time - start_time;
     int current_frame_index = (total_elapsed_ns / frame_delay_ns) % num_frames;
 
-    // Fetch latest coordinates safely
+    if (worker->animation[current_frame_index] == NULL) {
+      break;
+    }
+
     pthread_mutex_lock(&worker->pos_mutex);
     int draw_x = worker->x;
     int draw_y = worker->y;
@@ -104,8 +110,6 @@ void *animation_render(void *arg) {
     buf_append(fb, "\0337", 2);
 
     for (int l = 0; worker->animation[current_frame_index][l] != NULL; l++) {
-      char line_buf[256];
-
       manage_cursor(move, ((position_t){.x = draw_x, .y = draw_y + l}));
 
       char *color = give_fg_color(worker->color);
@@ -113,13 +117,14 @@ void *animation_render(void *arg) {
       render_frame(fb);
 
       const char *current_line = worker->animation[current_frame_index][l];
-      int len = snprintf(line_buf, sizeof(line_buf), "%s", current_line);
 
-      buf_append(fb, line_buf, len);
+      if (current_line == NULL)
+        continue;
+
+      buf_append(fb, current_line, strlen(current_line));
     }
 
     buf_append(fb, "\033[0m", 4);
-
     buf_append(fb, "\0338", 2);
 
     render_frame(fb);
