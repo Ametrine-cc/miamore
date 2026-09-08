@@ -159,6 +159,8 @@ typedef struct {
   const char ***frames;
   animation_preset_t preset;
   unsigned int fps;
+  position_t position;
+  colors_t color;
 } AnimationOptions;
 
 void *animate_impl(AnimationOptions opts);

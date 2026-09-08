@@ -364,7 +364,7 @@ mod tests {
             .fps(4)
             .start();
 
-        std::thread::sleep(std::time::Duration::from_secs(2));
+        std::thread::sleep(std::time::Duration::from_micros(20));
 
         manage_cursor(cursor_t::move_, Some(position_t { x: 4, y: 4 }));
         draw_text("hiya");

@@ -44,66 +44,87 @@ const char **kitty_frames[] = {
 
 extern pthread_mutex_t stdout_mutex;
 
-typedef struct {
-  pthread_t thread;
-  volatile int running;
-  const char ***animation;
-  unsigned int fps;
-} anim_worker_t;
-
 long long get_time_ns(void) {
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
   return (long long)ts.tv_sec * 1000000000LL + ts.tv_nsec;
 }
 
+typedef struct {
+  pthread_t thread;
+  volatile int running;
+  const char ***animation;
+  unsigned int fps;
+  int x;
+  int y;
+  colors_t color;
+  pthread_mutex_t pos_mutex; // Protects dynamic position updates
+} anim_worker_t;
+
+// Call this from the main thread if you move the animation anchor
+// void update_animation_pos(void *handle, int new_x, int new_y) {
+// if (!handle)
+// return;
+// anim_worker_t *worker = (anim_worker_t *)handle;
+
+// pthread_mutex_lock(&worker->pos_mutex);
+// worker->x = new_x;
+// worker->y = new_y;
+// pthread_mutex_unlock(&worker->pos_mutex);
+// }
+
 void *animation_render(void *arg) {
   anim_worker_t *worker = (anim_worker_t *)arg;
 
-  if (NULL == worker->animation) {
-    debug(tui, .function = __PRETTY_FUNCTION__,
-          .error = "cannot animate this (NULL).");
-    free(worker);
+  if (NULL == worker->animation)
     return NULL;
-  }
 
   unsigned int num_frames = 0;
-  while (worker->animation[num_frames] != NULL) {
+  while (worker->animation[num_frames] != NULL)
     num_frames++;
-  }
-
-  if (num_frames == 0) {
-    debug(tui, .function = __PRETTY_FUNCTION__,
-          .error = "Animation array is empty!");
-    free(worker);
+  if (num_frames == 0)
     return NULL;
-  }
 
   long long frame_delay_ns = 1000000000LL / (worker->fps ? worker->fps : 1);
   long long start_time = get_time_ns();
 
-  int origin_x = cursor_x;
-  int origin_y = cursor_y;
-
   while (worker->running) {
     long long current_time = get_time_ns();
     long long total_elapsed_ns = current_time - start_time;
-
     int current_frame_index = (total_elapsed_ns / frame_delay_ns) % num_frames;
+
+    // Fetch latest coordinates safely
+    pthread_mutex_lock(&worker->pos_mutex);
+    int draw_x = worker->x;
+    int draw_y = worker->y;
+    pthread_mutex_unlock(&worker->pos_mutex);
 
     pthread_mutex_lock(&stdout_mutex);
 
+    buf_append(fb, "\0337", 2);
+
     for (int l = 0; worker->animation[current_frame_index][l] != NULL; l++) {
-      manage_cursor(move, ((position_t){.x = origin_x, .y = origin_y + l}));
+      char line_buf[256];
+
+      manage_cursor(move, ((position_t){.x = draw_x, .y = draw_y + l}));
+
+      char *color = give_fg_color(worker->color);
+      buf_append(fb, color, strlen(color));
+      render_frame(fb);
 
       const char *current_line = worker->animation[current_frame_index][l];
-      snprintf(temp_buf, sizeof(temp_buf), "%s", current_line);
+      int len = snprintf(line_buf, sizeof(line_buf), "%s", current_line);
 
-      buf_append(fb, temp_buf, strlen(temp_buf));
-      render_frame(fb);
+      buf_append(fb, line_buf, len);
     }
 
+    buf_append(fb, "\033[0m", 4);
+
+    buf_append(fb, "\0338", 2);
+
+    render_frame(fb);
     fflush(stdout);
+
     pthread_mutex_unlock(&stdout_mutex);
 
     long long draw_time = get_time_ns() - current_time;
@@ -140,6 +161,9 @@ void *animate_impl(AnimationOptions opts) {
   worker->running = 1;
   worker->animation = target_frames;
   worker->fps = opts.fps;
+  worker->x = opts.position.x;
+  worker->y = opts.position.y;
+  worker->color = opts.color;
 
   if (pthread_create(&worker->thread, NULL, animation_render, worker) != 0) {
     free(worker);

@@ -163,18 +163,20 @@ int main(void) {
   draw_shape(rect, double_l, ((dimensions_t){26, 12}), ((position_t){5, 12}));
 
   set_fg(white);
-  set_bg(green);
-
-  manage_cursor(move, ((position_t){20, 4}));
 
   // Animation
-  void *animate_kitty = start_animation(.preset = KITTY, .fps = 4);
+  void *animate_kitty =
+      start_animation(.preset = KITTY, .fps = 4,
+                      .position = ((position_t){20, 4}), .color = green);
+  wait_for(MS(0.2));
+
+  set_fg(yellow);
+  manage_cursor(move, ((position_t){4, 4}));
+  draw_text("hiya");
 
   bool runtime = true;
 
   while (runtime) {
-    draw_text("hiya");
-
     int user = input();
 
     if ('q' == user) {
