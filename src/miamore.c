@@ -76,19 +76,27 @@ void init_miamore_opts(const MiamoreOptions opts) {
   }
 }
 
+// not required but is a better way to close miamore than just continuing with
+// the code
+void close_miamore() {
+  init = false;
+
+  // set colors to black
+  set_fg(black);
+  set_bg(black);
+
+  // reset and clear screen back to 0, 0
+  request_screen(reset_t);
+  request_screen(clear_origin_t);
+}
+
 void check_init(void) {
   if (!init) {
     snprintf(error_buf, sizeof(error_buf), "miamore not initialised");
-    write_error(error_buf);
+    debug(console, .function = "check_init", .error = error_buf);
   } else {
     return;
-    ;
   }
-}
-
-void write_error(char *error) {
-  printf("[error] %s\n", error);
-  exit(1);
 }
 
 // miamore functions
@@ -267,18 +275,20 @@ bool supports_truecolor(void) {
 }
 
 void debug_opts(DebugType type, DebugOptions opts) {
-  check_init();
   fflush(stdout);
 
-  snprintf(error_buf, sizeof(error_buf), "[%s] -> %s\n", opts.function,
-           opts.error);
+  char error[512];
+
+  snprintf(error, sizeof(error), "[%s] -> %s\n", opts.function, opts.error);
 
   switch (type) {
   case console:
-    printf("%s\n", error_buf);
+    printf("%s\n", error);
     break;
   case tui:
-    buf_append(fb, error_buf, strlen(error_buf));
+    check_init();
+
+    buf_append(fb, error, strlen(error));
     render_frame(fb);
     break;
   }

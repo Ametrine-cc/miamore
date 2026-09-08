@@ -37,7 +37,6 @@ extern char default_typeface[5][5];
 
 // error
 extern char error_buf[MAX_BUFFER_SIZE];
-extern void write_error(char *error);
 
 // screen_options enum
 typedef enum screen_options {

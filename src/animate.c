@@ -18,6 +18,7 @@
  * along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "global.h"
 #include "include/miamore.h"
 #include <pthread.h>
 #include <stdio.h>
@@ -48,7 +49,6 @@ typedef struct {
   volatile int running;
   const char ***animation;
   unsigned int fps;
-  unsigned int duration;
 } anim_worker_t;
 
 long long get_time_ns(void) {
@@ -94,11 +94,13 @@ void *animation_render(void *arg) {
     pthread_mutex_lock(&stdout_mutex);
 
     for (int l = 0; worker->animation[current_frame_index][l] != NULL; l++) {
-
       manage_cursor(move, ((position_t){.x = origin_x, .y = origin_y + l}));
 
       const char *current_line = worker->animation[current_frame_index][l];
-      printf("%s\x1b[K", current_line);
+      snprintf(temp_buf, sizeof(temp_buf), "%s", current_line);
+
+      buf_append(fb, temp_buf, strlen(temp_buf));
+      render_frame(fb);
     }
 
     fflush(stdout);

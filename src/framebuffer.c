@@ -18,7 +18,6 @@
  * along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// #include "include/miamore.h"
 #include "global.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,5 +48,6 @@ void render_frame(FrameBuffer *buf) {
   int res = write(STDOUT_FILENO, buf->data, buf->len);
   if (!res)
     printf("error with framebuffer\n");
+
   buf->len = 0;
 }

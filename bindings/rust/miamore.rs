@@ -286,6 +286,13 @@ impl Drop for MiamoreStdoutLock {
     }
 }
 
+/// close miamore
+pub fn close_miamore() {
+    unsafe {
+        sys::close_miamore();
+    }
+}
+
 /// Test function
 pub fn test(s: &str) {
     let c_string = CString::new(s).expect("String contained null bytes");
@@ -359,21 +366,24 @@ mod tests {
 
         std::thread::sleep(std::time::Duration::from_secs(2));
 
+        manage_cursor(cursor_t::move_, Some(position_t { x: 4, y: 4 }));
+        draw_text("hiya");
+
         let mut runtime: bool = true;
 
         while runtime {
             let input = input();
 
             if input == b'q' as i32 {
-                clear_origin();
                 runtime = false;
             }
         }
 
         anim.stop();
+        close_miamore();
 
         debug(
-            DebugType::tui,
+            DebugType::console,
             Some(DebugOptions {
                 function: c"test_2".as_ptr(),
                 error: c"This is an example of a debug error through the console raw with printf()"

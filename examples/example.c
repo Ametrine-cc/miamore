@@ -163,6 +163,7 @@ int main(void) {
   draw_shape(rect, double_l, ((dimensions_t){26, 12}), ((position_t){5, 12}));
 
   set_fg(white);
+  set_bg(green);
 
   manage_cursor(move, ((position_t){20, 4}));
 
@@ -172,19 +173,22 @@ int main(void) {
   bool runtime = true;
 
   while (runtime) {
+    draw_text("hiya");
+
     int user = input();
 
     if ('q' == user) {
-      clear_origin();
       runtime = false;
     }
   }
 
   end_animation(animate_kitty);
+  close_miamore();
 
   // Use debug with console
   debug(console, .function = "test_2",
         .error = "This is an example of a debug error through the console raw "
                  "with printf()");
+
   return 0;
 }
