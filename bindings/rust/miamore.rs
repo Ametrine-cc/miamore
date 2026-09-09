@@ -353,8 +353,6 @@ mod tests {
             colors_t::green,
         );
 
-        std::thread::sleep(std::time::Duration::from_micros(20));
-
         set_fg(colors_t::yellow);
 
         manage_cursor(cursor_t::move_, Some(position_t { x: 4, y: 4 }));

@@ -169,7 +169,6 @@ int main(void) {
   void *animate_kitty =
       start_animation(.preset = KITTY, .fps = 4,
                       .position = ((position_t){20, 4}), .color = green);
-  wait_for(MS(0.2));
 
   set_fg(yellow);
   manage_cursor(move, ((position_t){4, 4}));

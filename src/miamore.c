@@ -20,6 +20,7 @@
 
 #include "include/miamore.h"
 #include "global.h"
+#include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,11 +64,32 @@ void fb_init(void) {
   fb->len = 0;
 }
 
+void handle_resize(int sig) {
+  struct winsize w;
+  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1) {
+    printf("Resize caught! New size: %d columns x %d rows\n", w.ws_col,
+           w.ws_row);
+  }
+}
+
 void init_miamore_opts(const MiamoreOptions opts) {
   init = true;
   calc_window_size();
   fb_init();
 
+  // Window resize
+  struct sigaction sa;
+  sa.sa_handler = handle_resize;
+
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = SA_RESTART;
+
+  if (sigaction(SIGWINCH, &sa, NULL) == -1) {
+    perror("sigaction");
+    exit(EXIT_FAILURE);
+  }
+
+  // MiamoreOptions
   if (opts.should_clear) {
     request_screen(clear_origin_t);
   }
@@ -76,8 +98,7 @@ void init_miamore_opts(const MiamoreOptions opts) {
   }
 }
 
-// not required but is a better way to close miamore than just continuing with
-// the code
+// Required
 void close_miamore() {
   init = false;
 

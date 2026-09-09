@@ -175,6 +175,8 @@ void *animate_impl(AnimationOptions opts) {
     return NULL;
   }
 
+  wait_for(MS(0.02));
+
   return (void *)worker;
 }
 
