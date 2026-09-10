@@ -37,6 +37,7 @@ int unsigned window_height;
 int unsigned cursor_x;
 int unsigned cursor_y;
 
+bool resize;
 bool init;
 
 char error_buf[MAX_BUFFER_SIZE];
@@ -69,8 +70,11 @@ void handle_resize(int sig) {
   if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1) {
     clear_origin();
 
-    printf("Resize caught! New size: %d columns x %d rows\n", w.ws_col,
-           w.ws_row);
+    snprintf(temp_buf, sizeof(temp_buf),
+             "Resize caught! New size: %d columns x %d rows\n", w.ws_col,
+             w.ws_row);
+
+    debug(console, .function = __FUNCTION__, .error = temp_buf);
   }
 }
 
@@ -116,7 +120,7 @@ void close_miamore() {
 void check_init(void) {
   if (!init) {
     snprintf(error_buf, sizeof(error_buf), "miamore not initialised");
-    debug(console, .function = "check_init", .error = error_buf);
+    debug(console, .function = __FUNCTION__, .error = error_buf);
   } else {
     return;
   }
