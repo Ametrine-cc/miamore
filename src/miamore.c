@@ -78,6 +78,8 @@ void handle_resize(int sig) {
              w.ws_row);
 
     debug(console, .function = __FUNCTION__, .error = temp_buf);
+    window_height = w.ws_col;
+    window_width = w.ws_row;
   }
 }
 

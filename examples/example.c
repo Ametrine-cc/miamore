@@ -132,7 +132,7 @@ void ctest() {
 
 int main(void) {
   // Init miamore
-  init_miamore(true, true);
+  init_miamore(true, true, true);
   manage_keys(disable);
 
   // Use debug
