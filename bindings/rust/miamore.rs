@@ -65,10 +65,11 @@ pub fn clear_origin() {
     unsafe { sys::clear_origin() }
 }
 
-pub fn init_miamore(should_clear: bool, disable_mouse: bool) {
+pub fn init_miamore(should_clear: bool, disable_mouse: bool, resize: bool) {
     let opts = MiamoreOptions {
         should_clear,
         disable_mouse,
+        resize,
     };
     unsafe { sys::init_miamore_opts(opts) }
 }
@@ -293,7 +294,7 @@ mod tests {
     #[test]
     fn miamore_test() {
         // Init miamore
-        init_miamore(true, true);
+        init_miamore(true, true, true);
 
         manage_keys(keys_t::disable);
 

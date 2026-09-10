@@ -66,6 +66,9 @@ void fb_init(void) {
 }
 
 void handle_resize(int sig) {
+  if (!resize)
+    return;
+
   struct winsize w;
   if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1) {
     clear_origin();
@@ -82,6 +85,7 @@ void init_miamore_opts(const MiamoreOptions opts) {
   init = true;
   calc_window_size();
   fb_init();
+  resize = opts.resize;
 
   // Window resize
   struct sigaction sa;

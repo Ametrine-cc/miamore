@@ -89,6 +89,7 @@ void clear_origin(void); // clear window and go to 1, 1
 typedef struct {
   bool should_clear;
   bool disable_mouse;
+  bool resize;
 } MiamoreOptions;
 void init_miamore_opts(MiamoreOptions opts);
 #define init_miamore(...) init_miamore_opts((MiamoreOptions){__VA_ARGS__})

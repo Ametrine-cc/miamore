@@ -67,7 +67,7 @@ void ctest() {
   // functions will fail and return errors (return error then quit at that spot)
   //
   //  init_miamore();
-  init_miamore(.should_clear = true, .disable_mouse = true);
+  init_miamore(.should_clear = true, .disable_mouse = true, .resize = true);
   manage_keys(disable);
 
   // the draw_border command can take 2 arguments, text="" and style=enum. text
