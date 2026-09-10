@@ -6,7 +6,7 @@ authors = [
     "Ametrine Foundation <business@ametrine.cc>"
 ]
 edition = "2024"
-description = "A lightweight C TUI Library. These are the official Rust bindings for miamore"
+description = "A better way of making TUI. The official Rust bindings for miamore."
 license = "LGPL-3.0"
 repository = "https://github.com/Ametrine-cc/miamore"
 readme = "README.md"

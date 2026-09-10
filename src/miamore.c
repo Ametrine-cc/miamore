@@ -31,6 +31,8 @@
 #include <unistd.h>
 
 FrameBuffer *fb = NULL;
+FrameBuffer *fbb = NULL;
+
 int unsigned window_width;
 int unsigned window_height;
 
@@ -65,6 +67,25 @@ void fb_init(void) {
   fb->len = 0;
 }
 
+void fbb_init(void) {
+  if (!fbb) {
+    fbb = malloc(sizeof(FrameBuffer));
+    if (!fbb)
+      return;
+
+    fbb->data = malloc(65536);
+    if (!fbb->data) {
+      free(fbb);
+      fbb = NULL;
+      return;
+    }
+
+    fbb->capacity = 65536;
+  }
+
+  fbb->len = 0;
+}
+
 void handle_resize(int sig) {
   if (!resize)
     return;
@@ -73,21 +94,25 @@ void handle_resize(int sig) {
   if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1) {
     clear_origin();
 
-    snprintf(temp_buf, sizeof(temp_buf),
-             "Resize caught! New size: %d columns x %d rows\n", w.ws_col,
-             w.ws_row);
+    // snprintf(temp_buf, sizeof(temp_buf),
+    // "Resize caught! New size: %d columns x %d rows\n", w.ws_col,
+    // w.ws_row);
 
-    debug(console, .function = __FUNCTION__, .error = temp_buf);
+    // debug(console, .function = __FUNCTION__, .error = temp_buf);
     window_height = w.ws_col;
     window_width = w.ws_row;
+
+    // render_frame(fbb);
   }
 }
 
 void init_miamore_opts(const MiamoreOptions opts) {
   init = true;
-  calc_window_size();
-  fb_init();
   resize = opts.resize;
+
+  calc_window_size();
+
+  fb_init();
 
   // Window resize
   struct sigaction sa;

@@ -37,8 +37,11 @@ void buf_append(FrameBuffer *buf, const char *str, size_t len) {
     buf->data = new_data;
     buf->capacity = new_cap;
   }
+
   memcpy(buf->data + buf->len, str, len);
   buf->len += len;
+
+  buf_append(fbb, str, strlen(str));
 }
 
 void render_frame(FrameBuffer *buf) {

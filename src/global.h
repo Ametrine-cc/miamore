@@ -30,7 +30,7 @@
 
 // global vars
 
-#define MAX_BUFFER_SIZE 2048
+#define MAX_BUFFER_SIZE 4048
 
 extern char temp_buf[MAX_BUFFER_SIZE];
 extern char default_typeface[5][5];
@@ -58,6 +58,7 @@ typedef struct {
 } FrameBuffer;
 
 extern FrameBuffer *fb;
+extern FrameBuffer *fbb;
 void fb_init(void);
 
 void buf_append(FrameBuffer *fb, const char *str, size_t len);
