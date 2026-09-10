@@ -1,5 +1,5 @@
 # miamore
-Making TUI applications simply
+A better way of making TUI
 
 #### Note: Documentation website will be the most recent version release, older versions of documentation wont be accesible for main library documentation but will on [Crate.io](https://crates.io/crates/miamore).
 #### Note: More information can be found on the [Ametrine Foundation Documentation website](https://docs.ametrine.cc/libraries/miamore)
@@ -11,7 +11,7 @@ Making TUI applications simply
 ### Dependencies
 
 *   `Linux` (other `UNIX-Like` or `UNIX` system have not been tested).
-*   `clang` (to compile the code).
+*   `clang` (to compile the code, the `Makefile` specifically looks for clang).
 *   `make` (automate build and install process).
 
 Install `miamore` from source:
@@ -50,7 +50,17 @@ sudo make install
 sudo make uninstall
 ```
 
+This will install the .a files to your systems `/usr/local/lib/` folder maing it accessible when linking
+during compilation.
+
 Examples can be found in `examples/example.c` and by running `make rust-test` after compilation
+You can manually compile the c exampke with this command, showing you also how to link miamore into the compilation
+manually after it has been installed onto your system.
+
+```bash
+clang examples/example.c -lmiamore -o example
+```
+
 
 ## How to contribute?
 
