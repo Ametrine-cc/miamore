@@ -68,6 +68,7 @@ void handle_resize(int sig) {
   struct winsize w;
   if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1) {
     clear_origin();
+
     printf("Resize caught! New size: %d columns x %d rows\n", w.ws_col,
            w.ws_row);
   }

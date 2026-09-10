@@ -66,7 +66,8 @@ If you find a bug, please help us by reporting it on the [GitHub Issues page](ht
 *   Any error messages or logs.
 *   Your operating system and compiler version.
 
-## Credits:
+## Credits
+Thank you to the Ametrine developers who helped out making miamore.
 
 *   Lead Developer - [Noticxs](https://github.com/Noticxs)
 

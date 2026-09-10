@@ -49,6 +49,7 @@ typedef enum screen_options {
 // init
 extern bool init;
 void check_init(void);
+extern char frame_stack[4048][4048];
 
 // framebuffer
 typedef struct {
