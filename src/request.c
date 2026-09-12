@@ -46,24 +46,21 @@ void request_screen(screen_options screen) {
 
   switch (screen) {
   case reset_t:
-    snprintf(temp_buf, sizeof(temp_buf), "%s", aec->reset_styles);
-    buf_append(&fb, temp_buf, strlen(temp_buf));
+    request_draw(
+        (DrawCmd){.type = CMD_TEXT, .text = strdup(aec->reset_styles)});
     render_frame();
 
     break;
   case clear_t:
-    snprintf(temp_buf, sizeof(temp_buf), "%s", aec->clear);
-    buf_append(&fb, temp_buf, strlen(temp_buf));
+    request_draw(
+        (DrawCmd){.type = CMD_TEXT, .text = strdup(aec->reset_styles)});
     render_frame();
 
     break;
   case clear_origin_t:
-    snprintf(temp_buf, sizeof(temp_buf), "%s", aec->clear);
-    buf_append(&fb, temp_buf, strlen(temp_buf));
-    render_frame();
+    request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup(aec->clear)});
 
-    snprintf(temp_buf, sizeof(temp_buf), "%s", aec->origin);
-    buf_append(&fb, temp_buf, strlen(temp_buf));
+    request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup(aec->origin)});
     render_frame();
 
     break;
@@ -72,7 +69,7 @@ void request_screen(screen_options screen) {
     strcat(temp_buf, "\x1b[?1003l");
     strcat(temp_buf, "\x1b[?1006l");
 
-    buf_append(&fb, temp_buf, strlen(temp_buf));
+    request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup(temp_buf)});
     render_frame();
 
     break;
@@ -82,24 +79,21 @@ void request_screen(screen_options screen) {
 void show_cursor() {
   fflush(stdout);
 
-  snprintf(temp_buf, sizeof(temp_buf), "%s", aec->show_cursor);
-  buf_append(&fb, temp_buf, strlen(temp_buf));
+  request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup(aec->show_cursor)});
   render_frame();
 }
 
 void hide_cursor() {
   fflush(stdout);
 
-  snprintf(temp_buf, sizeof(temp_buf), "%s", aec->hide_cursor);
-  buf_append(&fb, temp_buf, strlen(temp_buf));
+  request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup(aec->hide_cursor)});
   render_frame();
 }
 
 void move_cursor(int x, int y) {
   fflush(stdout);
 
-  snprintf(temp_buf, sizeof(temp_buf), "\033[%d;%dH", y + 1, x + 1);
-  buf_append(&fb, temp_buf, strlen(temp_buf));
+  request_draw((DrawCmd){.type = CMD_MOVE, .x = x + 1, .y = y + 1});
   render_frame();
 
   cursor_x = x;
