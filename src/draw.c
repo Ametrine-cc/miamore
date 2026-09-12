@@ -42,13 +42,12 @@ static const char *THEME_STR[][6] = {
 };
 
 void draw_rect(int width, int height, theme_t theme) {
-  request_draw((DrawCmd){.type = CMD_TEXT, .text = "hi"});
+  request_draw((DrawCmd){.type = CMD_BOX, .w = width, .h = height});
   render_frame();
 }
 
 void draw_shape_opts(shape_t shape, ShapeOptions opts) {
   check_init();
-  manage_cursor(move, ((position_t){opts.position.x, opts.position.y}));
   fflush(stdout);
 
   switch (shape) {

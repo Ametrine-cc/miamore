@@ -141,19 +141,24 @@ int main(void) {
   manage_keys(disable);
 
   // Use debug
-  // debug(tui, .error = "test",
-  // .function = "This is an example of a debug error");
+  debug(tui, .error = "test",
+        .function = "This is an example of a debug error");
+
+  // wait for 2 seconds
+  wait_for(2);
 
   // Clear screen
   clear_origin();
 
   set_fg(green);
 
-  // Drawing border
-  draw_shape(rect, thick_l);
-
   // Managing cursor
   manage_cursor(move, ((position_t){5, 5}));
+
+  // Drawing box
+  draw_shape(rect, double_l, ((dimensions_t){26, 12}));
+
+  manage_cursor(move, ((position_t){15, 15}));
   manage_cursor(show);
 
   // Drawing text
@@ -172,15 +177,12 @@ int main(void) {
     }
   }
 
-  // close_miamore();
+  close_miamore();
 
   // Use debug with console
   debug(console, .function = "test_2",
         .error = "This is an example of a debug error through the console raw "
                  "with printf()");
-
-  render_frame(); // can be done after close_miamore() as doesn't require
-                  // miamore to be initialised for rendering
 
   return 0;
 }

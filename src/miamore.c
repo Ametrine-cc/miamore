@@ -93,17 +93,17 @@ void init_miamore_opts(const MiamoreOptions opts) {
 }
 
 // Required
-// void close_miamore() {
-//   init = false;
+void close_miamore() {
+  init = false;
 
-//   // set colors to black
-//   set_fg(black);
-//   set_bg(black);
+  // set colors to black
+  set_fg(black);
+  set_bg(black);
 
-//   // reset and clear screen back to 0, 0
-//   request_screen(reset_t);
-//   request_screen(clear_origin_t);
-// }
+  // reset and clear screen back to 0, 0
+  request_screen(reset_t);
+  request_screen(clear_origin_t);
+}
 
 void check_init(void) {
   if (!init) {
@@ -303,7 +303,7 @@ void debug_opts(DebugType type, DebugOptions opts) {
   case tui:
     check_init();
 
-    buf_append(&fb, error, strlen(error));
+    request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup(error)});
     render_frame();
     break;
   }
