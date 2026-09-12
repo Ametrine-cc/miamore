@@ -147,6 +147,8 @@ int main(void) {
   // Clear screen
   clear_origin();
 
+  set_fg(green);
+
   // Drawing border
   draw_shape(rect, thick_l);
 

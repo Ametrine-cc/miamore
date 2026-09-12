@@ -167,13 +167,13 @@ char *give_bg_color(colors_t color) {
 void set_fg(colors_t color) {
   char *col = give_fg_color(color);
 
-  buf_append(fb, col, strlen(col));
-  render_frame(fb);
+  request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup(col)});
+  render_frame();
 }
 
 void set_bg(colors_t color) {
   char *col = give_bg_color(color);
 
-  buf_append(fb, col, strlen(col));
-  render_frame(fb);
+  request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup(col)});
+  render_frame();
 }
