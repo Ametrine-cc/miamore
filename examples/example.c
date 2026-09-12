@@ -58,77 +58,82 @@ void input_example() {
   draw_text(buf);
 }
 
-void ctest() {
-  // can change functionality of init with passing the argmuments .should_clear
-  // = false or .enable_mouse = true by defualt the values of these arguments
-  // are flipped relative to the ones shouwn in this snippet of documentation.
-  // init_miamore();
-  // you are required to use the init_miamore() function or most of the miamore
-  // functions will fail and return errors (return error then quit at that spot)
-  //
-  //  init_miamore();
-  init_miamore(.should_clear = true, .disable_mouse = true, .resize = true);
-  manage_keys(disable);
+// int main(void) {
+//   // Init miamore
+//   init_miamore(true, true, true);
+//   manage_keys(disable);
 
-  // the draw_border command can take 2 arguments, text="" and style=enum. text
-  // can be set to any const char array for example '.text="hiiii my amazing
-  // program"' and that will be outputed at the top of the border.
-  //
-  // style is an enum that has 4 distict varients for the border: normal(single
-  // line), bold(thicker line), rounded(single line with rounded edges) and
-  // block(blocky line). which can be called like this '.style=normal' for
-  // example
-  //
-  // draw_border(.text = "wsg");
-  set_fg(white);
-  draw_border(.text = "C example!", .theme = thick_l);
+//   // Use debug
+//   debug(tui, .error = "test",
+//         .function = "This is an example of a debug error");
 
-  manage_cursor(move, ((position_t){5, 5}));
-  manage_cursor(show);
+//   // must remember to render frames
+//   render_frame();
 
-  // draw hello world to the screen "\n" is only needed if you want a new line
-  draw_text("Hello,");
-  draw_text(" World!\n");
+//   // Wait for 2 seconds
+//   wait_for(2.0);
 
-  // miamore has 2 clear functions, clear() -> which clears screen and doesnt
-  // move the cursor and clear_origin() which does the same but moves the cursor
-  // back to (1, 1)
-  //
-  // clear();
-  // clear_origin();
+//   // Clear screen
+//   clear_origin();
 
-  manage_cursor(move, ((position_t){5, 10}));
+//   // Drawing border
+//   draw_border("!C test!", thick_l);
 
-  // position becomes the shape origin (cursor position becomes top left corner)
-  draw_shape(rect, .theme = single_l, ((dimensions_t){26, 12}));
+//   // Managing cursor
+//   manage_cursor(move, ((position_t){5, 5}));
+//   manage_cursor(show);
 
-  // wait_for(MS(250)); // Wait 250 milliseconds
-  wait_for(SECONDS(2)); // Wait for 2 seconds
-  // wait_for(2); // Wait for 2 seconds
-  clear_origin();
+//   // Setting foreground color
+//   set_fg(cyan);
 
-  // Drawing animations in miamore
+//   // Drawing text
+//   draw_text("Hello, ");
+//   draw_text("World!");
 
-  manage_cursor(move, ((position_t){5, 5}));
-  manage_cursor(hide);
+//   // Drawing shapes
+//   draw_shape(rect, double_l, ((dimensions_t){26, 12}), ((position_t){5,
+//   12}));
 
-  // Passing a preset via designated initializer
-  void *animate_kitty = start_animation(.preset = KITTY, .fps = 4);
-  // void *animate_kitty =
-  // start_animation(.frames = (const char ***)kitten_frames, .fps = 4);
+//   render_frame(); // rendering frames doesnt have to be straight after draw
 
-  while (1) {
-    int user = input();
+//   set_fg(white);
 
-    if ('q' == user) {
-      end_animation(animate_kitty);
-      break;
-    }
-  }
+//   // Animation
+//   // You should not use manage_cursor() to set the position of an animation
+//   void *animate_kitty =
+//       start_animation(.preset = KITTY, .fps = 4,
+//                       .position = ((position_t){20, 4}), .color = green);
 
-  // wait_for(4); // Wait for 4 seconds
-  clear_origin();
-}
+//   set_fg(yellow);
+//   manage_cursor(move, ((position_t){4, 4}));
+//   draw_text("hiya");
+
+//   render_frame();
+
+//   bool runtime = true;
+
+//   while (runtime) {
+//     int user = input();
+
+//     if ('q' == user) {
+//       runtime = false;
+//     }
+//   }
+
+//   end_animation(animate_kitty);
+//   close_miamore();
+
+//   // Use debug with console
+//   debug(console, .function = "test_2",
+//         .error = "This is an example of a debug error through the console raw
+//         "
+//                  "with printf()");
+
+//   render_frame(); // can be done after close_miamore() as doesn't require
+//                   // miamore to be initialised for rendering
+
+//   return 0;
+// }
 
 int main(void) {
   // Init miamore
@@ -136,43 +141,24 @@ int main(void) {
   manage_keys(disable);
 
   // Use debug
-  debug(tui, .error = "test",
-        .function = "This is an example of a debug error");
-
-  // Wait for 2 seconds
-  wait_for(2.0);
+  // debug(tui, .error = "test",
+  // .function = "This is an example of a debug error");
 
   // Clear screen
   clear_origin();
 
   // Drawing border
-  draw_border("!C test!", thick_l);
+  draw_shape(rect, thick_l);
 
   // Managing cursor
   manage_cursor(move, ((position_t){5, 5}));
   manage_cursor(show);
 
-  // Setting foreground color
-  set_fg(cyan);
-
   // Drawing text
   draw_text("Hello, ");
   draw_text("World!");
 
-  // Drawing shapes
-  draw_shape(rect, double_l, ((dimensions_t){26, 12}), ((position_t){5, 12}));
-
-  set_fg(white);
-
-  // Animation
-  // You should not use manage_cursor() to set the position of an animation
-  void *animate_kitty =
-      start_animation(.preset = KITTY, .fps = 4,
-                      .position = ((position_t){20, 4}), .color = green);
-
-  set_fg(yellow);
-  manage_cursor(move, ((position_t){4, 4}));
-  draw_text("hiya");
+  render_frame();
 
   bool runtime = true;
 
@@ -184,13 +170,15 @@ int main(void) {
     }
   }
 
-  end_animation(animate_kitty);
-  close_miamore();
+  // close_miamore();
 
   // Use debug with console
   debug(console, .function = "test_2",
         .error = "This is an example of a debug error through the console raw "
                  "with printf()");
+
+  render_frame(); // can be done after close_miamore() as doesn't require
+                  // miamore to be initialised for rendering
 
   return 0;
 }

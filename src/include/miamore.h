@@ -85,7 +85,7 @@ char *input_ex(void);
 void clear(void);        // clear window and keep cursor ar position
 void clear_origin(void); // clear window and go to 1, 1
 
-// init/close_miamore()
+// init/close_miamore() and render_frame()
 typedef struct {
   bool should_clear;
   bool disable_mouse;
@@ -94,6 +94,7 @@ typedef struct {
 void init_miamore_opts(MiamoreOptions opts);
 #define init_miamore(...) init_miamore_opts((MiamoreOptions){__VA_ARGS__})
 
+void render_frame(void);
 void close_miamore();
 
 // manage_keys

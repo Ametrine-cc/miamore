@@ -57,14 +57,24 @@ typedef struct {
   size_t len;
 } FrameBuffer;
 
-extern FrameBuffer *fb;
-extern FrameBuffer *fbb;
-void fb_init(void);
+typedef enum { CMD_CLEAR, CMD_MOVE, CMD_TEXT, CMD_BOX } CommandType;
 
+typedef struct {
+  CommandType type;
+  int x, y, w, h;
+  char *text;
+} DrawCmd;
+
+extern FrameBuffer fb;
+extern DrawCmd *g_cmds;
+extern size_t g_cmd_count;
+extern size_t g_cmd_capacity;
+
+void fb_init(void);
 void buf_append(FrameBuffer *fb, const char *str, size_t len);
-void render_frame(FrameBuffer *fb);
 
 // request functions
+void request_draw(DrawCmd);
 void request_screen(screen_options screen);
 void(request_cursor)(cursor_t cursor, position_t position);
 

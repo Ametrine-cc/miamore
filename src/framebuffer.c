@@ -22,35 +22,74 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 
-void buf_append(FrameBuffer *buf, const char *str, size_t len) {
-  if (!buf || !str || len == 0)
-    return;
+DrawCmd *g_cmds = NULL;
+size_t g_cmd_count = 0;
+size_t g_cmd_capacity = 0;
 
-  if (buf->len + len > buf->capacity) {
-    size_t new_cap = (buf->capacity == 0) ? 65536 : (buf->len + len) * 2;
-    char *new_data = realloc(buf->data, new_cap);
-    if (!new_data)
-      return;
-
-    buf->data = new_data;
-    buf->capacity = new_cap;
+void buf_append(FrameBuffer *fb, const char *str, size_t len) {
+  if (fb->len + len >= fb->capacity) {
+    size_t new_cap = fb->capacity == 0 ? 1024 : fb->capacity * 2;
+    while (new_cap <= fb->len + len)
+      new_cap *= 2;
+    fb->data = realloc(fb->data, new_cap);
+    fb->capacity = new_cap;
   }
-
-  memcpy(buf->data + buf->len, str, len);
-  buf->len += len;
-
-  buf_append(fbb, str, strlen(str));
+  memcpy(fb->data + fb->len, str, len);
+  fb->len += len;
 }
 
-void render_frame(FrameBuffer *buf) {
-  if (!buf || buf->len == 0)
-    return;
+void render_frame(void) {
+  fb.len = 0;
 
-  int res = write(STDOUT_FILENO, buf->data, buf->len);
-  if (!res)
-    printf("error with framebuffer\n");
+  struct winsize ws;
+  int cols = 80, rows = 24;
+  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == 0) {
+    cols = ws.ws_col;
+    rows = ws.ws_row;
+  }
 
-  buf->len = 0;
+  const char *clear_home = "\x1b[2J\x1b[H";
+  buf_append(&fb, clear_home, strlen(clear_home));
+
+  for (size_t i = 0; i < g_cmd_count; i++) {
+    DrawCmd *cmd = &g_cmds[i];
+    char temp[64];
+
+    if (cmd->type == CMD_MOVE) {
+      int n = snprintf(temp, sizeof(temp), "\x1b[%d;%dH", cmd->y, cmd->x);
+      if (n > 0)
+        buf_append(&fb, temp, (size_t)n);
+    } else if (cmd->type == CMD_TEXT) {
+      if (cmd->text)
+        buf_append(&fb, cmd->text, strlen(cmd->text));
+    } else if (cmd->type == CMD_BOX) {
+      int box_w = (cmd->w > 0) ? cmd->w : (cols - cmd->x);
+      int box_h = (cmd->h > 0) ? cmd->h : (rows - cmd->y);
+
+      for (int r = cmd->y; r < cmd->y + box_h && r <= rows; r++) {
+        int n = snprintf(temp, sizeof(temp), "\x1b[%d;%dH", r, cmd->x);
+        buf_append(&fb, temp, (size_t)n);
+
+        if (r == cmd->y || r == cmd->y + box_h - 1) {
+          buf_append(&fb, "+", 1);
+          for (int c = 0; c < box_w - 2; c++)
+            buf_append(&fb, "-", 1);
+          buf_append(&fb, "+", 1);
+        } else {
+          buf_append(&fb, "|", 1);
+          int n2 = snprintf(temp, sizeof(temp), "\x1b[%d;%dH", r,
+                            cmd->x + box_w - 1);
+          buf_append(&fb, temp, (size_t)n2);
+          buf_append(&fb, "|", 1);
+        }
+      }
+    }
+  }
+
+  if (fb.len > 0) {
+    write(STDOUT_FILENO, fb.data, fb.len);
+  }
 }

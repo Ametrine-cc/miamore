@@ -21,6 +21,7 @@
 #include "global.h"
 #include "include/miamore.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 typedef struct ASCIIEscapeCodes {
@@ -46,24 +47,24 @@ void request_screen(screen_options screen) {
   switch (screen) {
   case reset_t:
     snprintf(temp_buf, sizeof(temp_buf), "%s", aec->reset_styles);
-    buf_append(fb, temp_buf, strlen(temp_buf));
-    render_frame(fb);
+    buf_append(&fb, temp_buf, strlen(temp_buf));
+    render_frame();
 
     break;
   case clear_t:
     snprintf(temp_buf, sizeof(temp_buf), "%s", aec->clear);
-    buf_append(fb, temp_buf, strlen(temp_buf));
-    render_frame(fb);
+    buf_append(&fb, temp_buf, strlen(temp_buf));
+    render_frame();
 
     break;
   case clear_origin_t:
     snprintf(temp_buf, sizeof(temp_buf), "%s", aec->clear);
-    buf_append(fb, temp_buf, strlen(temp_buf));
-    render_frame(fb);
+    buf_append(&fb, temp_buf, strlen(temp_buf));
+    render_frame();
 
     snprintf(temp_buf, sizeof(temp_buf), "%s", aec->origin);
-    buf_append(fb, temp_buf, strlen(temp_buf));
-    render_frame(fb);
+    buf_append(&fb, temp_buf, strlen(temp_buf));
+    render_frame();
 
     break;
   case disable_mouse:
@@ -71,8 +72,8 @@ void request_screen(screen_options screen) {
     strcat(temp_buf, "\x1b[?1003l");
     strcat(temp_buf, "\x1b[?1006l");
 
-    buf_append(fb, temp_buf, strlen(temp_buf));
-    render_frame(fb);
+    buf_append(&fb, temp_buf, strlen(temp_buf));
+    render_frame();
 
     break;
   }
@@ -82,24 +83,24 @@ void show_cursor() {
   fflush(stdout);
 
   snprintf(temp_buf, sizeof(temp_buf), "%s", aec->show_cursor);
-  buf_append(fb, temp_buf, strlen(temp_buf));
-  render_frame(fb);
+  buf_append(&fb, temp_buf, strlen(temp_buf));
+  render_frame();
 }
 
 void hide_cursor() {
   fflush(stdout);
 
   snprintf(temp_buf, sizeof(temp_buf), "%s", aec->hide_cursor);
-  buf_append(fb, temp_buf, strlen(temp_buf));
-  render_frame(fb);
+  buf_append(&fb, temp_buf, strlen(temp_buf));
+  render_frame();
 }
 
 void move_cursor(int x, int y) {
   fflush(stdout);
 
   snprintf(temp_buf, sizeof(temp_buf), "\033[%d;%dH", y + 1, x + 1);
-  buf_append(fb, temp_buf, strlen(temp_buf));
-  render_frame(fb);
+  buf_append(&fb, temp_buf, strlen(temp_buf));
+  render_frame();
 
   cursor_x = x;
   cursor_y = y;
@@ -120,4 +121,12 @@ void(request_cursor)(cursor_t cursor, position_t position) {
     move_cursor(position.x, position.y);
     break;
   }
+}
+
+void request_draw(DrawCmd cmd) {
+  if (g_cmd_count >= g_cmd_capacity) {
+    g_cmd_capacity = g_cmd_capacity == 0 ? 16 : g_cmd_capacity * 2;
+    g_cmds = realloc(g_cmds, g_cmd_capacity * sizeof(DrawCmd));
+  }
+  g_cmds[g_cmd_count++] = cmd;
 }

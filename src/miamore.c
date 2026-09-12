@@ -30,8 +30,7 @@
 #include <time.h>
 #include <unistd.h>
 
-FrameBuffer *fb = NULL;
-FrameBuffer *fbb = NULL;
+FrameBuffer fb = {0};
 
 int unsigned window_width;
 int unsigned window_height;
@@ -48,44 +47,6 @@ char default_typeface[5][5];
 
 bool enable_truecolor;
 
-void fb_init(void) {
-  if (!fb) {
-    fb = malloc(sizeof(FrameBuffer));
-    if (!fb)
-      return;
-
-    fb->data = malloc(65536);
-    if (!fb->data) {
-      free(fb);
-      fb = NULL;
-      return;
-    }
-
-    fb->capacity = 65536;
-  }
-
-  fb->len = 0;
-}
-
-void fbb_init(void) {
-  if (!fbb) {
-    fbb = malloc(sizeof(FrameBuffer));
-    if (!fbb)
-      return;
-
-    fbb->data = malloc(65536);
-    if (!fbb->data) {
-      free(fbb);
-      fbb = NULL;
-      return;
-    }
-
-    fbb->capacity = 65536;
-  }
-
-  fbb->len = 0;
-}
-
 void handle_resize(int sig) {
   if (!resize)
     return;
@@ -93,16 +54,8 @@ void handle_resize(int sig) {
   struct winsize w;
   if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1) {
     clear_origin();
-
-    // snprintf(temp_buf, sizeof(temp_buf),
-    // "Resize caught! New size: %d columns x %d rows\n", w.ws_col,
-    // w.ws_row);
-
-    // debug(console, .function = __FUNCTION__, .error = temp_buf);
     window_height = w.ws_col;
     window_width = w.ws_row;
-
-    // render_frame(fbb);
   }
 }
 
@@ -110,9 +63,13 @@ void init_miamore_opts(const MiamoreOptions opts) {
   init = true;
   resize = opts.resize;
 
-  calc_window_size();
+  for (size_t i = 0; i < g_cmd_count; i++) {
+    if (g_cmds[i].text)
+      free(g_cmds[i].text);
+  }
+  g_cmd_count = 0;
 
-  fb_init();
+  calc_window_size();
 
   // Window resize
   struct sigaction sa;
@@ -136,17 +93,17 @@ void init_miamore_opts(const MiamoreOptions opts) {
 }
 
 // Required
-void close_miamore() {
-  init = false;
+// void close_miamore() {
+//   init = false;
 
-  // set colors to black
-  set_fg(black);
-  set_bg(black);
+//   // set colors to black
+//   set_fg(black);
+//   set_bg(black);
 
-  // reset and clear screen back to 0, 0
-  request_screen(reset_t);
-  request_screen(clear_origin_t);
-}
+//   // reset and clear screen back to 0, 0
+//   request_screen(reset_t);
+//   request_screen(clear_origin_t);
+// }
 
 void check_init(void) {
   if (!init) {
@@ -282,8 +239,8 @@ char *input_ex(void) {
         length--;
         input_buf[length] = '\0';
 
-        buf_append(fb, "\b \b", 3);
-        render_frame(fb);
+        buf_append(&fb, "\b \b", 3);
+        render_frame();
       }
     } else {
       if (length + 1 >= capacity) {
@@ -301,8 +258,8 @@ char *input_ex(void) {
       input_buf[length] = '\0';
 
       char char_str[2] = {(char)ch, '\0'};
-      buf_append(fb, char_str, 1);
-      render_frame(fb);
+      buf_append(&fb, char_str, 1);
+      render_frame();
     }
   }
 
@@ -346,8 +303,8 @@ void debug_opts(DebugType type, DebugOptions opts) {
   case tui:
     check_init();
 
-    buf_append(fb, error, strlen(error));
-    render_frame(fb);
+    buf_append(&fb, error, strlen(error));
+    render_frame();
     break;
   }
 }
