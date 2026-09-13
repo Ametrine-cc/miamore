@@ -53,9 +53,11 @@ void handle_resize(int sig) {
 
   struct winsize w;
   if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1) {
-    // clear_origin();
+    clear_origin();
     window_height = w.ws_col;
     window_width = w.ws_row;
+
+    render_frame();
   }
 }
 

@@ -57,7 +57,7 @@ typedef struct {
   size_t len;
 } FrameBuffer;
 
-typedef enum { CMD_CLEAR, CMD_MOVE, CMD_TEXT, CMD_BOX } CommandType;
+typedef enum { CMD_CLEAR, CMD_MOVE, CMD_TEXT } CommandType;
 
 typedef struct {
   CommandType type;

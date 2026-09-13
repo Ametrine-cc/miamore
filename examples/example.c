@@ -74,7 +74,7 @@ int main(void) {
   clear_origin();
 
   // Drawing border
-  // draw_border("!C test!", thick_l);
+  draw_border("!C test!", thick_l);
 
   // Managing cursor
   manage_cursor(move, ((position_t){5, 5}));
@@ -88,7 +88,8 @@ int main(void) {
   draw_text("World!");
 
   // Drawing shapes
-  draw_shape(rect, double_l, ((dimensions_t){26, 12}), ((position_t){5, 12}));
+  // draw_shape(rect, double_l, ((dimensions_t){26, 12}), ((position_t){5,
+  // 12}));
 
   set_fg(white);
 

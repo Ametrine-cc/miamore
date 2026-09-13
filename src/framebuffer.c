@@ -65,27 +65,6 @@ void render_frame(void) {
     } else if (cmd->type == CMD_TEXT) {
       if (cmd->text)
         buf_append(&fb, cmd->text, strlen(cmd->text));
-    } else if (cmd->type == CMD_BOX) {
-      int box_w = (cmd->w > 0) ? cmd->w : (cols - cmd->x);
-      int box_h = (cmd->h > 0) ? cmd->h : (rows - cmd->y);
-
-      for (int r = cmd->y; r < cmd->y + box_h && r <= rows; r++) {
-        int n = snprintf(temp, sizeof(temp), "\x1b[%d;%dH", r, cmd->x);
-        buf_append(&fb, temp, (size_t)n);
-
-        if (r == cmd->y || r == cmd->y + box_h - 1) {
-          buf_append(&fb, "+", 1);
-          for (int c = 0; c < box_w - 2; c++)
-            buf_append(&fb, "-", 1);
-          buf_append(&fb, "+", 1);
-        } else {
-          buf_append(&fb, "|", 1);
-          int n2 = snprintf(temp, sizeof(temp), "\x1b[%d;%dH", r,
-                            cmd->x + box_w - 1);
-          buf_append(&fb, temp, (size_t)n2);
-          buf_append(&fb, "|", 1);
-        }
-      }
     }
   }
 
