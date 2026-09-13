@@ -107,27 +107,28 @@ void *animation_render(void *arg) {
 
     pthread_mutex_lock(&stdout_mutex);
 
-    buf_append(fb, "\0337", 2);
+    request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup("\0337")});
 
     for (int l = 0; worker->animation[current_frame_index][l] != NULL; l++) {
       manage_cursor(move, ((position_t){.x = draw_x, .y = draw_y + l}));
 
       char *color = give_fg_color(worker->color);
-      buf_append(fb, color, strlen(color));
-      render_frame(fb);
+      request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup(color)});
+      render_frame();
 
       const char *current_line = worker->animation[current_frame_index][l];
 
       if (current_line == NULL)
         continue;
 
-      buf_append(fb, current_line, strlen(current_line));
+      request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup(current_line)});
     }
 
-    buf_append(fb, "\033[0m", 4);
-    buf_append(fb, "\0338", 2);
+    request_screen(reset_t);
+    // (fb, "\033[0m", 4);
+    request_draw((DrawCmd){.type = CMD_TEXT, .text = strdup("\0338")});
 
-    render_frame(fb);
+    render_frame();
     fflush(stdout);
 
     pthread_mutex_unlock(&stdout_mutex);

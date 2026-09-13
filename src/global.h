@@ -72,6 +72,7 @@ extern size_t g_cmd_capacity;
 
 void fb_init(void);
 void buf_append(FrameBuffer *fb, const char *str, size_t len);
+void render_frame(void);
 
 // request functions
 void request_draw(DrawCmd);
