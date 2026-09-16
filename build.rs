@@ -26,12 +26,7 @@ fn main() {
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     cc::Build::new()
-        .file("src/color.c")
-        .file("src/draw.c")
-        .file("src/framebuffer.c")
         .file("src/miamore.c")
-        .file("src/animate.c")
-        .file("src/request.c")
         .include("src/include")
         .out_dir(&out_dir)
         .compile("miamore");

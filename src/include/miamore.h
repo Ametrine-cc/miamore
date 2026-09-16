@@ -28,12 +28,6 @@
 #include <stdbool.h>
 #endif
 
-void test(char *string);
-
-// Version MAJOR.MINOR.PATCH
-
-// 0.1.1
-
 // global miamore vars
 extern unsigned int window_width;
 extern unsigned int window_height;
