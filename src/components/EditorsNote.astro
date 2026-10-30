@@ -1,0 +1,40 @@
+---
+interface Props {
+    text?: string;
+    function: string;
+}
+
+const { text: customText, function: fnType } = Astro.props;
+
+const presetTexts: Record<string, string> = {
+    c_libraries_compatibility_cpp:
+        "All C libraries have been tested and fully function on C++.",
+    c_libraries_no_compatibility_cpp:
+        "This C libraries is not compatible with C++.",
+    no_standalone_function:
+        "This Library is not functionable alone, add to your existing project.",
+};
+
+const editorsNote = customText || presetTexts[fnType] || "";
+---
+
+<span>
+    <slot />
+    <a class="note">Editors note: {editorsNote}</a>
+</span>
+
+<style>
+    .note {
+        /*font-weight: 200;*/
+
+        /*background-color: var(--sl-color-black);*/
+        color: var(--sl-color-white);
+        text-align: center;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        padding: 6px 8px;
+        opacity: 1;
+        border: 1px solid var(--sl-color-gray-5);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+</style>

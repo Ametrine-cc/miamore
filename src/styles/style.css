@@ -1,0 +1,21 @@
+:root {
+  --sl-content-width: 50rem;
+  --sl-text-5xl: 3.5rem;
+
+  /* Sans-serif stack for body text and navigation */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Monospace stack for <code>, <pre>, and technical identifiers */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Geist Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  --font-404: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --accent: #f2aafc;
+  --accent-hover: #a9a0fc;
+}
+
+.main-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem;
+}

@@ -1,0 +1,34 @@
+---
+title: miamore / examples
+description: A ncurses replacement, with more features.
+---
+
+import ToolTip from "../../../components/ToolTip.astro";
+import EditorsNote from "../../../components/EditorsNote.astro";
+
+<EditorsNote function="no_standalone_function"></EditorsNote>
+<br /> <br />
+
+### Examples
+
+If you want to check out the original <ToolTip function="C">`C`</ToolTip> example that was made alongside development of miamore run the following commands to compile.
+
+```bash
+make static example
+```
+
+To have a luck at the example written in rust run these commands to compile it.
+
+```bash
+# build library
+make static rust-build
+
+# build build and run example
+make rust-test
+```
+
+<br />
+
+## License
+
+This project is licensed under the <ToolTip function="lgpl">`GNU LESSER GENERAL PUBLIC LICENSE`</ToolTip> - see the [LICENSE](https://github.com/Ametrine-cc/miamore/blob/master/LICENSE) file for details or see the license on [here](https://docs.ametrine.cc/lgpl)

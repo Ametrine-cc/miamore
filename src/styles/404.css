@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+  font-family: var(--font-404);
+  background-color: black;
+  color: whitesmoke;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 1.5rem;
+}
+.container {
+  max-width: 500px;
+}
+h1 {
+  font-size: 6rem;
+  margin: 0;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+p.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0.5rem 0 1rem;
+}
+p.description {
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+a.button {
+  background-color: var(--accent);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+a.button:hover {
+  background-color: var(--accent-hover);
+}

@@ -1,0 +1,86 @@
+---
+interface Props {
+    text?: string;
+    function: string;
+}
+
+const { text: customText, function: fnType } = Astro.props;
+
+const presetTexts: Record<string, string> = {
+    // Ametrine specific tooltips
+    Ametrine: "The company who cares.",
+    miamore: "The TUI library by Ametrine, as a replacement for ncurses",
+    ncurses: "A old popular TUI library",
+    tui: "Terminal-User-Interface",
+
+    // Operating system specific tooltips (yes and kernels)
+    OperatingSystems: "The system that your computer runs on.",
+    CommandLineArgument:
+        "A command line argument that gets parsed into the program.",
+
+    Linux: "This feature requires a Linux operating system.",
+    UNIX: "A kernel similar to the Linux Kernel which is UNIX-Like",
+
+    PackageManager:
+        "How you install apps on Linux and other UNIX-Like operating systems",
+    ASCIIColors: "Colors in ASCII for the terminal stdout",
+
+    // Programming specific tooltips
+    C: "The C programming language.",
+    Rust: "The Rust programming language",
+    "C++": "The C++ programming language, at Ametrine Fountation, we specifically use C++20",
+    make: "The chosen build system for all Ametrine Foundation Projects and Libraries.",
+    makefile: "File for the build system make",
+    "clang++":
+        "A C++ compiler used by all Ametrine Foundation Projects and Libraries.",
+    gcc: "A C compiler.",
+    clang: "A C compiler used by all Ametrine Foundation Projects and Libraries.",
+
+    // License specific tooltips
+    gplv3: "The GNU General Public License v3 used in most Ametrine projects.",
+    agpl: "GNU Affero General Public License is used in some Ametrine projects like: kazmai and Lumina(coming soon).",
+    lgpl: "The GNU Lesser General Public License is used in some Ametrine projects",
+};
+
+const finalTooltipText = customText || presetTexts[fnType] || "";
+---
+
+<span class="tooltip-container">
+    <slot />
+    <span class="tooltip-popup">{finalTooltipText}</span>
+</span>
+
+<style>
+    .tooltip-container {
+        position: relative;
+        display: inline-block;
+        cursor: help;
+    }
+
+    .tooltip-popup {
+        /*visibility: hidden;*/
+        display: none;
+        width: 200px;
+        background-color: var(--sl-color-black);
+        color: var(--sl-color-white);
+        text-align: center;
+        border-radius: 4px;
+        padding: 6px 8px;
+        position: absolute;
+        z-index: 99999;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+        font-size: 0.85rem;
+        border: 1px solid var(--sl-color-gray-5);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .tooltip-container:hover .tooltip-popup {
+        /*visibility: visible;*/
+        display: block;
+        opacity: 1;
+    }
+</style>

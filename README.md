@@ -1,81 +1,52 @@
-# miamore
-Making TUI applications simply
+# Starlight:Ametrine Docs
+Key Requirement: Contributor License Agreement (CLA)
 
-`miamore` is a library for `C` allowing you to make TUI apps simply.
+If you choose Dual Licensing and later accept contributions from other developers, require them to sign a CLA. This grants you copyright permission to relicense their contributions commercially. Without a CLA, outside contributions would lock you out of selling commercial licenses for those parts of the codebase.
 
-`miamore` exists as a ncurses replacement(not drop in, syntax is very different) allowing developers to make TUI applications much easier with more features.
-miamore adds native 24-bit colors and the support to make animations directly in the library without having to add extra boilerplate in your main codebase.
-miamore also streamlines some processes about normal nurses such as the ability to create shapes with our 'draw()' function.
-More information can be found on the [Ametrine Foundation Documentation website](https://docs.ametrine.cc/libraries/miamore)
-
-## Installing miamore:
-
-### Dependencies
-
-*   `Linux` (other `UNIX-Like` or `UNIX` system have not been tested).
-*   `clang` (to compile the code).
-*   `make` (automate build and install process).
-
-Install `miamore` from source:
-
-### Cloning miamore
-```bash
-# All distrobutions
-git clone https://github.com/Ametrine-cc/miamore.git
-cd miamore
+[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
 ```
-
-### Building miamore
-```bash
-# building the .a lib
-make static
-
-# building the .so library
-make dynamic
-
-# building rust bindings
-# needs either static or dynamic library to be built before hand
-make rust-build
-
-# building both .a, .so and the rust bindings
-make all
+npm create astro@latest -- --template starlight
 ```
 
-### Installing miamore
-```bash
-# To use these commands use superuser privilages (sudo or doas)
-# To install the library on your system
-sudo make install
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
-# To uninstall run the uninstall command instead
-sudo make uninstall
+## 🚀 Project Structure
+
+Inside of your Astro + Starlight project, you'll see the following folders and files:
+
+```
+.
+├── public/
+├── src/
+│   ├── assets/
+│   ├── content/
+│   │   └── docs/
+│   └── content.config.ts
+├── astro.config.mjs
+├── package.json
+└── tsconfig.json
 ```
 
-Examples can be found in `examples/example.c` and by running `make rust-test` after compilation
+Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
 
-## How to contribute?
+Images can be added to `src/assets/` and embedded in Markdown with a relative link.
 
-We welcome contributions from the community to help improve `miamore`! Whether it's reporting bugs, suggesting new features, or submitting code changes, your help is valuable.
+Static assets, like favicons, can be placed in the `public/` directory.
 
-### Reporting Bugs
+## 🧞 Commands
 
-If you find a bug, please help us by reporting it on the [GitHub Issues page](https://github.com/Ametrine-cc/miamore/issues). When reporting a bug, please include:
+All commands are run from the root of the project, from a terminal:
 
-*   A clear and concise description of the bug.
-*   Steps to reproduce the behavior.
-*   Expected behavior vs. actual behavior.
-*   Any error messages or logs.
-*   Your operating system and compiler version.
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`             | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:4321`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
+| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## Credits:
+## 👀 Want to learn more?
 
-*   Lead Developer - [Noticxs](https://github.com/Noticxs)
-
-## License
-
-## Licensing
-This project is licensed under the GNU Lesser General Public License v3.0 or later (LGPL-3.0-or-later) - see `LICENSE` and `LICENSE.LESSER` for details.
-
-### Using this library in commercial/closed-source software
-You can use `libyourname` in closed-source projects via dynamic linking (`.so`/`.dll`). If you modify `libyourname` directly, those modifications must be released under the LGPL.
+Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).

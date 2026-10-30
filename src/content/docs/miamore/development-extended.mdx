@@ -1,0 +1,149 @@
+---
+title: miamore / development with miamore extended
+description: A ncurses replacement, with more features.
+---
+
+import ToolTip from "../../../components/ToolTip.astro";
+import EditorsNote from "../../../components/EditorsNote.astro";
+
+<EditorsNote function="no_standalone_function"></EditorsNote>
+<br /> <br />
+
+## Functions:
+
+### test
+
+```c
+void test(char *string);
+```
+
+This function is just a test to make sure that the library works properly.
+
+<br />
+
+### calc_window_size
+
+```c
+void calc_window_size(void);
+```
+
+This function calculates the window `width` and `height`.
+
+<br />
+
+### wait_for
+
+```c
+void wait_for(seconds_t seconds);
+```
+
+This function calculates sets a timer and pauses the program until set time is finished.
+
+<br />
+
+### \*input
+
+```c
+int input(void);
+char *input_ex(void);
+```
+
+These functions allow the developer to take user input from the user in the terminal. It is a small function and functionality may and will be limited.
+
+<br />
+
+### clear\*
+
+```c
+void clear(void);        // clear window and keep cursor ar position
+void clear_origin(void); // clear window and go to 1, 1
+```
+
+These functions allow a developer to clear the terminal window, the difference between them however is `clear()` retains the cursor position while clearing the window however `clear_origin()` brings cursor back to its 'origin' at `(1, 1)`.
+
+<br />
+
+<EditorsNote text="Functionality to set your own origin isn't included but will be available at in later updates">
+  {" "}
+</EditorsNote>
+
+<br />
+<br />
+
+### init_miamore
+
+```c
+#define init_miamore(...)
+```
+
+This is the main init function for `miamore` if this isn't included before using most functions at the top of your `int main()` or `fn main()` will not work.
+
+<br />
+
+### manage_keys
+
+```c
+void manage_keys(keys_t keyboard);
+```
+
+This function allows the developer to manage what the user can do with the keyboard, currently supporting `disable` and `enable`.
+
+<br />
+
+### manage_cursor
+
+```c
+// void(manage_cursor)(cursor_t cursor, position_t position);
+void manage_cursor(...);
+```
+
+This function allows the developer to manage what is currently happening to the cursor, this includes `move` -> moving the cursor (which requires the `position_t` to be filled so the cursor can `move`), `hide` -> to hide the cursor from showing and `show` -> which shows the cursor.
+
+<br />
+
+### draw_text
+
+```c
+void draw_text(const char *text);
+```
+
+This function allows the developer to draw text to the screen as normal `printf` may not properly work all the time and this is connected to our `frame_buffer` to it will draw just as fast as the rest of the window.
+
+<br />
+
+### draw_shape
+
+```c
+// void draw_shape_opts(shape_t shape, ShapeOptions opts);
+#define draw_shape(s, ...)
+```
+
+This function allows developers to draw shapes to the window, currently only supports rectangles `rect` but support for circles, triangles and other shapes will be coming to a later update.
+
+<br />
+
+### draw_border
+
+```c
+void draw_border_opts(BorderOptions opts);
+#define draw_border(...)
+```
+
+This function allows the developer to draw a border around the edge of the window. It supports the `text` which acts as a title to the window and `theme_t` to set a theme the line should be drawn with.
+
+<br />
+
+### set\*
+
+```c
+void set_fg(colors_t);
+void set_bg(colors_t);
+```
+
+This allows the developer to set a `color_t` -> color to the window. Either the `set_fg` -> foreground or the `set_bg` -> background. Both these functions and all the color functions have an internal function that checks the currently used `terminal emulator` or `tty` for `truecolor` support and if so uses `truecolor` instead of the default `8-bit` color mode.
+
+<br />
+
+## License
+
+This project is licensed under the <ToolTip function="lgpl">`GNU LESSER GENERAL PUBLIC LICENSE`</ToolTip> - see the [LICENSE](https://github.com/Ametrine-cc/miamore/blob/master/LICENSE) file for details or see the license on [here](https://docs.ametrine.cc/lgpl)

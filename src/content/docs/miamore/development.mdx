@@ -1,0 +1,298 @@
+---
+title: miamore / development with miamore
+description: A ncurses replacement, with more features.
+---
+
+import ToolTip from "../../../components/ToolTip.astro";
+import EditorsNote from "../../../components/EditorsNote.astro";
+
+<EditorsNote function="no_standalone_function"></EditorsNote>
+<br /> <br />
+
+## Using miamore:
+
+### Linking to C code
+
+```bash
+# Include the libmiamore (miamore) for compilation
+clang src/PROJECT_NAME -lmiamore -o PROJECT_NAME
+```
+
+The example shows `clang` but can be swapped out interchangeably with `gcc`.
+Replace `"PROJECT_NAME"` with your project name. All code presented is drag-and-droppable.
+
+### Using in Rust
+
+First install the library into your current <ToolTip function="rust">`Rust`</ToolTip> project
+
+```bash
+cargo add miamore
+```
+
+Or add the following to your <ToolTip function="cargo_toml">`Cargo.toml`</ToolTip> file.
+
+```toml
+miamore = "0.1.0"
+```
+
+## Global Definitions/Variables:
+
+### window\_\*
+
+```c
+extern unsigned int window_width;
+extern unsigned int window_height;
+```
+
+<br />
+<EditorsNote text="The current window width and height"></EditorsNote>
+
+<br />
+
+### cursor\_\*
+
+```c
+extern unsigned int cursor_x;
+extern unsigned int cursor_y;
+```
+
+<br />
+<EditorsNote text="The current cursor x and y"></EditorsNote>
+
+<br />
+
+### time
+
+```c
+#define SECONDS(s) ((seconds_t)(s))
+#define MS(m) ((seconds_t)((m) / 1000.0))
+```
+
+<br />
+<EditorsNote text="The macros can be used in the wait_for() function"></EditorsNote>
+
+<br />
+
+### color
+
+```c
+char *give_color(colors_t color);
+```
+
+<br />
+<EditorsNote text="Returns char array (char*) should not be used stand-alone"></EditorsNote>
+
+<br />
+
+## Type Definitions:
+
+### cursor_t
+
+The typedef in C.
+
+```c
+typedef enum {
+  hide,
+  show,
+  move,
+} cursor_t;
+```
+
+This is type `cursor_t` is used in functions like `manage_cursor()` to allow the user to specify what the cursor should do in that current moment.
+
+<br />
+
+### keys_t
+
+The typedef in C.
+
+```c
+typedef enum {
+    disable,
+    enable
+} keys_t;
+```
+
+This is type `keys_t` is used in the function `manage_keys()` to allow the user to specify disable or enable the keyboard.
+
+<br />
+<EditorsNote text="Can be used if things like TUI based games or system monitors"></EditorsNote>
+
+<br /> <br />
+
+### position_t
+
+The typedef in C.
+
+```c
+typedef struct {
+  int x;
+  int y;
+} position_t;
+```
+
+This is type `position_t` is used in functions like `manage_cursor()` or `draw_shape()`'s `ShapeOptions` structure to allow the user to specify the x(row) and y(col) the cursor should be at in the terminal window.
+
+<br />
+
+### shape_t
+
+The typedef in C.
+
+```c
+typedef enum {
+  rect,
+} shape_t;
+```
+
+This is type `shape_t` is used in functions like `draw_shape()` which allows shapes to be specified to be drawn to the screen.
+
+<br />
+
+<EditorsNote text="More shapes will be added in later updates, currently only rect is supported"></EditorsNote>
+
+<br /> <br />
+
+### theme_t
+
+The typedef in C.
+
+```c
+typedef enum {
+  single_l,
+  double_l,
+  thick_l,
+  round_l,
+  blocky_l
+} theme_t;
+```
+
+This is type `theme_t` is used in functions like `draw_shape()`, `init_miamore()` and `draw_border()` which allows the developer to specify the type of line that gets used to create that shape.
+
+#### Line types
+
+```c
+static const char *THEME_STR[][6] = {
+    //             0    1    2    3    4    5
+    [single_l] = {"┌", "┐", "└", "┘", "─", "│"},
+    [double_l] = {"╔", "╗", "╚", "╝", "═", "║"},
+    [thick_l] = {"┏", "┓", "┗", "┛", "━", "┃"},
+    [round_l] = {"╭", "╮", "╰", "╯", "─", "│"},
+    [blocky_l] = {"█", "█", "█", "█", "█", "█"},
+};
+```
+
+<br />
+
+<EditorsNote text="More line types may be added in future along with custom line support."></EditorsNote>
+
+<br /> <br />
+
+<EditorsNote text="Dev has no access to this structure as it is strictly for internal use currently."></EditorsNote>
+
+<br /> <br />
+
+### dimensions_t
+
+The typedef in C.
+
+```c
+typedef struct {
+  int width;
+  int height;
+} dimensions_t;
+```
+
+This is type `dimensions_t` is used in functions like `draw_shape()` which allows the developer to specify the dimensions `width` and `height` that gets used to create that shape.
+
+<br />
+
+### seconds_t
+
+The typedef in C.
+
+```c
+typedef double seconds_t;
+```
+
+This is type `seconds_t` is used in `wait_for()`, it can take both `MS(m)` -> miliseconds and `SECONDS(s)` -> seconds.
+
+<br />
+
+### colors_t
+
+The typedef in C.
+
+```c
+typedef enum colors_t {
+  red,
+  orange,
+  yellow,
+  green,
+  blue,
+  pink,
+  purple,
+  cyan,
+  magenta,
+  black,
+  white,
+} colors_t;
+```
+
+This is type `colors_t` is used in various functions such as `set_fg()`, `set_bg()` and `*give_color()`.
+
+<br />
+
+### MiamoreOptions
+
+The typedef in C.
+
+```c
+typedef struct {
+  bool should_clear;
+  bool disable_mouse;
+} MiamoreOptions;
+```
+
+This is type `MiamoreOptions` is used in `init_miamore()`, to set default functionality for the developer. Allowing them so speficy if `should_clear` -> should clear the terminal window when starting the TUI, `disable_mouse` -> should disable the mouse in the TUI when starting the TUI.
+
+<br />
+
+### ShapeOptions
+
+The typedef in C.
+
+```c
+typedef struct {
+  theme_t theme;
+  dimensions_t dimensions;
+  position_t position;
+} ShapeOptions;
+```
+
+This is type `ShapeOptions` is used in `draw_shape()`, to set variables to be used when creating the shape. Allowing developers to set `theme_t` -> the theme/type of line the shape should use, the `dimensions_t` -> dimensions of the shape `width` and `height`.
+
+<br />
+
+### BorderOptions
+
+The typedef in C.
+
+```c
+typedef struct {
+  char *text;
+  theme_t theme;
+} BorderOptions;
+```
+
+This is type `BorderOptions` is used in `draw_border()`, to set variables to be used when creating the border. Allowing developers to set `theme_t` -> the theme/type of line the shape should use and set `text` which will show as the `title` at the top of the terminal window.
+
+<br />
+
+<EditorsNote text="Functions can be found on the next page"> </EditorsNote>
+
+<br/ >
+
+## License
+
+This project is licensed under the <ToolTip function="lgpl">`GNU LESSER GENERAL PUBLIC LICENSE`</ToolTip> - see the [LICENSE](https://github.com/Ametrine-cc/miamore/blob/master/LICENSE) file for details or see the license on [here](https://docs.ametrine.cc/lgpl)
