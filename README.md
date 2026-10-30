@@ -1,52 +1,98 @@
-# Starlight:Ametrine Docs
-Key Requirement: Contributor License Agreement (CLA)
+# miamore
+A better way of making TUI
 
-If you choose Dual Licensing and later accept contributions from other developers, require them to sign a CLA. This grants you copyright permission to relicense their contributions commercially. Without a CLA, outside contributions would lock you out of selling commercial licenses for those parts of the codebase.
+#### Note: Documentation website will be the most recent version release, older versions of documentation wont be accesible for main library documentation but will on [Crate.io](https://crates.io/crates/miamore).
+#### Note: More information can be found on the [Ametrine Foundation Documentation website](https://docs.ametrine.cc/libraries/miamore)
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+`miamore` is a library for `C` allowing you to make TUI apps simply.
+
+## Installing miamore:
+
+### Dependencies
+
+*   `Linux` (other `UNIX-Like` or `UNIX` system have not been tested).
+*   `clang` (to compile the code, the `Makefile` specifically looks for clang).
+*   `make` (automate build and install process).
+
+Install `miamore` from source:
+
+### Cloning miamore
+```bash
+# All distrobutions
+git clone https://github.com/Ametrine-cc/miamore.git
+cd miamore
 
 ```
-npm create astro@latest -- --template starlight
+
+### Building miamore
+```bash
+# building the .a lib
+make static
+
+# building the .so library
+make dynamic
+
+# building rust bindings
+# needs either static or dynamic library to be built before hand
+make rust-build
+
+# building both .a, .so and the rust bindings
+make all
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### Installing miamore
+```bash
+# To use these commands use superuser privilages (sudo or doas)
+# To install the library on your system
+sudo make install
 
-## 🚀 Project Structure
-
-Inside of your Astro + Starlight project, you'll see the following folders and files:
-
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
+# To uninstall run the uninstall command instead
+sudo make uninstall
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+This will install the .a files to your systems `/usr/local/lib/` folder maing it accessible when linking
+during compilation.
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+Examples can be found in `examples/example.c` and by running `make rust-test` after compilation
+You can manually compile the c exampke with this command, showing you also how to link miamore into the compilation
+manually after it has been installed onto your system.
 
-Static assets, like favicons, can be placed in the `public/` directory.
+```bash
+clang examples/example.c -lmiamore -o example
+```
 
-## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+## How to contribute?
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+We welcome contributions from the community to help improve `miamore`! Whether it's reporting bugs, suggesting new features, or submitting code changes, your help is valuable.
 
-## 👀 Want to learn more?
+### Reporting Bugs
 
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+If you find a bug, please help us by reporting it on the [GitHub Issues page](https://github.com/Ametrine-cc/miamore/issues). When reporting a bug, please include:
+
+*   A clear and concise description of the bug.
+*   Steps to reproduce the behavior.
+*   Expected behavior vs. actual behavior.
+*   Any error messages or logs.
+*   Your operating system and compiler version.
+
+## Credits
+Thank you to the Ametrine developers who helped out making miamore.
+
+*   Lead Developer - [Noticxs](https://github.com/Noticxs)
+
+### Contributers
+Thank you to all the people who have contributed to the miamore project, no matter how big the update or change we appreciate everyone's help.
+
+Here is a list of our contributers to v0.2.1:
+*   Noticxs
+*   nitinbhat972
+
+## License
+
+This project is licensed under the GNU Lesser General Public License v3.0 or later (LGPL-3.0-or-later) - see `LICENSE` and `LICENSE.LESSER` for details.
+
+### Using this library in commercial/closed-source software
+You can use miamore in closed-source projects via dynamic linking (`.so`/`.dll`). If you modify miamore directly, those modifications must be released under the LGPL.
+
+For any further questions on licensing please contact on our business [email](mailto:business%40ametrine.cc?subject=Licensing%20issues).
