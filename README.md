@@ -1,0 +1,106 @@
+# miamore
+
+A better way of making TUI
+
+#### Note: Documentation website will be the most recent version release, older versions of documentation wont be accesible for main library documentation but will on [Crate.io](https://crates.io/crates/miamore).
+
+#### Note: More information can be found on the [Ametrine Foundation Documentation website](https://miamore.ametrine.cc/)
+
+`miamore` is a library for `C` allowing you to make TUI apps simply.
+
+## Installing miamore:
+
+### Dependencies
+
+- `Linux` (other `UNIX-Like` or `UNIX` system have not been tested).
+- `clang` (to compile the code, the `Makefile` specifically looks for clang).
+- `make` (automate build and install process).
+
+Install `miamore` from source:
+
+### Cloning miamore
+
+```bash
+# All distrobutions
+git clone https://github.com/Ametrine-cc/miamore.git
+cd miamore
+
+```
+
+### Building miamore
+
+```bash
+# building the .a lib
+make static
+
+# building the .so library
+make dynamic
+
+# building rust bindings
+# needs either static or dynamic library to be built before hand
+make rust-build
+
+# building both .a, .so and the rust bindings
+make all
+```
+
+### Installing miamore
+
+```bash
+# To use these commands use superuser privilages (sudo or doas)
+# To install the library on your system
+sudo make install
+
+# To uninstall run the uninstall command instead
+sudo make uninstall
+```
+
+This will install the .a files to your systems `/usr/local/lib/` folder maing it accessible when linking
+during compilation.
+
+Examples can be found in `examples/example.c` and by running `make rust-test` after compilation
+You can manually compile the c exampke with this command, showing you also how to link miamore into the compilation
+manually after it has been installed onto your system.
+
+```bash
+clang examples/example.c -lmiamore -o example
+```
+
+## How to contribute?
+
+We welcome contributions from the community to help improve `miamore`! Whether it's reporting bugs, suggesting new features, or submitting code changes, your help is valuable.
+
+### Reporting Bugs
+
+If you find a bug, please help us by reporting it on the [GitHub Issues page](https://github.com/Ametrine-cc/miamore/issues). When reporting a bug, please include:
+
+- A clear and concise description of the bug.
+- Steps to reproduce the behavior.
+- Expected behavior vs. actual behavior.
+- Any error messages or logs.
+- Your operating system and compiler version.
+
+## Credits
+
+Thank you to the Ametrine developers who helped out making miamore.
+
+- Lead Developer - [Noticxs](https://github.com/Noticxs)
+
+### Contributers
+
+Thank you to all the people who have contributed to the miamore project, no matter how big the update or change we appreciate everyone's help.
+
+Here is a list of our contributers to v0.2.1:
+
+- Noticxs
+- nitinbhat972
+
+## License
+
+This project is licensed under the GNU Lesser General Public License v3.0 or later (LGPL-3.0-or-later) - see `LICENSE` and `LICENSE.LESSER` for details.
+
+### Using this library in commercial/closed-source software
+
+You can use miamore in closed-source projects via dynamic linking (`.so`/`.dll`). If you modify miamore directly, those modifications must be released under the LGPL.
+
+For any further questions on licensing please contact on our business [email](mailto:business%40ametrine.cc?subject=Licensing%20issues).

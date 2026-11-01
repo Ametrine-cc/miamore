@@ -1,0 +1,6 @@
+/obj/
+/build/
+/example
+/target
+/src/.old
+/Cargo.lock

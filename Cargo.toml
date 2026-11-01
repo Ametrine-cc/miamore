@@ -1,0 +1,33 @@
+[package]
+name = "miamore"
+version = "1.0.0"
+authors = [
+    "Noticxs <noticxs@ametrine.cc>",
+    "Ametrine Foundation <business@ametrine.cc>"
+]
+edition = "2024"
+description = "A better way of making TUI."
+license = "LGPL-3.0"
+repository = "https://github.com/Ametrine-cc/miamore"
+readme = "README.md"
+
+include = [
+    "src/**/*",
+    "Makefile",
+    "tests/**/*",
+    "build.rs",
+    "bindings/**/*",
+    "README.md",
+    "LICENSE",
+    "COPYING.LESSER"
+]
+
+[lib]
+path = "bindings/miamore.rs"
+
+[build-dependencies]
+bindgen = "0.70.1"
+cc = "1.0"
+
+[dependencies]
+libc = "0.2.189"
