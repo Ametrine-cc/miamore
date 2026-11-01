@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #endif
 
+void miamore_init();
 bool check_for_window_resize();
 
 #endif // MIAMORE_H

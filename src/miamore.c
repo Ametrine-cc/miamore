@@ -19,11 +19,6 @@
  */
 
 #include "include/miamore.h"
-#include <stdbool.h>
-#include <stdio.h>
-#include <sys/ioctl.h>
-#include <time.h>
-#include <unistd.h>
 
 unsigned int window_height = 0;
 unsigned int window_width = 0;
@@ -31,27 +26,4 @@ unsigned int window_width = 0;
 unsigned int cursor_x = 0;
 unsigned int cursor_y = 0;
 
-int main(void) {
-  int previous_row = -1;
-  int previous_col = -1;
-
-  while (true) {
-    struct winsize ws;
-
-    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1) {
-      perror("ioctl");
-      return 1;
-    }
-
-    if ((int)ws.ws_row != previous_row || (int)ws.ws_col != previous_col) {
-      printf("Rows: %u, columns: %u\n", ws.ws_row, ws.ws_col);
-      fflush(stdout);
-
-      previous_row = ws.ws_row;
-      previous_col = ws.ws_col;
-    }
-
-    struct timespec delay = {.tv_sec = 0, .tv_nsec = 200000000};
-    nanosleep(&delay, NULL);
-  }
-}
+void miamore_init() { check_for_window_resize(); }

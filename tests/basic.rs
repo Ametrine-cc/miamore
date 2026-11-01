@@ -20,18 +20,7 @@
 
 use miamore::*;
 
-mod common;
-
 #[test]
 fn basic() {
-    common::setup();
-
-    draw_border("Basic test", theme_t::round_l);
-
-    draw_text("Hello, ");
-    draw_text("World!");
-
-    wait_for_seconds(2.0);
-
-    common::close();
+    miamore_init();
 }

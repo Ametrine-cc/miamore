@@ -48,7 +48,7 @@ OBJ_DIR       := obj
 BUILD_DIR     := build
 
 LIB_SRC_FILES := $(LIB_SRC)/miamore.c \
-                 # $(LIB_SRC)/request.c \
+                 $(LIB_SRC)/resize.c \
                  # $(LIB_SRC)/framebuffer.c \
                  # $(LIB_SRC)/draw.c \
                  # $(LIB_SRC)/color.c \
