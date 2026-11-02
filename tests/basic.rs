@@ -27,12 +27,22 @@ fn basic() {
     // enable verbose output from miamore for debug: bool
     miamore_init(true, true);
 
+    // Set values for changing miamore settings
     miamore_settings(MiamoreSettings {
         clear_on_reload: true,
         clear_on_startup: true,
         full_canvas_mode: false,
     });
 
+    // Get user input (Single character)
     let c = input(input_mode::Short);
+
+    // Print single character user input
     println!("char: {}", c);
+
+    // Get user input (word(chars till EOL) character)
+    let w = input(input_mode::Long);
+
+    // Print word user input
+    println!("\nword: {}", w);
 }
