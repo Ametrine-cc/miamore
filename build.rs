@@ -28,6 +28,7 @@ fn main() {
     cc::Build::new()
         .file("src/miamore.c")
         .file("src/resize.c")
+        .file("src/misc.c")
         .include("src/include")
         .out_dir(&out_dir)
         .compile("miamore");

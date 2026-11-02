@@ -31,13 +31,15 @@ pub mod sys {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 
-// pub use sys::{
-// AnimationOptions, BorderOptions, DebugOptions, DebugType, MiamoreOptions, ShapeOptions,
-// animation_preset_t, colors_t, cursor_t, dimensions_t, keys_t, position_t, seconds_t, shape_t,
-// theme_t,
-// };
+pub use sys::{
+    // AnimationOptions, BorderOptions, DebugOptions, DebugType, MiamoreOptions, ShapeOptions,
+    // animation_preset_t, colors_t, cursor_t, dimensions_t, keys_t, position_t, seconds_t, shape_t,
+    // theme_t,
+    window_height,
+    window_width,
+};
 
 /// Functions for terminal window resizing
-pub fn miamore_init() {
-    unsafe { sys::miamore_init() }
+pub fn miamore_init(manage_resize_reload: bool, enable_verbose: bool) {
+    unsafe { sys::miamore_init(manage_resize_reload, enable_verbose) }
 }

@@ -25,7 +25,18 @@
 #include <stdbool.h>
 #endif
 
-void miamore_init();
+// Window height and Width from ws.row and ws.col
+extern int window_height;
+extern int window_width;
+
+extern unsigned int cursor_x;
+extern unsigned int cursor_y;
+
+extern bool verbose;
+
+void miamore_init(bool manage_resize_reload, bool enable_verbose);
+
+int *get_window_size();
 bool check_for_window_resize();
 
 #endif // MIAMORE_H

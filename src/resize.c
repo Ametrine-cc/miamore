@@ -19,16 +19,29 @@
  */
 
 #include "include/miamore.h"
+#include "include/miamore_internal.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
 #include <time.h>
 #include <unistd.h>
 
-bool check_for_window_resize(void) {
-  int previous_row = -1;
-  int previous_col = -1;
+int *get_window_size() {
+  struct winsize ws;
+  static int window_size_array[2];
 
+  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1) {
+    perror("ioctl");
+    return window_size_array;
+  }
+
+  window_size_array[0] = ws.ws_row;
+  window_size_array[1] = ws.ws_col;
+
+  return window_size_array;
+}
+
+bool check_for_window_resize(void) {
   while (true) {
     struct winsize ws;
 
@@ -37,12 +50,15 @@ bool check_for_window_resize(void) {
       return 1;
     }
 
-    if ((int)ws.ws_row != previous_row || (int)ws.ws_col != previous_col) {
-      printf("Rows: %u, columns: %u\n", ws.ws_row, ws.ws_col);
-      fflush(stdout);
+    if ((int)ws.ws_row != window_width || (int)ws.ws_col != window_height) {
+      char buffer[MAX_BUFFER_SIZE];
+      printf(buffer, MAX_BUFFER_SIZE, "Rows: %u, columns: %u\n", ws.ws_row,
+             ws.ws_col);
+      return_debug(__FUNCTION__, buffer);
+      // fflush(stdout);
 
-      previous_row = ws.ws_row;
-      previous_col = ws.ws_col;
+      window_width = ws.ws_row;
+      window_height = ws.ws_col;
     }
 
     struct timespec delay = {.tv_sec = 0, .tv_nsec = 200000000};

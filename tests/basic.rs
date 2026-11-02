@@ -22,5 +22,6 @@ use miamore::*;
 
 #[test]
 fn basic() {
-    miamore_init();
+    // Initialize miamore
+    miamore_init(true, true);
 }

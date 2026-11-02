@@ -19,11 +19,34 @@
  */
 
 #include "include/miamore.h"
+#include "include/miamore_internal.h"
+#include <stdio.h>
 
-unsigned int window_height = 0;
-unsigned int window_width = 0;
+int window_height = -1;
+int window_width = -1;
 
 unsigned int cursor_x = 0;
 unsigned int cursor_y = 0;
 
-void miamore_init() { check_for_window_resize(); }
+bool verbose = false;
+
+void miamore_init(bool manage_resize_reload, bool enable_verbose) {
+  char buffer[MAX_BUFFER_SIZE];
+  verbose = enable_verbose;
+
+  // Get window size, width(row) and height(col)
+  if (verbose) {
+    snprintf(buffer, MAX_BUFFER_SIZE, "window_width:\t%d\n",
+             get_window_size()[0]);
+    return_debug(__FUNCTION__, buffer);
+
+    snprintf(buffer, MAX_BUFFER_SIZE, "window_height:\t%d\n",
+             get_window_size()[1]);
+    return_debug(__FUNCTION__, buffer);
+  }
+
+  if (manage_resize_reload) {
+    // Check for window resize
+    check_for_window_resize();
+  }
+}

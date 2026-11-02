@@ -49,9 +49,9 @@ BUILD_DIR     := build
 
 LIB_SRC_FILES := $(LIB_SRC)/miamore.c \
                  $(LIB_SRC)/resize.c \
+                 $(LIB_SRC)/misc.c \
                  # $(LIB_SRC)/framebuffer.c \
                  # $(LIB_SRC)/draw.c \
-                 # $(LIB_SRC)/color.c \
                  # $(LIB_SRC)/animate.c
 
 # Maps src/foo.c to obj/foo.o
