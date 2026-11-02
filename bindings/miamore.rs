@@ -35,11 +35,23 @@ pub use sys::{
     // AnimationOptions, BorderOptions, DebugOptions, DebugType, MiamoreOptions, ShapeOptions,
     // animation_preset_t, colors_t, cursor_t, dimensions_t, keys_t, position_t, seconds_t, shape_t,
     // theme_t,
+    MiamoreSettings,
     window_height,
     window_width,
 };
 
-/// Functions for terminal window resizing
+/// miamore_init, initialize miamore
 pub fn miamore_init(manage_resize_reload: bool, enable_verbose: bool) {
     unsafe { sys::miamore_init(manage_resize_reload, enable_verbose) }
+}
+
+/// change miamores settings
+pub fn miamore_settings(settings: MiamoreSettings) {
+    let opts = sys::MiamoreSettings {
+        clear_on_reload: settings.clear_on_reload,
+        clear_on_startup: settings.clear_on_startup,
+        full_canvas_mode: settings.full_canvas_mode,
+    };
+
+    unsafe { sys::miamore_settings_opts(opts) }
 }

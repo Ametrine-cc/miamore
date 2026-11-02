@@ -22,6 +22,10 @@
 #include "include/miamore.h"
 #include "include/miamore_internal.h"
 #include <stdio.h>
+#include <sys/ioctl.h>
+#include <termios.h>
+#include <time.h>
+#include <unistd.h>
 
 void return_debug(const char *function, const char *message) {
   if (message == NULL)
@@ -30,4 +34,39 @@ void return_debug(const char *function, const char *message) {
   if (verbose)
     printf("[%s] %s\n", function, message);
   fflush(stdout);
+}
+
+void wait_for(seconds_t seconds) {
+  if (seconds <= 0.0)
+    return;
+
+  struct timespec req;
+  req.tv_sec = (time_t)seconds;
+  req.tv_nsec = (double)((seconds - req.tv_sec) * 1e9);
+  nanosleep(&req, NULL);
+}
+
+char *input(input_mode mode) {
+  struct termios oldt, newt;
+  char *character_buffer;
+  int character;
+
+  switch (mode) {
+  case Short:
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    character = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+    snprintf(character_buffer, MAX_BUFFER_SIZE, "%c", character);
+
+  case Long:
+    break;
+  }
+
+  return character_buffer;
 }

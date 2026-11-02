@@ -63,8 +63,17 @@ void miamore_init(bool manage_resize_reload, bool enable_verbose) {
       exit(1);
     }
     pthread_detach(managed_resize_thread);
+  }
+}
 
-    // Wait timer : NOT FOR PROD
-    sleep(4);
+void miamore_settings_opts(MiamoreSettings settings) {
+  if (settings.clear_on_reload) {
+    return_debug(__FUNCTION__, "clear on reload");
+  }
+  if (settings.clear_on_startup) {
+    return_debug(__FUNCTION__, "clear on startup");
+  }
+  if (settings.full_canvas_mode) {
+    return_debug(__FUNCTION__, "full canvas mode");
   }
 }

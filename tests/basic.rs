@@ -26,4 +26,10 @@ fn basic() {
     // enable if resize management should be used: bool
     // enable verbose output from miamore for debug: bool
     miamore_init(true, true);
+
+    miamore_settings(MiamoreSettings {
+        clear_on_reload: true,
+        clear_on_startup: true,
+        full_canvas_mode: false,
+    });
 }

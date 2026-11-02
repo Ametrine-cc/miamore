@@ -70,11 +70,6 @@ REAL_SO_OUT   := $(BUILD_DIR)/$(SO_REAL)
 SO_NAME_OUT   := $(BUILD_DIR)/$(SO_SONAME)
 DYNAMIC_OUT   := $(BUILD_DIR)/$(SO_LIB)
 
-# --- Example Layout ---
-EXAMPLE_SRC    := examples
-EXAMPLE_FILE   := $(EXAMPLE_SRC)/example.c
-EXAMPLE_TARGET := example
-
 # --- Targets ---
 .PHONY: all static dynamic install uninstall example rust-test rust-build clean
 
@@ -145,5 +140,5 @@ uninstall:
 
 # --- Clean ---
 clean:
-	rm -rf $(OBJ_DIR) $(BUILD_DIR) $(EXAMPLE_TARGET)
+	rm -rf $(OBJ_DIR) $(BUILD_DIR)
 	$(CARGO) clean 2>/dev/null || rm -rf $(RS_TARGET)
