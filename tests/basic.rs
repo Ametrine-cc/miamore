@@ -32,4 +32,7 @@ fn basic() {
         clear_on_startup: true,
         full_canvas_mode: false,
     });
+
+    let c = input(input_mode::Short);
+    println!("char: {}", c);
 }

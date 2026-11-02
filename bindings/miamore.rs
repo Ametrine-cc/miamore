@@ -36,6 +36,7 @@ pub use sys::{
     // animation_preset_t, colors_t, cursor_t, dimensions_t, keys_t, position_t, seconds_t, shape_t,
     // theme_t,
     MiamoreSettings,
+    input_mode,
     window_height,
     window_width,
 };
@@ -54,4 +55,16 @@ pub fn miamore_settings(settings: MiamoreSettings) {
     };
 
     unsafe { sys::miamore_settings_opts(opts) }
+}
+
+/// Get user input
+pub fn input(mode: input_mode) -> String {
+    unsafe {
+        let input_raw = sys::input(mode);
+
+        let input_string: String = std::ffi::CStr::from_ptr(input_raw as *const i8)
+            .to_string_lossy()
+            .into_owned();
+        return input_string;
+    }
 }
