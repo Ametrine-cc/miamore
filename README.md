@@ -2,8 +2,6 @@
 
 A better way of making TUI
 
-#### Note: Documentation website will be the most recent version release, older versions of documentation wont be accesible for main library documentation but will on [Crate.io](https://crates.io/crates/miamore).
-
 #### Note: More information can be found on the [Ametrine Foundation Documentation website](https://miamore.ametrine.cc/)
 
 `miamore` is a library for `C` allowing you to make TUI apps simply.
