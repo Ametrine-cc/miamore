@@ -41,13 +41,13 @@ int *get_window_size() {
   return window_size_array;
 }
 
-bool check_for_window_resize(void) {
+void *check_for_window_resize() {
   while (true) {
     struct winsize ws;
 
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1) {
       perror("ioctl");
-      return 1;
+      return NULL;
     }
 
     if ((int)ws.ws_row != window_width || (int)ws.ws_col != window_height) {

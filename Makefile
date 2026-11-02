@@ -22,7 +22,7 @@ CFLAGS   ?= -Wall -Wextra -O2 -fPIC
 CPPFLAGS ?= -I$(LIB_SRC)
 AR       ?= ar
 ARFLAGS  ?= rcs
-LDFLAGS  ?= -lm
+LDFLAGS  ?= -lpthread
 CARGO    ?= cargo
 
 # --- Versioning ---

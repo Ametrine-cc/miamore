@@ -24,5 +24,6 @@
 #define MAX_BUFFER_SIZE 2048
 
 void return_debug(const char *function, const char *message);
+void *check_for_window_resize();
 
 #endif // MIAMORE_INTERNAL_H

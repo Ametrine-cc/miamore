@@ -20,7 +20,10 @@
 
 #include "include/miamore.h"
 #include "include/miamore_internal.h"
+#include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 // Set some default values
 
@@ -40,17 +43,28 @@ void miamore_init(bool manage_resize_reload, bool enable_verbose) {
 
   // Get window size, width(row) and height(col)
   if (verbose) {
-    snprintf(buffer, MAX_BUFFER_SIZE, "window_width:\t%d\n",
+    snprintf(buffer, MAX_BUFFER_SIZE, "window_width:\t%d",
              get_window_size()[0]);
     return_debug(__FUNCTION__, buffer);
 
-    snprintf(buffer, MAX_BUFFER_SIZE, "window_height:\t%d\n",
+    snprintf(buffer, MAX_BUFFER_SIZE, "window_height:\t%d",
              get_window_size()[1]);
     return_debug(__FUNCTION__, buffer);
   }
 
   if (manage_resize_reload) {
+    // Create resize thread
+    pthread_t managed_resize_thread;
+
     // Check for window resize
-    check_for_window_resize();
+    if (pthread_create(&managed_resize_thread, NULL, check_for_window_resize,
+                       NULL) != 0) {
+      perror("Failed to create thread");
+      exit(1);
+    }
+    pthread_detach(managed_resize_thread);
+
+    // Wait timer : NOT FOR PROD
+    sleep(4);
   }
 }
