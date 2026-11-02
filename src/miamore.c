@@ -22,9 +22,13 @@
 #include "include/miamore_internal.h"
 #include <stdio.h>
 
+// Set some default values
+
+// Set window height and width
 int window_height = -1;
 int window_width = -1;
 
+// Set cursor x and y
 unsigned int cursor_x = 0;
 unsigned int cursor_y = 0;
 

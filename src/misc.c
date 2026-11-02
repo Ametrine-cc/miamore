@@ -28,5 +28,6 @@ void return_debug(const char *function, const char *message) {
     return;
 
   if (verbose)
-    printf("[%s] %s", function, message);
+    printf("[%s] %s\n", function, message);
+  fflush(stdout);
 }

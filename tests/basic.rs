@@ -23,5 +23,7 @@ use miamore::*;
 #[test]
 fn basic() {
     // Initialize miamore
+    // enable if resize management should be used: bool
+    // enable verbose output from miamore for debug: bool
     miamore_init(true, true);
 }

@@ -52,10 +52,11 @@ bool check_for_window_resize(void) {
 
     if ((int)ws.ws_row != window_width || (int)ws.ws_col != window_height) {
       char buffer[MAX_BUFFER_SIZE];
-      printf(buffer, MAX_BUFFER_SIZE, "Rows: %u, columns: %u\n", ws.ws_row,
-             ws.ws_col);
+
+      snprintf(buffer, MAX_BUFFER_SIZE, "Rows: %u, columns: %u", ws.ws_row,
+               ws.ws_col);
+
       return_debug(__FUNCTION__, buffer);
-      // fflush(stdout);
 
       window_width = ws.ws_row;
       window_height = ws.ws_col;
